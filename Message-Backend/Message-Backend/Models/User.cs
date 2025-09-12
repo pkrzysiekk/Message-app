@@ -13,5 +13,5 @@ public class User
     public ICollection<UserGroup> UserGroups { get; set; } = [];
     public ICollection<Message> Messages { get; set; } = [];
     public ICollection<Friends> Friends { get; set; } = [];
-    public Avatar Avatar { get; set; }
+    public Avatar? Avatar { get; set; }
 }
