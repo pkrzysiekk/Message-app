@@ -5,6 +5,12 @@ namespace Message_Backend.Data;
 
 public class MessageContext :DbContext
 {
+   public DbSet<User> Users { get; set; }
+   public DbSet<Message> Messages { get; set; }
+   public DbSet<Friends> Friends { get; set; }
+   public DbSet<Group> Groups { get; set; }
+   public DbSet<Chat> Chats { get; set; }
+   public DbSet<UserGroup> UserGroups { get; set; }
    public MessageContext(DbContextOptions<MessageContext> options):base(options){}
 
    protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -34,5 +40,10 @@ public class MessageContext :DbContext
          .HasOne(f => f.User)
          .WithMany(u => u.Friends)
          .HasForeignKey(f => f.UserId);
+      
+      modelBuilder.Entity<Avatar>()
+         .HasOne(a => a.User)
+         .WithOne(u => u.Avatar)
+         .HasForeignKey<Avatar>(a => a.UserId);
    }
 }
