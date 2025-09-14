@@ -1,9 +1,11 @@
 using Message_Backend.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace Message_Backend.Data;
 
-public class MessageContext :DbContext
+public class MessageContext :IdentityDbContext<User,IdentityRole<int>,int>
 {
    public DbSet<User> Users { get; set; }
    public DbSet<Message> Messages { get; set; }
@@ -14,7 +16,9 @@ public class MessageContext :DbContext
    public MessageContext(DbContextOptions<MessageContext> options):base(options){}
 
    protected override void OnModelCreating(ModelBuilder modelBuilder)
-   {
+ {  
+      base.OnModelCreating(modelBuilder);
+    
       modelBuilder.Entity<UserGroup>()
          .HasKey(ug => new { ug.UserId, ug.GroupId });
       
