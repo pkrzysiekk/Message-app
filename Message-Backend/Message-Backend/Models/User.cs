@@ -1,11 +1,11 @@
 using System.Collections;
+using Microsoft.AspNetCore.Identity;
 
 namespace Message_Backend.Models;
 
-public class User
+public class User : IdentityUser<int>
 {
-    public int Id { get; set; }
-    public required string Username{ get; set; }
+
     public int AvatarId { get; set; }
     public DateTime LastSeen { get; set; }
     public bool IsOnline { get; set; }
