@@ -15,7 +15,7 @@ public static class UserMapper
             IsOnline = user.IsOnline,
         };
 
-    public static User ToEntity(this UserDto dto) =>
+    public static User ToBo(this UserDto dto) =>
         new User
         {
             Id = dto.Id,
