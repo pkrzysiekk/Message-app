@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Message_Backend.Data;
 
-public class MessageContext :IdentityDbContext<User,IdentityRole<int>,int>
+public class MessageContext :IdentityUserContext<User,int>
 {
    public DbSet<User> Users { get; set; }
    public DbSet<Message> Messages { get; set; }
@@ -18,7 +18,14 @@ public class MessageContext :IdentityDbContext<User,IdentityRole<int>,int>
    protected override void OnModelCreating(ModelBuilder modelBuilder)
  {  
       base.OnModelCreating(modelBuilder);
-    
+      
+      modelBuilder.Entity<User>().ToTable("User");
+      modelBuilder.Entity<Message>().ToTable("Message");
+      modelBuilder.Entity<Friends>().ToTable("Friends");
+      modelBuilder.Entity<Group>().ToTable("Group");
+      modelBuilder.Entity<Chat>().ToTable("Chat");
+      modelBuilder.Entity<UserGroup>().ToTable("UserGroup");
+      
       modelBuilder.Entity<UserGroup>()
          .HasKey(ug => new { ug.UserId, ug.GroupId });
       
