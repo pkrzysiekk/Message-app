@@ -52,5 +52,17 @@ public class UserRepository : IUserRepository
 
     }
 
+    public async Task ChangePassword(int userId, string oldPassword, string newPassword)
+    {
+        var userToUpdate = await GetById(userId);
+        if (userToUpdate == null)
+            throw new Exception("User not found");
+        var result=await _userManager.ChangePasswordAsync(userToUpdate, oldPassword, newPassword);
+        if (!result.Succeeded)
+        {
+            throw new Exception(String.Join("\n", result.Errors.Select(e => e.Description)));
+        }
+    }
+
 
 }
