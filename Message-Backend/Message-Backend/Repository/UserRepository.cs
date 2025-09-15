@@ -15,7 +15,9 @@ public class UserRepository : IUserRepository
     
     public async Task Create(User item,string password)
     {
-        await _userManager.CreateAsync(item,password);
+       var result= await _userManager.CreateAsync(item,password);
+       if (!result.Succeeded)
+           throw new Exception(String.Join("\n",result.Errors.Select(e => e.Description)));
     }
 
     public IQueryable<User> GetAll()
@@ -33,9 +35,9 @@ public class UserRepository : IUserRepository
         var userToUpdate = await GetById(user.Id);
         if (userToUpdate == null)
             throw new Exception("User not found");
-        userToUpdate.UserName = user.UserName;
-        userToUpdate.Email = user.Email;
-        await _userManager.UpdateAsync(userToUpdate);
+        var result= await _userManager.SetUserNameAsync(userToUpdate, user.UserName);
+        if (!result.Succeeded)
+            throw new Exception(String.Join("\n", result.Errors.Select(e => e.Description)));
         
     }
 
@@ -44,13 +46,11 @@ public class UserRepository : IUserRepository
         var userToDelete = await GetById(id);
         if (userToDelete == null)
             throw new Exception("User not found");
-        await _userManager.DeleteAsync(userToDelete);
+        var result= await _userManager.DeleteAsync(userToDelete);
+        if (!result.Succeeded)
+            throw new Exception(String.Join("\n", result.Errors.Select(e => e.Description)));
 
     }
 
-    public Task SaveChanges()
-    {
-        throw new System.NotImplementedException("You need to implement this function, UserManager from Identity takes" +
-                                                 "care of it :)");
-    }
+
 }
