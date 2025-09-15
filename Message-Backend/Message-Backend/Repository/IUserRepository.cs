@@ -9,4 +9,5 @@ public interface IUserRepository
     public Task<User?> GetById(int id);
     public Task Update(User item);
     public Task Delete(int id);
+    public Task ChangePassword(int id, string oldPassword, string newPassword);
 }
