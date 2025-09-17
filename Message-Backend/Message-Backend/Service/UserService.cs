@@ -1,6 +1,7 @@
 using Message_Backend.Exceptions;
 using Message_Backend.Models;
 using Message_Backend.Repository;
+using Microsoft.AspNetCore.Razor.Language.Intermediate;
 using Microsoft.EntityFrameworkCore;
 
 namespace Message_Backend.Service;
@@ -38,9 +39,11 @@ public class UserService : IUserService
     public async Task<IEnumerable<User>> SearchForUsers(string term)
     {
         const int usersToTake = 8;
+        string normalisedSearchTerm = term.ToUpper();
+        
         var users = await _userRepository.GetAll()
-            .Where(u => u.UserName!
-                .StartsWith(term))
+            .Where(u => u.NormalizedUserName!
+                .StartsWith(normalisedSearchTerm))
             .Take(usersToTake)
             .ToListAsync();
         return users;
