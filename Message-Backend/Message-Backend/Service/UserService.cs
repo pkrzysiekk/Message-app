@@ -1,3 +1,4 @@
+using Message_Backend.Exceptions;
 using Message_Backend.Models;
 using Message_Backend.Repository;
 using Microsoft.EntityFrameworkCore;
@@ -16,43 +17,22 @@ public class UserService : IUserService
     public async Task<User> Get(int id)
     {
         var user = await _userRepository.GetById(id);
-        return user ?? throw new Exception("User not found");
+        return user ?? throw new NotFoundException("User not found");
     }
 
     public async Task Add(User user, string password)
     {
-        try
-        {
             await _userRepository.Create(user, password);
-        }
-        catch (Exception ex)
-        {
-            throw;
-        }
     }
 
     public async Task Update(User user)
     {
-        try
-        {
             await _userRepository.Update(user);
-        }
-        catch (Exception ex)
-        {
-            throw;
-        }
     }
 
     public async Task Delete(int id)
     {
-        try
-        {
             await _userRepository.Delete(id);
-        }
-        catch (Exception ex)
-        {
-            throw;
-        }
     }
 
     public async Task<IEnumerable<User>> SearchForUsers(string term)
@@ -69,13 +49,6 @@ public class UserService : IUserService
 
     public async Task ChangePassword(int id, string oldPassword, string newPassword)
     {
-        try
-        {
             await _userRepository.ChangePassword(id, oldPassword, newPassword);
-        } 
-        catch (Exception ex)
-        {
-            throw;
-        }
     }
 }
