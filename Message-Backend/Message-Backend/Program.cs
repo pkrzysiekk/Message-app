@@ -1,7 +1,9 @@
 using Message_Backend.Data;
+using Message_Backend.Exceptions;
 using Message_Backend.Models;
 using Message_Backend.Repository;
 using Message_Backend.Service;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -61,7 +63,24 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI(); 
 }
+//Define Error handling middleware
+app.UseExceptionHandler(errorApp =>
+{
+    errorApp.Run(async context =>
+    {
+        context.Response.ContentType = "application/json";
 
+        var exception = context.Features.Get<IExceptionHandlerFeature>()?.Error;
+        context.Response.StatusCode = exception switch
+        {
+            NotFoundException => StatusCodes.Status404NotFound,
+            UserManagerException => StatusCodes.Status403Forbidden,
+            _ => StatusCodes.Status500InternalServerError,
+        };
+        await context.Response.WriteAsJsonAsync(new{error=exception?.Message});
+
+    });
+});
 app.UseHttpsRedirection();
 
 app.UseAuthentication();
