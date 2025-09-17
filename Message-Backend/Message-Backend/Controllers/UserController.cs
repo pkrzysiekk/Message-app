@@ -25,6 +25,14 @@ namespace Message_Backend.Controllers
             return Ok(user.ToDto());
         }
 
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<UserDto>>> Search([FromQuery] string term)
+        {
+            var fetchedUsers=await _userService.SearchForUsers(term);
+            var usersDto=fetchedUsers.Select(u=>u.ToDto());
+            return Ok(usersDto);
+        }
+
         // POST api/<UserController>
         [HttpPost]
         public async Task<ActionResult>Post([FromBody] UserDto userDto,string password)
