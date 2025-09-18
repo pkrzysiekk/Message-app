@@ -10,6 +10,8 @@ public interface IUserService
    public Task Delete(int id);
    public Task<IEnumerable<User>> SearchForUsers(string term);
    public Task ChangePassword(int id, string oldPassword, string newPassword);
+   public Task ChangeEmail(int id, string email);
+   public Task SetAvatar(int id,IFormFile avatarContent);
    
    
 }

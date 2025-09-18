@@ -10,4 +10,6 @@ public interface IUserRepository
     public Task Update(User item);
     public Task Delete(int id);
     public Task ChangePassword(int id, string oldPassword, string newPassword);
+    public Task ChangeEmail(int userId, string email);
+    public Task SetAvatar(int id,Avatar avatar);
 }
