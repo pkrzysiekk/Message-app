@@ -79,6 +79,12 @@ namespace Message_Backend.Controllers
             await _userService.SetAvatar(id,avatar);
             return Ok("Avatar changed");
         }
-        
+
+        [HttpGet("{id}/avatar")]
+        public async Task<ActionResult> GetAvatar(int id)
+        {
+            var avatar = await _userService.GetAvatar(id);
+            return File(avatar.Content,avatar.ContentType);
+        }
     }
 }

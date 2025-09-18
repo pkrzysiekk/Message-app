@@ -11,5 +11,6 @@ public interface IUserRepository
     public Task Delete(int id);
     public Task ChangePassword(int id, string oldPassword, string newPassword);
     public Task ChangeEmail(int userId, string email);
-    public Task SetAvatar(int id,Avatar avatar);
+    public Task SetAvatar(int userId,Avatar avatar);
+    public Task<Avatar?> GetUserAvatar(int userId);
 }

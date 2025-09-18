@@ -1,5 +1,6 @@
 using Message_Backend.Exceptions;
 using Message_Backend.Models;
+using Message_Backend.Models.DTOs;
 using Message_Backend.Repository;
 using Microsoft.AspNetCore.Razor.Language.Intermediate;
 using Microsoft.EntityFrameworkCore;
@@ -73,5 +74,17 @@ public class UserService : IUserService
             ContentType = avatarContent.ContentType,
         };
         await _userRepository.SetAvatar(id, avatar);
+    }
+
+    public async Task<AvatarDto> GetAvatar(int userId)
+    {
+        var avatar = await _userRepository.GetUserAvatar(userId);
+        if (avatar == null)
+            throw new Exception("Avatar not found");
+        return new AvatarDto()
+        {
+            Content = avatar.Content,
+            ContentType = avatar.ContentType
+        };
     }
 }

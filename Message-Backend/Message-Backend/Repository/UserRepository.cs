@@ -91,5 +91,12 @@ public class UserRepository : IUserRepository
         await _context.SaveChangesAsync();
     }
 
-
+    public async Task<Avatar?> GetUserAvatar(int userId)
+    {
+        var user = await GetById(userId);
+        if (user == null)
+            throw new NotFoundException("User not found");
+        return user.Avatar;
+        
+    }
 }

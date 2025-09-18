@@ -1,4 +1,5 @@
 using Message_Backend.Models;
+using Message_Backend.Models.DTOs;
 
 namespace Message_Backend.Service;
 
@@ -12,6 +13,7 @@ public interface IUserService
    public Task ChangePassword(int id, string oldPassword, string newPassword);
    public Task ChangeEmail(int id, string email);
    public Task SetAvatar(int id,IFormFile avatarContent);
+   public Task<AvatarDto> GetAvatar(int userId);
    
    
 }
