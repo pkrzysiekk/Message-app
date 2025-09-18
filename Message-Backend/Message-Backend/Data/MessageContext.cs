@@ -8,6 +8,7 @@ namespace Message_Backend.Data;
 public class MessageContext :IdentityUserContext<User,int>
 {
    public DbSet<User> AppUsers { get; set; }
+   public DbSet<Avatar> UserAvatar { get; set; }
    public DbSet<Message> Messages { get; set; }
    public DbSet<Friends> Friends { get; set; }
    public DbSet<Group> Groups { get; set; }
