@@ -54,4 +54,24 @@ public class UserService : IUserService
     {
             await _userRepository.ChangePassword(id, oldPassword, newPassword);
     }
+
+    public async Task ChangeEmail(int id, string email)
+    {
+        await  _userRepository.ChangeEmail(id, email);
+    }
+
+    public async Task SetAvatar(int id, IFormFile avatarContent)
+    {
+        if (avatarContent.Length == 0)
+            throw new Exception("Avatar content is empty");
+        using var ms = new MemoryStream();
+        await avatarContent.CopyToAsync(ms);
+
+        var avatar = new Avatar()
+        {
+            Content = ms.ToArray(),
+            ContentType = avatarContent.ContentType,
+        };
+        await _userRepository.SetAvatar(id, avatar);
+    }
 }

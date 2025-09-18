@@ -59,11 +59,26 @@ namespace Message_Backend.Controllers
             return Ok("Deleted");
         }
 
-        [HttpPost("{id}/change-password")]
+        [HttpPut("{id}/change-password")]
         public async Task<ActionResult> ChangePassword(int id, string oldPassword, string newPassword)
         {
                 await _userService.ChangePassword(id, oldPassword, newPassword);
                 return Ok("Password changed");
         }
+
+        [HttpPut("{id}/change-email")]
+        public async Task<ActionResult> ChangeEmail(int id, string email)
+        {
+            await _userService.ChangeEmail(id, email);
+            return Ok("Email changed");
+        }
+
+        [HttpPut("{id}/change-avatar")]
+        public async Task<ActionResult> ChangeAvatar(int id,  IFormFile avatar)
+        {
+            await _userService.SetAvatar(id,avatar);
+            return Ok("Avatar changed");
+        }
+        
     }
 }
