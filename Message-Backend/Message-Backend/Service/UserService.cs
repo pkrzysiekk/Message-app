@@ -64,7 +64,7 @@ public class UserService : IUserService
     public async Task SetAvatar(int id, IFormFile avatarContent)
     {
         if (avatarContent.Length == 0)
-            throw new Exception("Avatar content is empty");
+            throw new NotFoundException("Avatar content is empty");
         using var ms = new MemoryStream();
         await avatarContent.CopyToAsync(ms);
 
@@ -80,7 +80,7 @@ public class UserService : IUserService
     {
         var avatar = await _userRepository.GetUserAvatar(userId);
         if (avatar == null)
-            throw new Exception("Avatar not found");
+            throw new NotFoundException("Avatar not found");
         return new AvatarDto()
         {
             Content = avatar.Content,
