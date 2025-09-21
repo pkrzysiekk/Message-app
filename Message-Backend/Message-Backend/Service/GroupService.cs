@@ -27,9 +27,9 @@ public class GroupService :IGroupService
         await _groupRepository.Update(group);
     }
 
-    public async Task DeleteGroup(Group group)
+    public async Task DeleteGroup(int id)
     {
-        await _groupRepository.Delete(group.Id);
+        await _groupRepository.Delete(id);
     }
 
     public async Task<List<Group>> GetPaginatedUserGroups(int userId,int page, int pageSize)
