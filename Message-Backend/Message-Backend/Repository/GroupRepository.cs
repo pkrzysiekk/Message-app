@@ -25,7 +25,7 @@ public class GroupRepository : IRepository<Group>
 
     public async Task<Group?> GetById(int id)
     {
-        return await _context.Groups.FindAsync(id);
+        return await GetAll().FirstOrDefaultAsync(g => g.Id == id);
     }
 
     public async Task Update(Group item)
