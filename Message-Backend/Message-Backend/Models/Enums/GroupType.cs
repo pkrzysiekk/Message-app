@@ -1,6 +1,6 @@
 namespace Message_Backend.Models.Enums;
 
-public enum GroupStatus
+public enum GroupType
 {
     Private,
     Public,
