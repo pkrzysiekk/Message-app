@@ -5,7 +5,7 @@ namespace Message_Backend.Service;
 
 public interface IGroupService
 {
-    public Task CreateGroup(Group group);
+    public Task CreateGroup(Group group,int creatorId);
     public Task UpdateGroup(Group group);
     public Task DeleteGroup(int id);
     public Task<List<Group>> GetPaginatedUserGroups(int userId,int page, int pageSize);

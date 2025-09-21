@@ -17,9 +17,10 @@ public class GroupService :IGroupService
         _userService = userService;
     }
 
-    public async Task CreateGroup(Group group)
+    public async Task CreateGroup(Group group,int creatorId)
     {
         await _groupRepository.Create(group);
+        await AddUserToGroup(creatorId,group.Id,GroupRole.Owner);
     }
 
     public async Task UpdateGroup(Group group)
