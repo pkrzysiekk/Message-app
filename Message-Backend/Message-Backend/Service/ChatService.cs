@@ -25,15 +25,18 @@ public class ChatService : IChatService
             .GetAll().Where(x => x.GroupId == groupId).ToArrayAsync();
         return groups;
     }
+    
 
-    public async Task Create(Chat chat)
+    public async Task<Chat> Create(Chat chat)
     {
-        await _repository.Create(chat);
+        var addedChat=await _repository.Create(chat);
+        return addedChat;
     }
 
-    public async Task Update(Chat chat)
+    public async Task<Chat> Update(Chat chat)
     {
-        await _repository.Update(chat);
+        var updatedChat=await _repository.Update(chat);
+        return updatedChat;
     }
 
     public async Task Delete(int id)
