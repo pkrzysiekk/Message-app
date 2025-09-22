@@ -13,10 +13,11 @@ public class ChatRepository :IRepository<Chat>
     {
         _context = context;
     } 
-    public async Task Create(Chat item)
+    public async Task<Chat> Create(Chat item)
     {
-        _context.Chats.Add(item);
-        await SaveChanges();
+         var added= _context.Chats.Add(item);
+         await SaveChanges();
+         return added.Entity;
     }
 
     public IQueryable<Chat> GetAll()
@@ -29,14 +30,15 @@ public class ChatRepository :IRepository<Chat>
         return await GetAll().FirstOrDefaultAsync(c => c.Id == id);
     }
 
-    public async Task Update(Chat item)
+    public async Task<Chat> Update(Chat item)
     {
         var chatToUpdate = await GetById(item.Id);
         if (chatToUpdate == null)
             throw new NotFoundException("No Chat found with the specified id"); 
         chatToUpdate.Name = item.Name;
-        _context.Chats.Update(chatToUpdate);
+        var added=_context.Chats.Update(chatToUpdate);
         await SaveChanges();
+        return added.Entity;
     }
 
     public async Task Delete(int id)

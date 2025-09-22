@@ -12,10 +12,11 @@ public class GroupRepository : IRepository<Group>
     {
         _context = context;
     }
-    public async Task Create(Group item)
-    {
-       _context.Groups.Add(item); 
+    public async Task<Group> Create(Group item)
+    { 
+       var added=_context.Groups.Add(item); 
        await SaveChanges();
+       return added.Entity;
     }
 
     public IQueryable<Group> GetAll()
@@ -28,14 +29,16 @@ public class GroupRepository : IRepository<Group>
         return await GetAll().FirstOrDefaultAsync(g => g.Id == id);
     }
 
-    public async Task Update(Group item)
+    public async Task<Group> Update(Group item)
     {
         var groupToUpdate= await _context.Groups.FindAsync(item.Id);
         if (groupToUpdate == null)
             throw new NotFoundException("Group not found");
         groupToUpdate.Name = item.Name;
         groupToUpdate.Type = item.Type;
+        var added=_context.Groups.Update(groupToUpdate);
         await SaveChanges();
+        return added.Entity;
     }
 
     public async Task Delete(int id)
