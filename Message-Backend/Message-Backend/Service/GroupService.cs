@@ -11,10 +11,13 @@ public class GroupService :IGroupService
 {
     private readonly IRepository<Group> _groupRepository;
     private readonly IUserService _userService;
-    public GroupService(IRepository<Group> groupRepository, IUserService userService)
+    private readonly IChatService _chatService;
+    public GroupService
+        (IRepository<Group> groupRepository, IUserService userService, IChatService chatService)
     {
         _groupRepository = groupRepository;
         _userService = userService;
+        _chatService = chatService;
     }
 
     public async Task CreateGroup(Group group,int creatorId)
@@ -96,5 +99,19 @@ public class GroupService :IGroupService
       userGroupToUpdate.Role = role;
       await _groupRepository.SaveChanges();
     }
-    
+
+    public async Task AddChatToGroup(string chatName, int groupId)
+    {
+        var group = await GetGroup(groupId);
+        if (group == null)
+            throw new NotFoundException("Group not found");
+        var chat = new Chat(){Name = chatName, GroupId = groupId};
+        await _chatService.Create(chat);
+    }
+
+    public async Task RemoveChatFromGroup(int chatId)
+    {
+       await _chatService.Delete(chatId); 
+    }
+
 }
