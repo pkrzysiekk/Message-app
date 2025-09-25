@@ -9,8 +9,9 @@ public static class ChatMapper
    {
       return new Chat()
       {
-         Name = dto.ChatName,
          Id = dto.Id,
+         Name = dto.ChatName,
+         GroupId = dto.GroupId,
       };
    }
 
@@ -19,7 +20,8 @@ public static class ChatMapper
       return new ChatDto()
       {
          Id = chat.Id,
-         ChatName = chat.Name
+         ChatName = chat.Name,
+         GroupId = chat.GroupId,
       };
    }
 }
