@@ -9,7 +9,5 @@ public interface IChatService
    public Task<Chat> Create(Chat chat);
    public Task<Chat> Update(Chat chat);
    public Task Delete(int id);
-   public Task AddChatToGroup(Chat chat, int groupId);
-   public Task RemoveChatFromGroup(int chatId);
-   public Task UpdateChat(Chat chat);
+   public Task AddChatToGroup(Chat chat);
 }

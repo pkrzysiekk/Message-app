@@ -24,7 +24,7 @@ public class ChatService : IChatService
     public async Task<IEnumerable<Chat>> GetAllGroupChats(int groupId)
     {
         var groups= await _repository
-            .GetAll().Where(x => x.GroupId == groupId).ToArrayAsync();
+            .GetAll().Where(x => x.GroupId == groupId).ToListAsync();
         return groups;
     }
     
@@ -46,22 +46,12 @@ public class ChatService : IChatService
         await _repository.Delete(id);
     }
     
-    public async Task AddChatToGroup(Chat chat, int groupId)
+    public async Task AddChatToGroup(Chat chat)
     {
-        var group = await _groupService.GetGroup(groupId);
+        var group = await _groupService.GetGroup(chat.GroupId);
         if (group == null)
             throw new NotFoundException("Group not found");
-        chat.GroupId = groupId;
         await Create(chat);
     }
 
-    public async Task RemoveChatFromGroup(int chatId)
-    {
-        await Delete(chatId); 
-    }
-
-    public async Task UpdateChat(Chat chat)
-    {
-        await Update(chat);
-    }
 }

@@ -11,13 +11,11 @@ public class GroupService :IGroupService
 {
     private readonly IRepository<Group> _groupRepository;
     private readonly IUserService _userService;
-    private readonly IChatService _chatService;
     public GroupService
-        (IRepository<Group> groupRepository, IUserService userService, IChatService chatService)
+        (IRepository<Group> groupRepository, IUserService userService)
     {
         _groupRepository = groupRepository;
         _userService = userService;
-        _chatService = chatService;
     }
 
     public async Task CreateGroup(Group group,int creatorId)
