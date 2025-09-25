@@ -100,18 +100,5 @@ public class GroupService :IGroupService
       await _groupRepository.SaveChanges();
     }
 
-    public async Task AddChatToGroup(string chatName, int groupId)
-    {
-        var group = await GetGroup(groupId);
-        if (group == null)
-            throw new NotFoundException("Group not found");
-        var chat = new Chat(){Name = chatName, GroupId = groupId};
-        await _chatService.Create(chat);
-    }
-
-    public async Task RemoveChatFromGroup(int chatId)
-    {
-       await _chatService.Delete(chatId); 
-    }
-
+   
 }

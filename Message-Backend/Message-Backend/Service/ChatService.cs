@@ -8,9 +8,11 @@ namespace Message_Backend.Service;
 public class ChatService : IChatService
 {
     private readonly IRepository<Chat> _repository;
-    public ChatService(IRepository<Chat> repository)
+    private readonly IGroupService _groupService;
+    public ChatService(IRepository<Chat> repository, IGroupService groupService)
     {
         _repository = repository;
+        _groupService = groupService;
     }
     
     public async Task<Chat> Get(int id)
@@ -42,5 +44,24 @@ public class ChatService : IChatService
     public async Task Delete(int id)
     {
         await _repository.Delete(id);
+    }
+    
+    public async Task AddChatToGroup(Chat chat, int groupId)
+    {
+        var group = await _groupService.GetGroup(groupId);
+        if (group == null)
+            throw new NotFoundException("Group not found");
+        chat.GroupId = groupId;
+        await Create(chat);
+    }
+
+    public async Task RemoveChatFromGroup(int chatId)
+    {
+        await Delete(chatId); 
+    }
+
+    public async Task UpdateChat(Chat chat)
+    {
+        await Update(chat);
     }
 }

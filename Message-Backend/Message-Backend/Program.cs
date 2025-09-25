@@ -15,7 +15,10 @@ builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IRepository<Group>, GroupRepository>();
 builder.Services.AddScoped<IGroupService, GroupService>();
+builder.Services.AddScoped<IRepository<Chat>, ChatRepository>();
+builder.Services.AddScoped<IChatService, ChatService>();
 builder.Services.AddScoped<IUserService, UserService>();
+
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

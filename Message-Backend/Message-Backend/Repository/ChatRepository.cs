@@ -46,6 +46,7 @@ public class ChatRepository :IRepository<Chat>
         var chatToDelete = await GetById(id);
         if (chatToDelete == null)
             throw new NotFoundException("No Chat found with the specified id");
+        _context.Chats.Remove(chatToDelete);
         await SaveChanges();
     }
 

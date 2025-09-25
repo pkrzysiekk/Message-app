@@ -1,4 +1,5 @@
 using Message_Backend.Mappers;
+using Message_Backend.Models;
 using Message_Backend.Models.DTOs;
 using Message_Backend.Models.Enums;
 using Message_Backend.Service;
@@ -79,5 +80,7 @@ namespace Message_Backend.Controllers
             await _groupService.UpdateUserRoleInGroup(userId,request.GroupId, request.Role);
             return Ok("User role updated");
         }
+
+       
     }
 }
