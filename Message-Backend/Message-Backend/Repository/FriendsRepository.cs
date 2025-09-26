@@ -38,7 +38,8 @@ public class FriendsRepository :IFriendsRepository
     public async Task<Friends?> GetById(int userId,int friendId)
     {
         return await GetAll()
-            .Where(x => x.UserId == userId && x.FriendId == friendId)
+            .Where(x => (x.UserId == userId && x.FriendId == friendId)
+            ||  (x.UserId == friendId && x.FriendId == userId))
             .FirstOrDefaultAsync();
     }
 
