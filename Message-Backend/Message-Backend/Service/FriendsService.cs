@@ -63,4 +63,13 @@ public class FriendsService :IFriendsService
             .ToListAsync();
         return friends;
     }
+
+    public async Task<List<Friends>> GetAllUserPendingInvites(int userId)
+    {
+        var invites = await _friendsRepository
+            .GetAll()
+            .Where(f => f.FriendId == userId && f.Status == FriendInvitationStatus.Pending)
+            .ToListAsync();
+        return invites;
+    }
 }

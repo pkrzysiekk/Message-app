@@ -9,4 +9,5 @@ public interface IFriendsService
     public Task<Friends> FindById(int userId,int friendId);
     public Task Update(Friends friends);
     public Task<List<Friends>> GetAllUserFriends(int userId);
+    public Task<List<Friends>> GetAllUserPendingInvites(int userId);
 }
