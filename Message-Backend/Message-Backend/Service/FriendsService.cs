@@ -8,10 +8,10 @@ namespace Message_Backend.Service;
 
 public class FriendsService :IFriendsService
 {
-    private readonly IRepository<Friends> _friendsRepository;
+    private readonly IFriendsRepository _friendsRepository;
     private readonly IUserService _userService;
 
-    public FriendsService(IRepository<Friends> friendsRepository, IUserService userService)
+    public FriendsService(IFriendsRepository friendsRepository, IUserService userService)
     {
         _friendsRepository = friendsRepository;
         _userService = userService;
@@ -37,14 +37,14 @@ public class FriendsService :IFriendsService
         await _friendsRepository.Create(invite);
     }
 
-    public async Task Delete(int friendId)
+    public async Task Delete(int userId,int friendId)
     {
-        await _friendsRepository.Delete(friendId);
+        await _friendsRepository.Delete(userId, friendId);
     }
 
-    public async Task<Friends> FindById(int id)
+    public async Task<Friends> FindById(int userId,int friendId)
     {
-        var friend = await _friendsRepository.GetById(id);
+        var friend = await _friendsRepository.GetById(userId, friendId);
         return friend ?? throw new NotFoundException("Entity not found");
     }
 
@@ -57,7 +57,9 @@ public class FriendsService :IFriendsService
     {
         var friends = await _friendsRepository
             .GetAll()
-            .Where(f => f.UserId == userId || f.FriendId == userId)
+            .Where(f => 
+                (f.UserId == userId || f.FriendId == userId)
+                && f.Status==FriendInvitationStatus.Accepted)
             .ToListAsync();
         return friends;
     }
