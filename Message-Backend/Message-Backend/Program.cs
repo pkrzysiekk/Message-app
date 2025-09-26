@@ -18,6 +18,8 @@ builder.Services.AddScoped<IGroupService, GroupService>();
 builder.Services.AddScoped<IRepository<Chat>, ChatRepository>();
 builder.Services.AddScoped<IChatService, ChatService>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IFriendsRepository, FriendsRepository>();
+builder.Services.AddScoped<IFriendsService, FriendsService>();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
