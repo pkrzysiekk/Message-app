@@ -33,6 +33,15 @@ namespace Message_Backend.Controllers
             var friendsDto=friends.Select(x=>x.ToDto()).ToList();
             return friendsDto;
         }
+
+        [HttpGet("/users/{userId}/invites")]
+        public async Task<ActionResult<IEnumerable<FriendsDto>>>
+            GetUserPendingInvites([FromRoute] int userId)
+        {
+            var invites = await _friendsService.GetAllUserPendingInvites(userId);
+            var invitesDto = invites.Select(x => x.ToDto()).ToList();
+            return invitesDto;
+        }
         
         [HttpPost]
         public async Task<ActionResult> Post([FromBody] FriendsDto friendsDto)
