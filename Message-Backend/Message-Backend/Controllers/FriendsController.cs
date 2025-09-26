@@ -19,10 +19,10 @@ namespace Message_Backend.Controllers
            _friendsService = friendsService; 
         }
         
-        [HttpGet("{id}")]
-        public async Task<ActionResult<FriendsDto>> Get([FromRoute] int id)
+        [HttpGet]
+        public async Task<ActionResult<FriendsDto>> Get([FromQuery] int userId,[FromQuery]int friendId)
         {
-            var friends = await _friendsService.FindById(id);
+            var friends = await _friendsService.FindById(userId, friendId);
             return friends.ToDto();
         }
 
@@ -49,10 +49,10 @@ namespace Message_Backend.Controllers
             return Ok("Friends updated");
         }
 
-        [HttpDelete("{id}")]
-        public async Task<ActionResult> Delete(int id)
+        [HttpDelete("/{userId}/{friendId}")]
+        public async Task<ActionResult> Delete([FromRoute] int userId,[FromRoute] int friendId)
         {
-            await _friendsService.Delete(id);
+            await _friendsService.Delete(userId, friendId);
             return Ok("Friends deleted");
         }
     }
