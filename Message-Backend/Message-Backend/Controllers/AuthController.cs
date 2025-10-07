@@ -19,9 +19,12 @@ namespace Message_Backend.Controllers
         }
         
         [HttpPost("/auth")]
-        public ActionResult<string> Post([FromBody] UserDto userDto)
-        {
-            var user = userDto.ToBo();
+        public async Task<ActionResult<string>> Post([FromBody] UserAuthorizationRequest request)
+        { 
+            var user = request.UserData.ToBo();
+            bool authenticationResult = await _authService.ValidateUserCredentials(user, request.Password);
+            if (!authenticationResult)
+                return Unauthorized();
             var token = _authService.GenerateToken(_jwtOptions,user);
             return Ok(token);
         }
