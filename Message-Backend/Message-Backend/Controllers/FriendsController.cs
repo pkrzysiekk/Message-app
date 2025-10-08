@@ -2,6 +2,7 @@ using Message_Backend.Mappers;
 using Message_Backend.Models;
 using Message_Backend.Models.DTOs;
 using Message_Backend.Service;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
@@ -20,6 +21,7 @@ namespace Message_Backend.Controllers
         }
         
         [HttpGet]
+        [Authorize(Policy = "SameUser")]
         public async Task<ActionResult<FriendsDto>> Get([FromQuery] int userId,[FromQuery]int friendId)
         {
             var friends = await _friendsService.FindById(userId, friendId);

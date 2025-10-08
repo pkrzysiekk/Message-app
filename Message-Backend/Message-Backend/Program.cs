@@ -1,4 +1,6 @@
 using System.Text;
+using Message_Backend.AuthHandlers;
+using Message_Backend.AuthRequirements;
 using Message_Backend.Data;
 using Message_Backend.Exceptions;
 using Message_Backend.Helpers;
@@ -7,6 +9,7 @@ using Message_Backend.Models.RSA;
 using Message_Backend.Repository;
 using Message_Backend.Service;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -26,7 +29,8 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IFriendsRepository, FriendsRepository>();
 builder.Services.AddScoped<IFriendsService, FriendsService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
-
+//Add authorization Services
+builder.Services.AddSingleton<IAuthorizationHandler,SameUserHandler>();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
@@ -71,10 +75,9 @@ builder.Services.AddIdentityCore<User>(options =>
         options.Password.RequireUppercase = false;
     })
     .AddEntityFrameworkStores<MessageContext>()
-    .AddSignInManager();               // <-- potrzebne np. do resetu hasła
+    .AddSignInManager();               
 
-// 3. Dodaj autoryzację i uwierzytelnianie (np. JWT, cookies itp.)
-// jeśli JWT:
+
 builder.Services
     .AddAuthentication(x =>
     {
@@ -93,6 +96,11 @@ builder.Services
             ValidateAudience = false
         };
     });
+
+builder.Services.AddAuthorization(options =>
+    options.AddPolicy("SameUser", policy =>policy.
+        Requirements
+        .Add(new SameUserRequirement())));
 
 var app = builder.Build();
 

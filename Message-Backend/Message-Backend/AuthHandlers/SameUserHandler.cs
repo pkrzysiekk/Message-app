@@ -21,8 +21,9 @@ public class SameUserHandler :AuthorizationHandler<SameUserRequirement>
 
        string userIdFromEndpoint;
        userIdFromEndpoint = httpContext.Request.Query["userId"].ToString();
+       
        if (string.IsNullOrEmpty(userIdFromEndpoint))
-        httpContext.GetRouteValue("userId").ToString();
+        userIdFromEndpoint = httpContext.GetRouteValue("userId").ToString();
        if (userIdFromEndpoint == userIdFromToken)
         context.Succeed(requirement);
        return Task.CompletedTask;
