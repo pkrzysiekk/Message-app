@@ -6,4 +6,5 @@ public class JwtOptions
     public string Audience { get; set; }
     public string PublicKeyLocation { get; set; }
     public string PrivateKeyLocation { get; set; }
+    public int MinutesBeforeExpiry { get; set; }
 }

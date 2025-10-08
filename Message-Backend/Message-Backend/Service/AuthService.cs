@@ -32,7 +32,7 @@ public class AuthService: IAuthService
         var tokenDescriptor = new SecurityTokenDescriptor()
         {
             Subject = GenerateClaims(user),
-            Expires = DateTime.Now.AddHours(1),
+            Expires = DateTime.Now.AddMinutes(jwtOptions.MinutesBeforeExpiry),
             Issuer = jwtOptions.Issuer,
             Audience = jwtOptions.Audience,
             SigningCredentials = credentials
@@ -41,7 +41,7 @@ public class AuthService: IAuthService
         return handler.WriteToken(token);
     }
 
-    private ClaimsIdentity GenerateClaims(User user)
+    private static ClaimsIdentity GenerateClaims(User user)
     {
         var claims = new ClaimsIdentity();
         claims.AddClaim(new Claim(ClaimTypes.NameIdentifier,user.Id.ToString()));
