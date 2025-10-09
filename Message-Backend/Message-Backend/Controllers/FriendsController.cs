@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Message_Backend.Controllers
 {
     [Route("api/[controller]")]
+    [Authorize]
     [ApiController]
     public class FriendsController : ControllerBase
     {
@@ -29,6 +30,7 @@ namespace Message_Backend.Controllers
         }
 
         [HttpGet("/users/{userId}/friends")]
+        [Authorize(Policy = "SameUser")]
         public async Task<ActionResult<IEnumerable<FriendsDto>>> GetFriends([FromRoute] int userId)
         {
             var friends = await _friendsService.GetAllUserFriends(userId);
@@ -61,6 +63,7 @@ namespace Message_Backend.Controllers
         }
 
         [HttpDelete("/{userId}/{friendId}")]
+        [Authorize(Policy = "SameUser")]
         public async Task<ActionResult> Delete([FromRoute] int userId,[FromRoute] int friendId)
         {
             await _friendsService.Delete(userId, friendId);
