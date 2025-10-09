@@ -3,12 +3,14 @@ using Message_Backend.Models;
 using Message_Backend.Models.DTOs;
 using Message_Backend.Models.Enums;
 using Message_Backend.Service;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Message_Backend.Controllers
 {
     [Route("api/[controller]")]
+    [Authorize]
     [ApiController]
     public class GroupController : ControllerBase
     {
@@ -50,6 +52,7 @@ namespace Message_Backend.Controllers
         }
 
         [HttpGet("{userId}/user-groups")]
+        [Authorize(Policy = "SameUser")]
         public async Task<ActionResult<IEnumerable<GroupDto>>> GetUserGroups
             ([FromRoute] int userId,[FromQuery] int page,[FromQuery] int pageSize)
         {
@@ -80,7 +83,5 @@ namespace Message_Backend.Controllers
             await _groupService.UpdateUserRoleInGroup(userId,request.GroupId, request.Role);
             return Ok("User role updated");
         }
-
-       
     }
 }
