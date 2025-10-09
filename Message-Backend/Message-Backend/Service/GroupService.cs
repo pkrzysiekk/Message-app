@@ -98,5 +98,12 @@ public class GroupService :IGroupService
       await _groupRepository.SaveChanges();
     }
 
-   
+    public async Task<GroupRole?> GetUserRoleInGroup(int userId, int groupId)
+    {
+        var groupToGet = await GetGroup(groupId);
+        var userGroup = groupToGet.UserGroups
+            .FirstOrDefault
+                (uc => uc.UserId == userId && groupId == uc.GroupId);
+        return userGroup?.Role;
+    }
 }
