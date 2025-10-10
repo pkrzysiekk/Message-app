@@ -37,6 +37,7 @@ namespace Message_Backend.Controllers
         }
 
         [HttpPut]
+        [Authorize(Policy = "RequireAdminRoleInGroup")]
         public async Task<IActionResult> Put([FromBody] GroupDto group)
         {
            var groupBo=group.ToBo();
@@ -44,10 +45,11 @@ namespace Message_Backend.Controllers
            return Ok("Group updated");
         }
 
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(int id)
+        [HttpDelete("{groupId}")]
+        [Authorize(Policy = "RequireAdminRoleInGroup")]
+        public async Task<IActionResult> Delete(int groupId)
         {
-            await _groupService.DeleteGroup(id);
+            await _groupService.DeleteGroup(groupId);
             return Ok("Group deleted");
         }
 
@@ -62,6 +64,7 @@ namespace Message_Backend.Controllers
         }
 
         [HttpPut("{userId}/add-user-to-group")]
+        [Authorize(Policy = "RequireAdminRoleInGroup")]
         public async Task<ActionResult> AddUserToGroup
             ([FromRoute] int userId, [FromBody] UserGroupRoleRequest roleRequest)
         {
@@ -70,6 +73,7 @@ namespace Message_Backend.Controllers
         }
 
         [HttpDelete("{userId}/remove-user-from-group")]
+        [Authorize(Policy = "RequireAdminRoleInGroup")]
         public async Task<ActionResult> RemoveUserFromGroup([FromRoute] int userId, [FromQuery] int groupId)
         {
             await  _groupService.RemoveUserFromGroup(userId, groupId);
@@ -77,6 +81,7 @@ namespace Message_Backend.Controllers
         }
 
         [HttpPut("{userId}/update-group-role")]
+        [Authorize(Policy = "RequireAdminRoleInGroup")]
         public async Task<ActionResult> UpdateUserRole
             ([FromRoute] int userId,[FromBody] UserGroupRoleRequest request)
         {
