@@ -31,6 +31,7 @@ builder.Services.AddScoped<IFriendsService, FriendsService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 //Add authorization Services
 builder.Services.AddSingleton<IAuthorizationHandler,SameUserHandler>();
+builder.Services.AddScoped<IAuthorizationHandler,RequireAdminOrOwnerRoleHandler>();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
@@ -97,10 +98,12 @@ builder.Services
         };
     });
 
-builder.Services.AddAuthorization(options =>
-    options.AddPolicy("SameUser", policy =>policy.
-        Requirements
-        .Add(new SameUserRequirement())));
+builder.Services.AddAuthorizationBuilder()
+    .AddPolicy("SameUser", policy => policy.Requirements
+        .Add(new SameUserRequirement()))
+    .AddPolicy("RequireAdminRoleInGroup", policy => policy.Requirements
+        .Add(new AdminRoleRequirement()));
+    
 
 var app = builder.Build();
 
