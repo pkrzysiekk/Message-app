@@ -32,6 +32,8 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 //Add authorization Services
 builder.Services.AddSingleton<IAuthorizationHandler,SameUserHandler>();
 builder.Services.AddScoped<IAuthorizationHandler,RequireAdminOrOwnerRoleHandler>();
+builder.Services.AddScoped<IAuthorizationHandler,GroupMemberRequirementHandler>();
+
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
@@ -102,7 +104,9 @@ builder.Services.AddAuthorizationBuilder()
     .AddPolicy("SameUser", policy => policy.Requirements
         .Add(new SameUserRequirement()))
     .AddPolicy("RequireAdminRoleInGroup", policy => policy.Requirements
-        .Add(new AdminRoleRequirement()));
+        .Add(new AdminRoleRequirement()))
+    .AddPolicy("GroupMember", policy =>
+        policy.Requirements.Add(new GroupMemberRequirement()));
     
 
 var app = builder.Build();
