@@ -21,10 +21,11 @@ namespace Message_Backend.Controllers
            _groupService = groupService; 
         } 
 
-        [HttpGet("{id}")]
-        public async Task<ActionResult<GroupDto>> Get(int id)
+        [HttpGet("{groupId}")]
+        [Authorize(Policy = "GroupMember")]
+        public async Task<ActionResult<GroupDto>> Get(int groupId)
         {
-            var group = await _groupService.GetGroup(id);
+            var group = await _groupService.GetGroup(groupId);
             return Ok(group.ToDto());
         }
 
@@ -33,7 +34,7 @@ namespace Message_Backend.Controllers
         {
             var groupBo=request.GroupDto.ToBo();
             await _groupService.CreateGroup(groupBo,request.userId);
-            return  CreatedAtAction(nameof(Get), new { id = groupBo.Id }, groupBo.ToDto());
+            return  CreatedAtAction(nameof(Get), new { groupId = groupBo.Id }, groupBo.ToDto());
         }
 
         [HttpPut]
