@@ -21,8 +21,10 @@ public static class RequestBodyHelper
       return result;
    }
    
-   public static async Task<int?> GetValueFromGroupEndpoint(HttpContext context,string propertyName="groupId")
+   public static async Task<int?> GetGroupIdFromGroupEndpointRequest(HttpContext context)
    {
+      string propertyName = "groupId";
+      
       if (TryGetIntFromQueryOrRoute(context, propertyName, out var groupId))
          return groupId;
 

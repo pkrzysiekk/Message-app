@@ -29,12 +29,10 @@ namespace Message_Backend.Controllers
             return Ok(group.ToDto());
         }
 
-        [HttpPost("{userId}/create-group")]
-        [Authorize(Policy = "UserGroup")]
-        public async Task<ActionResult> Post([FromRoute] int userId,[FromBody] UserGroupRequest request)
+        [HttpPost]
+        [Authorize(Policy = "UserCreatesGroupForThemselves")]
+        public async Task<ActionResult> Post([FromBody] UserGroupRequest request)
         {
-            if(userId !=request.userId)
-                return BadRequest("userId does not match the request");
             var groupBo=request.GroupDto.ToBo();
             await _groupService.CreateGroup(groupBo,request.userId);
             return  CreatedAtAction(nameof(Get), new { groupId = groupBo.Id }, groupBo.ToDto());
