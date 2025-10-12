@@ -33,6 +33,7 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddSingleton<IAuthorizationHandler,SameUserHandler>();
 builder.Services.AddScoped<IAuthorizationHandler,RequireAdminOrOwnerRoleHandler>();
 builder.Services.AddScoped<IAuthorizationHandler,GroupMemberRequirementHandler>();
+builder.Services.AddSingleton<IAuthorizationHandler, UserCreatesGroupForThemselvesHandler>();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -106,7 +107,9 @@ builder.Services.AddAuthorizationBuilder()
     .AddPolicy("RequireAdminRoleInGroup", policy => policy.Requirements
         .Add(new AdminRoleRequirement()))
     .AddPolicy("GroupMember", policy =>
-        policy.Requirements.Add(new GroupMemberRequirement()));
+        policy.Requirements.Add(new GroupMemberRequirement()))
+    .AddPolicy("UserCreatesGroupForThemselves", policy =>
+        policy.Requirements.Add(new UserCreatesGroupForThemselves()));
     
 
 var app = builder.Build();
