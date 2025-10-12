@@ -21,11 +21,9 @@ public static class RequestBodyHelper
       return result;
    }
    
-   public static async Task<int?> GetGroupIdFromEndpoint(HttpContext context)
+   public static async Task<int?> GetValueFromGroupEndpoint(HttpContext context,string propertyName="groupId")
    {
-      const string propertyToFind = "groupId";
-
-      if (TryGetIntFromQueryOrRoute(context, propertyToFind, out var groupId))
+      if (TryGetIntFromQueryOrRoute(context, propertyName, out var groupId))
          return groupId;
 
       var bodyDtos = new Func<HttpContext, Task<int?>>[]

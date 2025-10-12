@@ -25,7 +25,7 @@ public class GroupMemberRequirementHandler : AuthorizationHandler<GroupMemberReq
         }
 
         int userId=int.Parse(callersId);
-        var groupId = await RequestBodyHelper.GetGroupIdFromEndpoint(httpContext);
+        var groupId = await RequestBodyHelper.GetValueFromGroupEndpoint(httpContext);
         if (groupId == null)
             return;
         var userRole=await _groupService.GetUserRoleInGroup(userId, groupId.Value);
