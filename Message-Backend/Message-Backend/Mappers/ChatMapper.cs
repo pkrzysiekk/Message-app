@@ -12,6 +12,7 @@ public static class ChatMapper
          Id = dto.Id,
          Name = dto.ChatName,
          GroupId = dto.GroupId,
+         ForRole = dto.ForRole,
       };
    }
 
@@ -22,6 +23,7 @@ public static class ChatMapper
          Id = chat.Id,
          ChatName = chat.Name,
          GroupId = chat.GroupId,
+         ForRole = chat.ForRole,
       };
    }
 }

@@ -40,10 +40,12 @@ public class Repository<T> :IRepository<T> where T: class, IEntity
 
     public async Task<T> Update(T item)
     {
-        _context.Attach(item);
-        _context.Entry(item).State = EntityState.Modified;
+        var itemToUpdate = await _dbSet.FindAsync(item.Id);
+        if (itemToUpdate == null)
+            throw new NotFoundException("Item not found");
+        _context.Entry(itemToUpdate).CurrentValues.SetValues(item);
         await SaveChanges();
-        return item;
+        return itemToUpdate;
     }
 
     public async Task Delete(int id)
