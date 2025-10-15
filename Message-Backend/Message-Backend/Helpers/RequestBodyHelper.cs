@@ -10,11 +10,18 @@ public static class RequestBodyHelper
       context.Request.EnableBuffering();
 
       context.Request.Body.Position = 0;
-
-      var result = await JsonSerializer.DeserializeAsync<T>(
-         context.Request.Body,
-         new JsonSerializerOptions { PropertyNameCaseInsensitive = true }
-      );
+      T? result;
+      try
+      {
+         result = await JsonSerializer.DeserializeAsync<T>(
+            context.Request.Body,
+            new JsonSerializerOptions { PropertyNameCaseInsensitive = true }
+         );
+      }
+      catch (JsonException)
+      {
+         return default;
+      }
 
       context.Request.Body.Position = 0;
 
@@ -30,8 +37,8 @@ public static class RequestBodyHelper
 
       var bodyDtos = new Func<HttpContext, Task<int?>>[]
       {
-         async ctx => (await RequestBodyHelper.ReadBodyAsync<UserGroupRoleRequest>(ctx))?.GroupId,
-         async ctx => (await RequestBodyHelper.ReadBodyAsync<GroupDto>(ctx))?.GroupId
+         async ctx => (await ReadBodyAsync<UserGroupRoleRequest>(ctx))?.GroupId,
+         async ctx => (await ReadBodyAsync<GroupDto>(ctx))?.GroupId
       };
 
       foreach (var readDto in bodyDtos)
@@ -55,5 +62,30 @@ public static class RequestBodyHelper
          return true;
 
       return false;
+   }
+
+   public static async Task<int?> GetGroupIdFromChatEndpointRequest(HttpContext context)
+   {
+      string property="groupId";
+      if(TryGetIntFromQueryOrRoute(context,property,out var groupId))
+         return groupId;
+      
+      var groupDto=await ReadBodyAsync<GroupDto>(context);
+      return groupDto?.GroupId;
+   }
+
+   public static async Task<int?> GetChatIdFromChatEndpointRequest(HttpContext context)
+   {
+      string property="chatId";
+      int chatId;
+      
+      if(context.Request.Query.TryGetValue(property,out var q) &&int.TryParse(q,out chatId))
+         return chatId;
+      if(context.GetRouteValue(property) is string r && int.TryParse(r,out chatId))
+         return chatId;
+      var chatDto=await ReadBodyAsync<ChatDto>(context);
+      if (chatDto != null)
+         return chatDto.Id;
+      return null;
    }
 }

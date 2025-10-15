@@ -2,12 +2,14 @@ using Message_Backend.Mappers;
 using Message_Backend.Models;
 using Message_Backend.Models.DTOs;
 using Message_Backend.Service;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Message_Backend.Controllers
 {
     [Route("api/[controller]")]
+    [Authorize]
     [ApiController]
     public class ChatController : ControllerBase
     {
@@ -17,22 +19,25 @@ namespace Message_Backend.Controllers
             _chatService = chatService;
         }
         
-        [HttpGet("{id}")]
-        public async Task<ActionResult<ChatDto>> Get([FromRoute] int id)
+        [HttpGet("{chatId}")]
+        [Authorize(Policy = "UserHasRequiredRoleInGroup")]
+        public async Task<ActionResult<ChatDto>> Get([FromRoute] int chatId)
         {
-            var chat = await _chatService.Get(id);
+            var chat = await _chatService.Get(chatId);
             return Ok(chat.ToDto());
         }
 
         [HttpPost]
+        //TODO: Implement custom auth handler
         public async Task<ActionResult> Post([FromBody] ChatDto chatDto)
         {
             var chat = chatDto.ToBo();
-            await _chatService.AddChatToGroup(chat);
-            return CreatedAtAction(nameof(Get), new { id = chat.Id }, chat.ToDto());
+             await _chatService.AddChatToGroup(chat);
+            return CreatedAtAction(nameof(Get), new { chatId = chat.Id }, chat.ToDto());
         }
 
         [HttpPut]
+        [Authorize(Policy = "UserHasRequiredRoleInGroup")]
         public async Task<ActionResult> Put([FromBody] ChatDto chatDto)
         {
             var chat = chatDto.ToBo();
@@ -41,14 +46,16 @@ namespace Message_Backend.Controllers
         }
 
         // DELETE api/<ChatController>/5
-        [HttpDelete("{id}")]
-        public async Task<ActionResult> Delete([FromRoute] int id)
+        [HttpDelete("{chatId}")]
+        [Authorize(Policy = "UserHasRequiredRoleInGroup")]
+        public async Task<ActionResult> Delete([FromRoute] int chatId)
         {
-            await _chatService.Delete(id);
+            await _chatService.Delete(chatId);
             return Ok();
         }
 
         [HttpGet("group/{groupId}")]
+        [Authorize(Policy = "GroupMember")]
         public async Task<ActionResult<IEnumerable<ChatDto>>> GetAllGroupChats([FromRoute] int groupId)
         {
             var chats =await  _chatService.GetAllGroupChats(groupId);
