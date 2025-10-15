@@ -3,7 +3,7 @@ using Message_Backend.Models.Enums;
 
 namespace Message_Backend.Models;
 
-public class Group
+public class Group : IEntity
 {
     public int Id { get; set; }
     public required string Name { get; set; }

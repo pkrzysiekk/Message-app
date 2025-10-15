@@ -50,7 +50,9 @@ public class GroupService :IGroupService
 
     public async Task<Group> GetGroup(int id)
     {
-        var group = await _groupRepository.GetById(id);
+        var group = await _groupRepository
+            .GetAll(q=>q.Include(g=>g.UserGroups))
+            .FirstOrDefaultAsync(g=>g.Id == id);
         return group ?? throw new NotFoundException("Group not found");
     }
 

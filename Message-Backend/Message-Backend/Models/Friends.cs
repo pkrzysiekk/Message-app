@@ -2,7 +2,7 @@ using Message_Backend.Models.Enums;
 
 namespace Message_Backend.Models;
 
-public class Friends
+public class Friends 
 {
     public int UserId { get; set; }
     public int FriendId { get; set; }

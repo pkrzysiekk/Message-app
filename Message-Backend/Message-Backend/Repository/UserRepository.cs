@@ -15,7 +15,6 @@ public class UserRepository : IUserRepository
     {
         _userManager = userManager;
         _context = context;
-        
     }
     
     public async Task Create(User item,string password)
