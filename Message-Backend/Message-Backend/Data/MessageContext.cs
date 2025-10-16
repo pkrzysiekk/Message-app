@@ -10,6 +10,7 @@ public class MessageContext :IdentityUserContext<User,int>
    public DbSet<User> AppUsers { get; set; }
    public DbSet<Avatar> UserAvatar { get; set; }
    public DbSet<Message> Messages { get; set; }
+   public DbSet<MessageContent> MessageContents { get; set; }
    public DbSet<Friends> Friends { get; set; }
    public DbSet<Group> Groups { get; set; }
    public DbSet<Chat> Chats { get; set; }
@@ -22,10 +23,12 @@ public class MessageContext :IdentityUserContext<User,int>
       
       modelBuilder.Entity<User>().ToTable("User");
       modelBuilder.Entity<Message>().ToTable("Message");
+      modelBuilder.Entity<MessageContent>().ToTable("MessageContent");
       modelBuilder.Entity<Friends>().ToTable("Friends");
       modelBuilder.Entity<Group>().ToTable("Group");
       modelBuilder.Entity<Chat>().ToTable("Chat");
       modelBuilder.Entity<UserGroup>().ToTable("UserGroup");
+    
       
       modelBuilder.Entity<UserGroup>()
          .HasKey(ug => new { ug.UserId, ug.GroupId });
