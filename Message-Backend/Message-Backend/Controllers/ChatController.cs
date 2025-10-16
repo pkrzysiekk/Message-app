@@ -28,7 +28,7 @@ namespace Message_Backend.Controllers
         }
 
         [HttpPost]
-        //TODO: Implement custom auth handler
+        [Authorize(Policy = "CanCreateChatWithProvidedRole")]
         public async Task<ActionResult> Post([FromBody] ChatDto chatDto)
         {
             var chat = chatDto.ToBo();
@@ -37,7 +37,7 @@ namespace Message_Backend.Controllers
         }
 
         [HttpPut]
-        [Authorize(Policy = "UserHasRequiredRoleInGroup")]
+        [Authorize(Policy = "CanCreateChatWithProvidedRole")]
         public async Task<ActionResult> Put([FromBody] ChatDto chatDto)
         {
             var chat = chatDto.ToBo();
