@@ -2,8 +2,9 @@ namespace Message_Backend.Models.Enums;
 
 public enum MessageStatus
 {
+    Pending,
     Sent,
     Failed,
-    Pending,
     Deleted,
+    Edited
 }
