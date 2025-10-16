@@ -7,8 +7,8 @@ namespace Message_Backend.Repository;
 
 public class Repository<T,TKey> :IRepository<T,TKey> where T: class, IEntity<TKey>
 {
-    private readonly MessageContext _context;
-    private readonly DbSet<T> _dbSet;
+    protected readonly MessageContext _context;
+    protected readonly DbSet<T> _dbSet;
 
     public Repository(MessageContext context)
     {
@@ -30,7 +30,7 @@ public class Repository<T,TKey> :IRepository<T,TKey> where T: class, IEntity<TKe
         return query;
     }
 
-    public virtual async Task<T?> GetById(int id)
+    public virtual async Task<T?> GetById(TKey id)
     {
         var item = await _dbSet.FindAsync(id);
         if (item == null)
@@ -48,7 +48,7 @@ public class Repository<T,TKey> :IRepository<T,TKey> where T: class, IEntity<TKe
         return itemToUpdate;
     }
 
-    public virtual async Task Delete(int id)
+    public virtual async Task Delete(TKey id)
     {
         var item = await _dbSet.FindAsync(id);
         if (item == null)
