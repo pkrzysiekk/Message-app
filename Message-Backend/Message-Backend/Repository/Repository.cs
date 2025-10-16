@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Message_Backend.Repository;
 
-public class Repository<T> :IRepository<T> where T: class, IEntity
+public class Repository<T,TKey> :IRepository<T,TKey> where T: class, IEntity<TKey>
 {
     private readonly MessageContext _context;
     private readonly DbSet<T> _dbSet;

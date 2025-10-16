@@ -2,7 +2,7 @@ using Message_Backend.Models.Enums;
 using Microsoft.EntityFrameworkCore;
 
 namespace Message_Backend.Models;
-public class Chat :IEntity
+public class Chat :IEntity<int>
 {
     public int Id { get; set; }
     public int GroupId {get; set;}

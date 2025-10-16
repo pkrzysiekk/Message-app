@@ -2,7 +2,7 @@ using Message_Backend.Models.Enums;
 
 namespace Message_Backend.Models;
 
-public class Message : IEntity
+public class Message : IEntity<int>
 {
     public int Id { get; set; }
     public int ChatId { get; set; }

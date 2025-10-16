@@ -9,10 +9,10 @@ namespace Message_Backend.Service;
 
 public class GroupService :IGroupService
 {
-    private readonly IRepository<Group> _groupRepository;
+    private readonly IRepository<Group,int> _groupRepository;
     private readonly IUserService _userService;
     public GroupService
-        (IRepository<Group> groupRepository, IUserService userService)
+        (IRepository<Group,int> groupRepository, IUserService userService)
     {
         _groupRepository = groupRepository;
         _userService = userService;

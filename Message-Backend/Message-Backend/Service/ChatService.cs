@@ -7,9 +7,9 @@ namespace Message_Backend.Service;
 
 public class ChatService : IChatService
 {
-    private readonly IRepository<Chat> _repository;
+    private readonly IRepository<Chat,int> _repository;
     private readonly IGroupService _groupService;
-    public ChatService(IRepository<Chat> repository, IGroupService groupService)
+    public ChatService(IRepository<Chat,int> repository, IGroupService groupService)
     {
         _repository = repository;
         _groupService = groupService;
