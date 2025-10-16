@@ -52,10 +52,16 @@ public class MessageContext :IdentityUserContext<User,int>
          .HasOne(f => f.User)
          .WithMany(u => u.Friends)
          .HasForeignKey(f => f.UserId);
-      
+
       modelBuilder.Entity<Avatar>()
          .HasOne(a => a.User)
          .WithOne(u => u.Avatar)
          .HasForeignKey<Avatar>(a => a.UserId);
+      
+      modelBuilder.Entity<Message>()
+         .HasOne(m=>m.Content)
+         .WithOne(c=>c.Message)
+         .HasForeignKey<MessageContent>(m=>m.MessageId)
+         .OnDelete(DeleteBehavior.Cascade);
    }
 }
