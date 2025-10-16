@@ -10,13 +10,11 @@ namespace Message_Backend.AuthHandlers;
 
 public class CanCreateChatWithProvidedRoleHandler : AuthorizationHandler<CanCreateChatWithProvidedRole>
 {
-    private readonly IChatService _chatService;
     private readonly IGroupService _groupService;
 
     public CanCreateChatWithProvidedRoleHandler
-        (IChatService chatService, IGroupService groupService)
+        (IGroupService groupService)
     {
-        _chatService = chatService;
         _groupService = groupService;
     }
     
