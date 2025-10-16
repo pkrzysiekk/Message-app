@@ -34,6 +34,7 @@ builder.Services.AddScoped<IAuthorizationHandler,RequireAdminOrOwnerRoleHandler>
 builder.Services.AddScoped<IAuthorizationHandler,GroupMemberRequirementHandler>();
 builder.Services.AddSingleton<IAuthorizationHandler, UserCreatesGroupForThemselvesHandler>();
 builder.Services.AddScoped<IAuthorizationHandler, UserHasRequiredRoleInGroupHandler>();
+builder.Services.AddScoped<IAuthorizationHandler, CanCreateChatWithProvidedRoleHandler>();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -111,7 +112,9 @@ builder.Services.AddAuthorizationBuilder()
     .AddPolicy("UserCreatesGroupForThemselves", policy =>
         policy.Requirements.Add(new UserCreatesGroupForThemselves()))
     .AddPolicy("UserHasRequiredRoleInGroup", policy =>
-        policy.Requirements.Add(new UserHasRequiredRoleInGroup()));
+        policy.Requirements.Add(new UserHasRequiredRoleInGroup()))
+    .AddPolicy("CanCreateChatWithProvidedRole", policy =>
+        policy.Requirements.Add(new CanCreateChatWithProvidedRole()));
     
 
 var app = builder.Build();
