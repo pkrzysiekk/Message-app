@@ -1,6 +1,7 @@
 using Message_Backend.Data;
 using Message_Backend.Exceptions;
 using Message_Backend.Models;
+using Message_Backend.Models.Enums;
 
 namespace Message_Backend.Repository;
 
@@ -21,7 +22,13 @@ public class MessageRepository :Repository<Message,long>
         if (item is null)
             throw new NotFoundException("item not found");
         item.Content = messageContent;
+        item.Status = MessageStatus.Edited;
         await SaveChanges();
         return messageContent;
+    }
+
+    public override Task<Message> Update(Message item)
+    {
+        throw new NotSupportedException("Use UpdateMessageContent instead");
     }
 }
