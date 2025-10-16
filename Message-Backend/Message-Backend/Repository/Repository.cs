@@ -15,14 +15,14 @@ public class Repository<T,TKey> :IRepository<T,TKey> where T: class, IEntity<TKe
         _context = context ?? throw new ArgumentNullException(nameof(context));
         _dbSet = _context.Set<T>(); 
     }
-    public async Task<T> Create(T item)
+    public virtual async Task<T> Create(T item)
     {
         await _context.AddAsync(item);
         await SaveChanges();
         return item;
     }        
 
-    public IQueryable<T> GetAll(Func<IQueryable<T>, IQueryable<T>>? include=null)
+    public virtual IQueryable<T> GetAll(Func<IQueryable<T>, IQueryable<T>>? include=null)
     {
         IQueryable<T> query = _dbSet;
         if (include != null)
@@ -30,7 +30,7 @@ public class Repository<T,TKey> :IRepository<T,TKey> where T: class, IEntity<TKe
         return query;
     }
 
-    public async Task<T?> GetById(int id)
+    public virtual async Task<T?> GetById(int id)
     {
         var item = await _dbSet.FindAsync(id);
         if (item == null)
@@ -38,7 +38,7 @@ public class Repository<T,TKey> :IRepository<T,TKey> where T: class, IEntity<TKe
         return item;
     }
 
-    public async Task<T> Update(T item)
+    public virtual async Task<T> Update(T item)
     {
         var itemToUpdate = await _dbSet.FindAsync(item.Id);
         if (itemToUpdate == null)
@@ -48,7 +48,7 @@ public class Repository<T,TKey> :IRepository<T,TKey> where T: class, IEntity<TKe
         return itemToUpdate;
     }
 
-    public async Task Delete(int id)
+    public virtual async Task Delete(int id)
     {
         var item = await _dbSet.FindAsync(id);
         if (item == null)
@@ -57,7 +57,7 @@ public class Repository<T,TKey> :IRepository<T,TKey> where T: class, IEntity<TKe
         await SaveChanges();
     }
 
-    public async Task SaveChanges()
+    public virtual async Task SaveChanges()
     {
         await _context.SaveChangesAsync();
     }
