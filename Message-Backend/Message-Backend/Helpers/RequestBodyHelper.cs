@@ -70,7 +70,13 @@ public static class RequestBodyHelper
       if(TryGetIntFromQueryOrRoute(context,property,out var groupId))
          return groupId;
       
-      var groupDto=await ReadBodyAsync<GroupDto>(context);
+      GroupDto? groupDto=await ReadBodyAsync<GroupDto>(context);
+      ChatDto? chatDto;
+      if (groupDto == null)
+      {
+         chatDto = await ReadBodyAsync<ChatDto>(context);
+         return chatDto?.GroupId;
+      }
       return groupDto?.GroupId;
    }
 
