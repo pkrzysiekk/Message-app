@@ -6,4 +6,6 @@ public interface IMessageRepository : IRepository<Message, long>
 {
     public Task<MessageContent> AddMessageContent(MessageContent messageContent);
     public Task<MessageContent> UpdateMessageContent(MessageContent messageContent);
+    public Task<Message> AddMessage(Message message, MessageContent content);
+
 }
