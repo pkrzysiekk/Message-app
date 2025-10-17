@@ -32,10 +32,7 @@ public class Repository<T,TKey> :IRepository<T,TKey> where T: class, IEntity<TKe
 
     public virtual async Task<T?> GetById(TKey id)
     {
-        var item = await _dbSet.FindAsync(id);
-        if (item == null)
-            throw new NotFoundException("Item not found");
-        return item;
+        return  await _dbSet.FindAsync(id);
     }
 
     public virtual async Task<T> Update(T item)
