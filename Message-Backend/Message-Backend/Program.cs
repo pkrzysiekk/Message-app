@@ -20,6 +20,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddScoped(typeof(IRepository<,>),typeof(Repository<,>));
+builder.Services.AddScoped(typeof(IBaseService<,>),typeof(BaseService<,>));
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IGroupService, GroupService>();
@@ -28,6 +29,8 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IFriendsRepository, FriendsRepository>();
 builder.Services.AddScoped<IFriendsService, FriendsService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IMessageService, MessageService>();
+builder.Services.AddScoped<IMessageRepository, MessageRepository>();
 //Add authorization Services
 builder.Services.AddSingleton<IAuthorizationHandler,SameUserHandler>();
 builder.Services.AddScoped<IAuthorizationHandler,RequireAdminOrOwnerRoleHandler>();
@@ -36,7 +39,12 @@ builder.Services.AddSingleton<IAuthorizationHandler, UserCreatesGroupForThemselv
 builder.Services.AddScoped<IAuthorizationHandler, UserHasRequiredRoleInGroupHandler>();
 builder.Services.AddScoped<IAuthorizationHandler, CanCreateChatWithProvidedRoleHandler>();
 
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.ReferenceHandler 
+            = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
+    });
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
