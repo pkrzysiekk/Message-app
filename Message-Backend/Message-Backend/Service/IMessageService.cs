@@ -5,5 +5,6 @@ namespace Message_Backend.Service;
 public interface IMessageService : IBaseService<Message,long>
 {
     public Task<IEnumerable<Message>> GetChatMessages(int chatId,int page, int pageSize);
-    public Task Add(Message message, MessageContent content);
+     public Task Add(Message message, MessageContent content);
+    public Task Update(long messageId, MessageContent content);
 }

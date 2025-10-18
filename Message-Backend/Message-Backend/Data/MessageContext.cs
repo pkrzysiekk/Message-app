@@ -64,7 +64,7 @@ public class MessageContext :IdentityUserContext<User,int>
       modelBuilder.Entity<Message>()
          .HasOne(m=>m.Content)
          .WithOne(c=>c.Message)
-         .HasForeignKey<MessageContent>(m=>m.MessageId)
+         .HasForeignKey<Message>(m=>m.MessageContentId)
          .OnDelete(DeleteBehavior.Cascade);
    }
 }

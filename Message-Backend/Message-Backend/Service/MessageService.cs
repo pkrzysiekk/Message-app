@@ -39,17 +39,20 @@ public class MessageService : BaseService<Message,long>,IMessageService
     
     public async Task Add(Message message,MessageContent content)
     {
-        await _messageRepository.AddMessage(message,content);
+        message.SentAt = DateTime.UtcNow;
+        message.Content=content;
+        await _messageRepository.Create(message);
     }
-    
-    public async Task AddMessageContent(MessageContent messageContent)
+
+    public async Task Update(long messageId, MessageContent content)
     {
-        await _messageRepository.AddMessageContent(messageContent);
+        var message = await _messageRepository
+            .GetAll(q=>q.Include(m=>m.Content))
+            .FirstOrDefaultAsync(m=>m.Id == messageId);
+        if (message is null)
+            throw new NotFoundException("Message not found");
+        message.Content.Data=content.Data;
+        await _messageRepository.Update(message);
     }
-    
-    public async Task UpdateMessageContent(MessageContent messageContent)
-    {
-       var updated=await _messageRepository.UpdateMessageContent(messageContent);
-    }
-    
+
 }
