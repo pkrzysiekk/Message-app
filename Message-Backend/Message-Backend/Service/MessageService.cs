@@ -1,5 +1,6 @@
 using Message_Backend.Exceptions;
 using Message_Backend.Models;
+using Message_Backend.Models.Enums;
 using Message_Backend.Repository;
 using Microsoft.EntityFrameworkCore;
 
@@ -7,12 +8,7 @@ namespace Message_Backend.Service;
 
 public class MessageService : BaseService<Message,long>,IMessageService
 {
-    private readonly IMessageRepository _messageRepository;
-    
-    public MessageService(IMessageRepository repository) : base(repository)
-    {
-        _messageRepository = repository;
-    }
+    public MessageService(IRepository<Message,long> repository) : base(repository) {}
 
     public async Task<IEnumerable<Message>> GetChatMessages(int chatId, int page, int pageSize)
     {
@@ -29,7 +25,7 @@ public class MessageService : BaseService<Message,long>,IMessageService
 
     public override async Task<Message> GetById(long id)
     {
-        var messageToGet = await _messageRepository.GetAll()
+        var messageToGet = await _repository.GetAll()
             .Include(m => m.Content)
             .FirstOrDefaultAsync(m => m.Id == id);
         if (messageToGet is null)
@@ -41,18 +37,24 @@ public class MessageService : BaseService<Message,long>,IMessageService
     {
         message.SentAt = DateTime.UtcNow;
         message.Content=content;
-        await _messageRepository.Create(message);
+        await _repository.Create(message);
     }
 
     public async Task Update(long messageId, MessageContent content)
     {
-        var message = await _messageRepository
+        var message = await _repository
             .GetAll(q=>q.Include(m=>m.Content))
             .FirstOrDefaultAsync(m=>m.Id == messageId);
         if (message is null)
             throw new NotFoundException("Message not found");
         message.Content.Data=content.Data;
-        await _messageRepository.Update(message);
+        await _repository.Update(message);
     }
 
+    public override async Task Delete(long id)
+    {
+        var message = await GetById(id);
+        message.Status = MessageStatus.Deleted;
+        await _repository.Update(message);
+    }
 }

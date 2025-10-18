@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Message_Backend.Repository;
 
-public class MessageRepository :Repository<Message,long>, IMessageRepository
+public class MessageRepository :Repository<Message,long> 
 {
     public MessageRepository(MessageContext context) : base(context) {}
 }
