@@ -1,5 +1,6 @@
 using System.Text.Json;
 using Message_Backend.Models.DTOs;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Message_Backend.Helpers;
 
@@ -94,4 +95,10 @@ public static class RequestBodyHelper
          return chatDto.Id;
       return null;
    }
+
+   public static HttpContext? GetHttpContext(AuthorizationHandlerContext context)
+   {
+      return context.Resource is not HttpContext httpContext ? null : httpContext;
+   }
+   
 }
