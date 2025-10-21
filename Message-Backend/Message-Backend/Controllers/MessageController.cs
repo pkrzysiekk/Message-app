@@ -3,12 +3,14 @@ using Message_Backend.Models;
 using Message_Backend.Models.DTOs;
 using Message_Backend.Repository;
 using Message_Backend.Service;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Message_Backend.Controllers
 {
     [Route("api/[controller]")]
+    [Authorize]
     [ApiController]
     public class MessageController : ControllerBase
     {
@@ -28,6 +30,7 @@ namespace Message_Backend.Controllers
 
         // POST api/<MessageController>
         [HttpPost]
+        [Authorize(Policy = "UserIsSender")]
         public async Task<ActionResult> Post([FromBody] MessageDto messageDto)
         {
             var message = messageDto.ToBo();

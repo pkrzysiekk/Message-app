@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using UserIsSender = Message_Backend.AuthRequirements.UserIsSender;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -37,6 +38,7 @@ builder.Services.AddScoped<IAuthorizationHandler,GroupMemberRequirementHandler>(
 builder.Services.AddSingleton<IAuthorizationHandler, UserCreatesGroupForThemselvesHandler>();
 builder.Services.AddScoped<IAuthorizationHandler, UserHasRequiredRoleInGroupHandler>();
 builder.Services.AddScoped<IAuthorizationHandler, CanCreateChatWithProvidedRoleHandler>();
+builder.Services.AddScoped<IAuthorizationHandler, Message_Backend.AuthHandlers.UserIsSenderHandler>();
 
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
@@ -121,7 +123,10 @@ builder.Services.AddAuthorizationBuilder()
     .AddPolicy("UserHasRequiredRoleInGroup", policy =>
         policy.Requirements.Add(new UserHasRequiredRoleInGroup()))
     .AddPolicy("CanCreateChatWithProvidedRole", policy =>
-        policy.Requirements.Add(new CanCreateChatWithProvidedRole()));
+        policy.Requirements.Add(new CanCreateChatWithProvidedRole()))
+    .AddPolicy("UserIsSender", policy =>
+        policy.Requirements.Add(new UserIsSender()));
+
     
 
 var app = builder.Build();
