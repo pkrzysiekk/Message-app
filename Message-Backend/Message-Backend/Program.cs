@@ -38,7 +38,9 @@ builder.Services.AddScoped<IAuthorizationHandler,GroupMemberRequirementHandler>(
 builder.Services.AddSingleton<IAuthorizationHandler, UserCreatesGroupForThemselvesHandler>();
 builder.Services.AddScoped<IAuthorizationHandler, UserHasRequiredRoleInGroupHandler>();
 builder.Services.AddScoped<IAuthorizationHandler, CanCreateChatWithProvidedRoleHandler>();
-builder.Services.AddScoped<IAuthorizationHandler, Message_Backend.AuthHandlers.UserIsSenderHandler>();
+builder.Services.AddScoped<IAuthorizationHandler,UserIsSenderHandler>();
+builder.Services.AddScoped<IAuthorizationHandler, UserHasRequiredChatRoleHandler>();
+
 
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
@@ -125,9 +127,9 @@ builder.Services.AddAuthorizationBuilder()
     .AddPolicy("CanCreateChatWithProvidedRole", policy =>
         policy.Requirements.Add(new CanCreateChatWithProvidedRole()))
     .AddPolicy("UserIsSender", policy =>
-        policy.Requirements.Add(new UserIsSender()));
-
-    
+        policy.Requirements.Add(new UserIsSender()))
+    .AddPolicy("UserHasRequiredChatRole", policy =>
+        policy.Requirements.Add(new UserHasRequiredChatRole()));
 
 var app = builder.Build();
 

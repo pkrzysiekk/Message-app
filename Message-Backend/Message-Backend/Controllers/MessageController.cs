@@ -31,6 +31,7 @@ namespace Message_Backend.Controllers
         // POST api/<MessageController>
         [HttpPost]
         [Authorize(Policy = "UserIsSender")]
+        [Authorize(Policy = "UserHasRequiredChatRole")]
         public async Task<ActionResult> Post([FromBody] MessageDto messageDto)
         {
             var message = messageDto.ToBo();
