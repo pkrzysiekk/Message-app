@@ -47,6 +47,8 @@ namespace Message_Backend.Controllers
 
         // PUT api/<MessageController>/5
         [HttpPut("{id}")]
+        [Authorize(Policy = "UserIsSender")]
+        [Authorize(Policy = "UserHasRequiredChatRole")]
         public async Task<ActionResult> 
             Put([FromRoute] long id,[FromBody] MessageDto messageDto)
         {
