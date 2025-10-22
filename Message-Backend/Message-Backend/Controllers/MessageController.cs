@@ -30,7 +30,6 @@ namespace Message_Backend.Controllers
 
         // POST api/<MessageController>
         [HttpPost]
-        [Authorize(Policy = "UserIsSender")]
         [Authorize(Policy = "UserHasRequiredChatRole")]
         public async Task<ActionResult> Post([FromBody] MessageDto messageDto)
         {
@@ -46,25 +45,25 @@ namespace Message_Backend.Controllers
         }
 
         // PUT api/<MessageController>/5
-        [HttpPut("{id}")]
+        [HttpPut("{messageId}")]
         [Authorize(Policy = "UserIsSender")]
-        [Authorize(Policy = "UserHasRequiredChatRole")]
         public async Task<ActionResult> 
-            Put([FromRoute] long id,[FromBody] MessageDto messageDto)
+            Put([FromRoute] long messageId,[FromBody] MessageDto messageDto)
         {
             MessageContent messageContent = new MessageContent()
             {
                 Data = messageDto.Content
             };
-            await _messageService.Update(id,messageContent);
+            await _messageService.Update(messageId,messageContent);
             return NoContent();
         }
 
         // DELETE api/<MessageController>/5
-        [HttpDelete("{id}")]
-        public async Task<ActionResult> Delete([FromRoute] long id)
+        [HttpDelete("{messageId}")]
+        [Authorize(Policy = "UserCanDelete")]
+        public async Task<ActionResult> Delete([FromRoute] long messageId)
         {
-            await _messageService.Delete(id);
+            await _messageService.Delete(messageId);
             return NoContent();
         }
     }

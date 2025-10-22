@@ -40,6 +40,7 @@ builder.Services.AddScoped<IAuthorizationHandler, UserHasRequiredRoleInGroupHand
 builder.Services.AddScoped<IAuthorizationHandler, CanCreateChatWithProvidedRoleHandler>();
 builder.Services.AddScoped<IAuthorizationHandler,UserIsSenderHandler>();
 builder.Services.AddScoped<IAuthorizationHandler, UserHasRequiredChatRoleHandler>();
+builder.Services.AddScoped<IAuthorizationHandler, UserCanDeleteMessageHandler>();
 
 
 builder.Services.AddControllers()
@@ -129,7 +130,9 @@ builder.Services.AddAuthorizationBuilder()
     .AddPolicy("UserIsSender", policy =>
         policy.Requirements.Add(new UserIsSender()))
     .AddPolicy("UserHasRequiredChatRole", policy =>
-        policy.Requirements.Add(new UserHasRequiredChatRole()));
+        policy.Requirements.Add(new UserHasRequiredChatRole()))
+    .AddPolicy("UserCanDelete", policy =>
+        policy.Requirements.Add(new UserCanDeleteMessage()));
 
 var app = builder.Build();
 

@@ -21,28 +21,30 @@ public class UserHasRequiredChatRoleHandler : AuthorizationHandler<UserHasRequir
         _groupService = groupService;
         _chatService = chatService;
     }
-    
-    protected override async Task HandleRequirementAsync(AuthorizationHandlerContext context, UserHasRequiredChatRole requirement)
+
+    protected override async Task HandleRequirementAsync(AuthorizationHandlerContext context,
+        UserHasRequiredChatRole requirement)
     {
         var callersId = context.User
             .FindFirstValue(ClaimTypes.NameIdentifier);
-        var httpContext=RequestBodyHelper.GetHttpContext(context);
-        
+        var httpContext = RequestBodyHelper.GetHttpContext(context);
+
         if (callersId is null || httpContext is null)
         {
             context.Fail();
             return;
         }
-        var messageDto= await RequestBodyHelper.ReadBodyAsync<MessageDto>(httpContext);
+
+        var messageDto = await RequestBodyHelper.ReadBodyAsync<MessageDto>(httpContext);
         if (messageDto is null)
         {
             context.Fail();
             return;
         }
-        
+
         GroupRole? userRoleInGroup;
         Chat fetchedChat;
-        
+
         try
         {
             fetchedChat = await _chatService.Get(messageDto.ChatId);
@@ -54,10 +56,12 @@ public class UserHasRequiredChatRoleHandler : AuthorizationHandler<UserHasRequir
             context.Fail();
             return;
         }
-        
-        if (userRoleInGroup is null ||
-            userRoleInGroup < fetchedChat.ForRole || 
-            Int32.Parse(callersId) != messageDto.SenderId)
+
+        bool userHasNotRequiredChatRole = userRoleInGroup is null ||
+                                          userRoleInGroup < fetchedChat.ForRole;
+        bool userIsNotSender = int.Parse(callersId) != messageDto.SenderId;
+
+        if (userHasNotRequiredChatRole || userIsNotSender)
         {
             context.Fail();
             return;
