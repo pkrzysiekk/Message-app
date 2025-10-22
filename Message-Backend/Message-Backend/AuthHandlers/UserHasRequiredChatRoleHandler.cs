@@ -1,9 +1,12 @@
 using System.Security.Claims;
 using Message_Backend.AuthRequirements;
 using Message_Backend.Helpers;
+using Message_Backend.Models;
 using Message_Backend.Models.DTOs;
+using Message_Backend.Models.Enums;
 using Message_Backend.Service;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.VisualBasic.CompilerServices;
 
 namespace Message_Backend.AuthHandlers;
 
@@ -36,12 +39,25 @@ public class UserHasRequiredChatRoleHandler : AuthorizationHandler<UserHasRequir
             context.Fail();
             return;
         }
-
-        var fetchedChat = await _chatService.Get(messageDto.ChatId);
-        var userRoleInGroup = await _groupService
-            .GetUserRoleInGroup(Int32.Parse(callersId),fetchedChat.GroupId);
         
-        if (userRoleInGroup is null || userRoleInGroup < fetchedChat.ForRole)
+        GroupRole? userRoleInGroup;
+        Chat fetchedChat;
+        
+        try
+        {
+            fetchedChat = await _chatService.Get(messageDto.ChatId);
+            userRoleInGroup = await _groupService
+                .GetUserRoleInGroup(Int32.Parse(callersId), fetchedChat.GroupId);
+        }
+        catch
+        {
+            context.Fail();
+            return;
+        }
+        
+        if (userRoleInGroup is null ||
+            userRoleInGroup < fetchedChat.ForRole || 
+            Int32.Parse(callersId) != messageDto.SenderId)
         {
             context.Fail();
             return;
