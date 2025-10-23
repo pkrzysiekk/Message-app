@@ -21,10 +21,11 @@ namespace Message_Backend.Controllers
         }
 
         // GET api/<MessageController>/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult> Get(long id)
+        [HttpGet("{messageId}")]
+        [Authorize(Policy = "CanReadMessage")]
+        public async Task<ActionResult> Get(long messageId)
         {
-            var message = await _messageService.GetById(id);
+            var message = await _messageService.GetById(messageId);
             return Ok(message.ToDto());
         }
 
