@@ -5,7 +5,6 @@ using Message_Backend.Data;
 using Message_Backend.Exceptions;
 using Message_Backend.Helpers;
 using Message_Backend.Models;
-using Message_Backend.Models.RSA;
 using Message_Backend.Repository;
 using Message_Backend.Service;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -104,12 +103,11 @@ builder.Services
     })
     .AddJwtBearer(x =>
     {
-        var jwtOptions = RsaHelper.LoadJwtOptions();
         x.RequireHttpsMetadata = false;
         x.SaveToken = true;
         x.TokenValidationParameters = new TokenValidationParameters
         {
-            IssuerSigningKey = new RsaSecurityKey(RsaHelper.LoadRsaKey(jwtOptions.PublicKeyLocation)),
+            IssuerSigningKey = new RsaSecurityKey(RsaHelper.PublicKey),
             ValidateIssuer = false,
             ValidateAudience = false
         };

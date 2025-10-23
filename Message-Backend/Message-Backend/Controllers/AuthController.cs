@@ -15,7 +15,7 @@ namespace Message_Backend.Controllers
         public AuthController(IAuthService authService)
         {
             _authService = authService;
-            _jwtOptions=RsaHelper.LoadJwtOptions();
+            _jwtOptions=RsaHelper.JwtOptions;
         }
         
         [HttpPost("/auth")]

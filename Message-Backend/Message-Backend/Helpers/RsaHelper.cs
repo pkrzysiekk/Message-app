@@ -1,11 +1,21 @@
 using System.Security.Cryptography;
 using Message_Backend.Models.RSA;
+using Microsoft.AspNetCore.Http.Json;
 
 namespace Message_Backend.Helpers;
 
 public static class RsaHelper
 {
-    public static RSA LoadRsaKey(string rsaKeyPath)
+    public static JwtOptions JwtOptions;
+    public static RSA PrivateKey;
+    public static RSA PublicKey;
+    static RsaHelper()
+    {
+        JwtOptions = LoadJwtOptions();
+        PrivateKey = LoadRsaKey(JwtOptions.PrivateKeyLocation);
+        PublicKey = LoadRsaKey(JwtOptions.PublicKeyLocation);
+    }
+    private static RSA LoadRsaKey(string rsaKeyPath)
     {
         var rsa = RSA.Create();
         var path = Path.Combine(Directory.GetCurrentDirectory(), rsaKeyPath);
@@ -16,7 +26,7 @@ public static class RsaHelper
         return rsa;
     }
 
-    public static JwtOptions LoadJwtOptions()
+    private static JwtOptions LoadJwtOptions()
     {
         var configuration = new ConfigurationBuilder()
             .SetBasePath(Directory.GetCurrentDirectory())

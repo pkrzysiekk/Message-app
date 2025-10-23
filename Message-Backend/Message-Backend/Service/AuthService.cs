@@ -23,7 +23,7 @@ public class AuthService: IAuthService
     public async Task<string> GenerateToken(JwtOptions jwtOptions,string username)
     {
         var handler = new JwtSecurityTokenHandler();
-        var rsa=RsaHelper.LoadRsaKey(jwtOptions.PrivateKeyLocation);
+        var rsa=RsaHelper.PrivateKey;
         var user= await _userManager.FindByNameAsync(username);
         
         if(user is null)
