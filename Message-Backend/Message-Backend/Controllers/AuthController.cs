@@ -21,11 +21,10 @@ namespace Message_Backend.Controllers
         [HttpPost("/auth")]
         public async Task<ActionResult<string>> Post([FromBody] UserAuthorizationRequest request)
         { 
-            var user = request.UserData.ToBo();
-            bool authenticationResult = await _authService.ValidateUserCredentials(user, request.Password);
+            bool authenticationResult = await _authService.ValidateUserCredentials(request.Username, request.Password);
             if (!authenticationResult)
                 return Unauthorized();
-            var token = _authService.GenerateToken(_jwtOptions,user);
+            var token = await _authService.GenerateToken(_jwtOptions,request.Username);
             return Ok(token);
         }
     }

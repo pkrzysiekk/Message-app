@@ -20,10 +20,14 @@ public class AuthService: IAuthService
     {
        _userManager = userManager;
     }
-    public string GenerateToken(JwtOptions jwtOptions,User user)
+    public async Task<string> GenerateToken(JwtOptions jwtOptions,string username)
     {
         var handler = new JwtSecurityTokenHandler();
         var rsa=RsaHelper.LoadRsaKey(jwtOptions.PrivateKeyLocation);
+        var user= await _userManager.FindByNameAsync(username);
+        
+        if(user is null)
+            throw new NotFoundException("User not found");
         
         var credentials = new SigningCredentials(
             new RsaSecurityKey(rsa),
@@ -49,9 +53,9 @@ public class AuthService: IAuthService
         return claims;
     }
 
-    public async Task<bool> ValidateUserCredentials(User user, string password)
+    public async Task<bool> ValidateUserCredentials(string username, string password)
     {
-        var userToCheck = await _userManager.FindByIdAsync(user.Id.ToString());
+        var userToCheck = await _userManager.FindByNameAsync(username);
         if (userToCheck == null)
             throw new NotFoundException("User not found");
         return await _userManager.CheckPasswordAsync(userToCheck,password);
