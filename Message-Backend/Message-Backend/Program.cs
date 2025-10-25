@@ -42,7 +42,6 @@ builder.Services.AddScoped<IAuthorizationHandler, UserHasRequiredChatRoleHandler
 builder.Services.AddScoped<IAuthorizationHandler, UserCanDeleteMessageHandler>();
 builder.Services.AddScoped<IAuthorizationHandler,CanReadMessageHandler>();
 
-
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
     {
@@ -147,8 +146,10 @@ if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
     app.UseSwagger();
-    app.UseSwaggerUI(); 
+    app.UseSwaggerUI();
+
 }
+
 //Define Error handling middleware
 app.UseExceptionHandler(errorApp =>
 {
