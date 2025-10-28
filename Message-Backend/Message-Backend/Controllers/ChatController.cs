@@ -62,6 +62,14 @@ namespace Message_Backend.Controllers
             var chatsDto=chats.Select(x=>x.ToDto()).ToList();
             return Ok(chatsDto);
         }
+
+        [HttpGet("chat/{userId}")]
+        //For Development Only
+        public async Task<ActionResult<IEnumerable<ChatDto>>> GetAllUserChats([FromRoute] int userId)
+        {
+            var userChats=await _chatService.GetUserChats(userId);
+            return Ok(userChats.Select(x=>x.ToDto()).ToList());
+        }
         
     }
 }

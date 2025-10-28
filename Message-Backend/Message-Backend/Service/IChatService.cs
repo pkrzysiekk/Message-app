@@ -10,4 +10,5 @@ public interface IChatService
    public Task<Chat> Update(Chat chat);
    public Task Delete(int id);
    public Task AddChatToGroup(Chat chat);
+   public Task<IEnumerable<Chat>> GetUserChats(int userId);
 }

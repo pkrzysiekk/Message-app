@@ -9,10 +9,13 @@ public class ChatService : IChatService
 {
     private readonly IRepository<Chat,int> _repository;
     private readonly IGroupService _groupService;
-    public ChatService(IRepository<Chat,int> repository, IGroupService groupService)
+    private readonly IUserService _userService;
+    public ChatService
+        (IRepository<Chat,int> repository, IGroupService groupService,IUserService userService)
     {
         _repository = repository;
         _groupService = groupService;
+        _userService = userService;
     }
     
     public async Task<Chat> Get(int id)
@@ -54,4 +57,14 @@ public class ChatService : IChatService
         await Create(chat);
     }
 
+    public async Task<IEnumerable<Chat>> GetUserChats(int userId)
+    {
+        var user = await _userService.Get(userId);
+
+        var userChats = await _repository.GetAll(q => q.Include(c => c.Group)
+                .ThenInclude(g => g.UserGroups))
+            .Where(c => c.Group.UserGroups.Any(ug => ug.UserId == userId && ug.Role >= c.ForRole))
+            .ToListAsync();
+        return userChats;
+    }
 }
