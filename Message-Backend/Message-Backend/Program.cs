@@ -79,6 +79,7 @@ builder.Services.AddSwaggerGen(c =>
     };
 
     c.AddSecurityRequirement(securityRequirement);
+    c.AddSignalRSwaggerGen();
 });
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
