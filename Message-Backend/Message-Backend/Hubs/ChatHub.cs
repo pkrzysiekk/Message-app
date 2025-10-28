@@ -1,3 +1,4 @@
+using Message_Backend.Hubs.Contracts;
 using Message_Backend.Mappers;
 using Message_Backend.Models.DTOs;
 using Message_Backend.Service;
@@ -6,7 +7,7 @@ using SignalRSwaggerGen.Attributes;
 
 namespace Message_Backend.Hubs;
 [SignalRHub]
-public class ChatHub :Hub
+public class ChatHub :Hub<IChatClient>
 {
     private readonly IMessageService _messageService;
    
@@ -15,10 +16,11 @@ public class ChatHub :Hub
         _messageService = messageService;
     }
     
-    public async Task SendMessage(MessageDto message)
+    public async Task SendMessageInChat(MessageDto message)
     {
-        await Clients.All.SendAsync("ReceiveMessage", message);
         var messageBo = message.ToBo();
         await _messageService.Add(messageBo);
+        
+        await Clients.Group(message.ChatId.ToString()).ReceiveMessage(messageBo.ToDto());
     }
 }
