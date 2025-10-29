@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Message_Backend.Controllers
 {
+    [Route("api/[controller]")]
+
     public class AuthController : Controller
     {
         private readonly IAuthService _authService;
@@ -18,7 +20,7 @@ namespace Message_Backend.Controllers
             _jwtOptions=RsaHelper.JwtOptions;
         }
         
-        [HttpPost("/auth")]
+        [HttpPost]
         public async Task<ActionResult<string>> Post([FromBody] UserAuthorizationRequest request)
         { 
             bool authenticationResult = await _authService.ValidateUserCredentials(request.Username, request.Password);
