@@ -4,6 +4,7 @@ using Message_Backend.AuthRequirements;
 using Message_Backend.Data;
 using Message_Backend.Exceptions;
 using Message_Backend.Helpers;
+using Message_Backend.Hubs;
 using Message_Backend.Models;
 using Message_Backend.Repository;
 using Message_Backend.Service;
@@ -41,7 +42,18 @@ builder.Services.AddScoped<IAuthorizationHandler,UserIsSenderHandler>();
 builder.Services.AddScoped<IAuthorizationHandler, UserHasRequiredChatRoleHandler>();
 builder.Services.AddScoped<IAuthorizationHandler, UserCanDeleteMessageHandler>();
 builder.Services.AddScoped<IAuthorizationHandler,CanReadMessageHandler>();
-
+builder.Services.AddSignalR();
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(
+        builder =>
+        {
+            builder.WithOrigins("https:localhost:3000")
+                .AllowAnyHeader()
+                .WithMethods("GET", "POST")
+                .AllowCredentials();
+        });
+});
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
     {
@@ -142,6 +154,7 @@ using (var scope = app.Services.CreateScope())
     var messageContext = scope.ServiceProvider.GetRequiredService<MessageContext>();
     messageContext.Database.Migrate();
 }
+app.MapHub<ChatHub>("/ChatHub");
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
