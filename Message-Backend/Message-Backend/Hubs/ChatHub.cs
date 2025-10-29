@@ -11,12 +11,14 @@ public class ChatHub :Hub<IChatClient>
 {
     private readonly IMessageService _messageService;
     private readonly IChatService _chatService;
+    private readonly IUserService _userService;
    
     public ChatHub
-        (IMessageService messageService, IChatService chatService)
+        (IMessageService messageService, IChatService chatService, IUserService userService)
     {
         _messageService = messageService;
         _chatService = chatService;
+        _userService = userService;
     }
 
     public override async Task OnConnectedAsync()
@@ -31,9 +33,21 @@ public class ChatHub :Hub<IChatClient>
         {
              await Groups.AddToGroupAsync(Context.ConnectionId, userChat.Id.ToString());
         }
+        
         await base.OnConnectedAsync();
+        await _userService.ChangeOnlineStatus(userId, true); 
     }
-    
+
+    public override async Task OnDisconnectedAsync(Exception? exception)
+    {
+        var callersId = Context.User.Identity.Name;
+        if (callersId is null)
+            return;
+        await base.OnDisconnectedAsync(exception);
+        var userId = Int32.Parse(callersId);
+        await _userService.ChangeOnlineStatus(userId, false);
+    }
+
     public async Task SendMessageInChat(MessageDto message)
     {
         var messageBo = message.ToBo();
