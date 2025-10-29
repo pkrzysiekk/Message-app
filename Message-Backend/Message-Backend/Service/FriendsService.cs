@@ -26,8 +26,8 @@ public class FriendsService :IFriendsService
         if (alreadyFriends)
             throw new EntityAlreadyExistsException("Already Friends");
         
-        var user = await _userService.Get(userId);
-        var friend = await _userService.Get(friendId);
+        var user = await _userService.GetById(userId);
+        var friend = await _userService.GetById(friendId);
         var invite = new Friends()
         {
             UserId = userId,

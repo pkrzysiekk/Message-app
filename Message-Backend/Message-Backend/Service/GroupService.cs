@@ -59,7 +59,7 @@ public class GroupService :IGroupService
     public async Task AddUserToGroup(int userId, int groupId,GroupRole role)
     {
        var groupToAddUserTo = await GetGroup(groupId);
-       var userToAdd = await _userService.Get(userId);
+       var userToAdd = await _userService.GetById(userId);
        bool isAlreadyAdded = groupToAddUserTo.UserGroups.Any(ug => ug.UserId == userId);
        if (isAlreadyAdded)
            throw new KeyNotFoundException("User with this group already exists");

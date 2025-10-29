@@ -16,7 +16,7 @@ public class UserService : IUserService
        _userRepository = userRepository; 
     }
     
-    public async Task<User> Get(int id)
+    public async Task<User> GetById(int id)
     {
         var user = await _userRepository.GetById(id);
         return user ?? throw new NotFoundException("User not found");
@@ -59,6 +59,13 @@ public class UserService : IUserService
     public async Task ChangeEmail(int id, string email)
     {
         await  _userRepository.ChangeEmail(id, email);
+    }
+
+    public async Task ChangeOnlineStatus(int id,bool isOnline)
+    {
+        var user = await GetById(id);
+        user.IsOnline = isOnline;
+        await Update(user);
     }
 
     public async Task SetAvatar(int id, IFormFile avatarContent)

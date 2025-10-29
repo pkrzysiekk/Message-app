@@ -59,7 +59,7 @@ public class ChatService : IChatService
 
     public async Task<IEnumerable<Chat>> GetUserChats(int userId)
     {
-        var user = await _userService.Get(userId);
+        var user = await _userService.GetById(userId);
 
         var userChats = await _repository.GetAll(q => q.Include(c => c.Group)
                 .ThenInclude(g => g.UserGroups))

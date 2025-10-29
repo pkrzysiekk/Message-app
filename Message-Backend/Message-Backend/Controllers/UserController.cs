@@ -23,7 +23,7 @@ namespace Message_Backend.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<UserDto>> Get(int id)
         {
-            var user = await _userService.Get(id);
+            var user = await _userService.GetById(id);
             return Ok(user.ToDto());
         }
 
