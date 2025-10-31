@@ -42,7 +42,12 @@ builder.Services.AddScoped<IAuthorizationHandler,UserIsSenderHandler>();
 builder.Services.AddScoped<IAuthorizationHandler, UserHasRequiredChatRoleHandler>();
 builder.Services.AddScoped<IAuthorizationHandler, UserCanDeleteMessageHandler>();
 builder.Services.AddScoped<IAuthorizationHandler,CanReadMessageHandler>();
-builder.Services.AddSignalR();
+
+builder.Services.AddSignalR(o =>
+{
+    o.EnableDetailedErrors = true;
+    o.MaximumReceiveMessageSize = 5000000;
+});
 builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(
