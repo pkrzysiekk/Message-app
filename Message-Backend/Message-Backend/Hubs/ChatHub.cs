@@ -1,6 +1,8 @@
+using System.Security.Claims;
 using Message_Backend.Hubs.Contracts;
 using Message_Backend.Mappers;
 using Message_Backend.Models.DTOs;
+using Message_Backend.Models.HubRequests;
 using Message_Backend.Service;
 using Microsoft.AspNetCore.SignalR;
 using SignalRSwaggerGen.Attributes;
@@ -23,7 +25,7 @@ public class ChatHub :Hub<IChatClient>
 
     public override async Task OnConnectedAsync()
     {
-        var callersId = Context.User.Identity.Name;
+        var callersId = Context.User.FindFirstValue(ClaimTypes.NameIdentifier);
         if (callersId is null)
             return;
         
@@ -35,24 +37,29 @@ public class ChatHub :Hub<IChatClient>
         }
         
         await base.OnConnectedAsync();
-        await _userService.ChangeOnlineStatus(userId, true); 
+       // await _userService.ChangeOnlineStatus(userId, true); 
     }
 
     public override async Task OnDisconnectedAsync(Exception? exception)
     {
-        var callersId = Context.User.Identity.Name;
+        var callersId = Context.User.FindFirstValue(ClaimTypes.NameIdentifier);
         if (callersId is null)
             return;
         await base.OnDisconnectedAsync(exception);
         var userId = Int32.Parse(callersId);
-        await _userService.ChangeOnlineStatus(userId, false);
+       // await _userService.ChangeOnlineStatus(userId, false);
     }
 
-    public async Task SendMessageInChat(MessageDto message)
+    public async Task SendMessage(MessageDto messageDto)
     {
-        var messageBo = message.ToBo();
+        var messageBo = messageDto.ToBo();
         await _messageService.Add(messageBo);
+        SendMessageRequest request = new SendMessageRequest()
+        {
+            Message = messageBo.ToDto(),
+            SenderName = Context.User.Identity.Name
+        };
         
-        await Clients.Group(message.ChatId.ToString()).ReceiveMessage(messageBo.ToDto());
+        await Clients.Group(messageBo.ChatId.ToString()).ReceiveMessage(request);
     }
 }
