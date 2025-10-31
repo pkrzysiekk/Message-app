@@ -14,6 +14,10 @@ public static class MessageMapper
             ChatId = messageDto.ChatId,
             Status = messageDto.Status,
             Type = messageDto.Type,
+            Content = new MessageContent()
+            {
+                Data = messageDto.Content
+            }
         };
     }
     
@@ -26,7 +30,7 @@ public static class MessageMapper
             ChatId = message.ChatId,
             Status = message.Status,
             Type = message.Type,
-            Content = message.Content.Data
+            Content = message.Content.Data,
         };
     }
 }
