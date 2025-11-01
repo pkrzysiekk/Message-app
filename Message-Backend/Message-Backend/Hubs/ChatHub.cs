@@ -45,6 +45,11 @@ public class ChatHub :Hub<IChatClient>
         var callersId = Context.User.FindFirstValue(ClaimTypes.NameIdentifier);
         if (callersId is null)
             return;
+        var userChats = await _chatService.GetUserChats(Int32.Parse(callersId));
+        foreach (var userChat in userChats)
+        {
+            await Groups.RemoveFromGroupAsync(Context.ConnectionId, userChat.Id.ToString());
+        }
         await base.OnDisconnectedAsync(exception);
         var userId = Int32.Parse(callersId);
        // await _userService.ChangeOnlineStatus(userId, false);
