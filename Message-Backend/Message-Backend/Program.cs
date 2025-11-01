@@ -32,10 +32,10 @@ builder.Services.AddScoped<IFriendsService, FriendsService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IMessageService, MessageService>();
 //Add authorization Services
-builder.Services.AddSingleton<IAuthorizationHandler,SameUserHandler>();
+builder.Services.AddScoped<IAuthorizationHandler,SameUserHandler>();
 builder.Services.AddScoped<IAuthorizationHandler,RequireAdminOrOwnerRoleHandler>();
 builder.Services.AddScoped<IAuthorizationHandler,GroupMemberRequirementHandler>();
-builder.Services.AddSingleton<IAuthorizationHandler, UserCreatesGroupForThemselvesHandler>();
+builder.Services.AddScoped<IAuthorizationHandler, UserCreatesGroupForThemselvesHandler>();
 builder.Services.AddScoped<IAuthorizationHandler, UserHasRequiredRoleInGroupHandler>();
 builder.Services.AddScoped<IAuthorizationHandler, CanCreateChatWithProvidedRoleHandler>();
 builder.Services.AddScoped<IAuthorizationHandler,UserIsSenderHandler>();
