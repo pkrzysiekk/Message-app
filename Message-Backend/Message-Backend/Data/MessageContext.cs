@@ -66,5 +66,11 @@ public class MessageContext :IdentityUserContext<User,int>
          .WithOne(c=>c.Message)
          .HasForeignKey<Message>(m=>m.MessageContentId)
          .OnDelete(DeleteBehavior.Cascade);
+      
+      modelBuilder.Entity<Chat>()
+         .HasOne(c=>c.Group)
+         .WithMany(g=>g.Chats)
+         .HasForeignKey(c=>c.GroupId)
+         .OnDelete(DeleteBehavior.Cascade);
    }
 }
