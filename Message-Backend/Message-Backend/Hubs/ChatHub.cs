@@ -67,4 +67,12 @@ public class ChatHub :Hub<IChatClient>
         
         await Clients.Group(messageBo.ChatId.ToString()).ReceiveMessage(request);
     }
+
+    public async Task SendUserIsTypingEvent(int chatId)
+    {
+        var username = Context?.User?.Identity?.Name;
+        if (username is null)
+            return;
+        await Clients.Group(chatId.ToString()).ReceiveUserIsTypingEvent(username);
+    }
 }
