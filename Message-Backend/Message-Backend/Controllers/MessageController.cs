@@ -41,7 +41,7 @@ namespace Message_Backend.Controllers
             };
             
             await _messageService.Add(message, messageContent);
-            return CreatedAtAction(nameof(Get), new { id = message.Id }, message);
+            return CreatedAtAction(nameof(Get), new { messageId = message.Id }, message);
 
         }
 
