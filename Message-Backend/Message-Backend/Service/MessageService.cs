@@ -33,10 +33,9 @@ public class MessageService : BaseService<Message,long>,IMessageService
         return messageToGet;
     }
     
-    public async Task Add(Message message,MessageContent content)
+    public async Task Add(Message message)
     {
         message.SentAt = DateTime.UtcNow;
-        message.Content=content;
         await _repository.Create(message);
     }
 

@@ -22,7 +22,10 @@ public class GroupService :BaseService<Group,int>,IGroupService
         await AddUserToGroup(creatorId,group.Id,GroupRole.Owner);
     }
 
-
+    public async Task UpdateGroup(Group group)
+    {
+       await _repository.Update(group); 
+    }
     public async Task<List<Group>> GetPaginatedUserGroups(int userId,int page, int pageSize)
     {
         page = page < 1 ? 1 : page;

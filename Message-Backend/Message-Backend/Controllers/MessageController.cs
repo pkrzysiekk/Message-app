@@ -40,7 +40,7 @@ namespace Message_Backend.Controllers
                 Data = messageDto.Content
             };
             
-            await _messageService.Add(message, messageContent);
+            await _messageService.Add(message);
             return CreatedAtAction(nameof(Get), new { messageId = message.Id }, message);
 
         }

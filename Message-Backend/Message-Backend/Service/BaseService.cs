@@ -13,16 +13,6 @@ public class BaseService<T,TKey> :IBaseService<T,TKey> where T : IEntity<TKey>
        _repository = repository; 
     }
 
-    public virtual async Task Add(T entity)
-    {
-        await _repository.Create(entity);
-    }
-
-    public virtual async Task Update(T entity)
-    {
-        await _repository.Update(entity);
-    }
-
     public virtual async Task Delete(TKey id)
     {
         await _repository.Delete(id);

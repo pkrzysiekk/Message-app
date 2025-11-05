@@ -43,7 +43,7 @@ namespace Message_Backend.Controllers
         public async Task<IActionResult> Put([FromBody] GroupDto group)
         {
            var groupBo=group.ToBo();
-           await _groupService.Update(groupBo);
+           await _groupService.UpdateGroup(groupBo);
            return Ok("Group updated");
         }
 
