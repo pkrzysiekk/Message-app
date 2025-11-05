@@ -4,6 +4,7 @@ namespace Message_Backend.Models;
 
 public class UserGroup
 {
+    public int Id { get; set; }
     public int UserId { get; set; }
     public int GroupId { get; set; }
     public GroupRole Role { get; set; }

@@ -51,7 +51,7 @@ public class ChatService : IChatService
     
     public async Task AddChatToGroup(Chat chat)
     {
-        var group = await _groupService.GetGroup(chat.GroupId);
+        var group = await _groupService.GetById(chat.GroupId);
         if (group == null)
             throw new NotFoundException("Group not found");
         await Create(chat);
@@ -61,7 +61,8 @@ public class ChatService : IChatService
     {
         var user = await _userService.GetById(userId);
 
-        var userChats = await _repository.GetAll(q => q.Include(c => c.Group)
+        var userChats = await _repository
+            .GetAll(q => q.Include(c => c.Group)
                 .ThenInclude(g => g.UserGroups))
             .Where(c => c.Group.UserGroups.Any(ug => ug.UserId == userId && ug.Role >= c.ForRole))
             .ToListAsync();

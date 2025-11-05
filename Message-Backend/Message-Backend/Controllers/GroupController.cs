@@ -25,7 +25,7 @@ namespace Message_Backend.Controllers
         [Authorize(Policy = "GroupMember")]
         public async Task<ActionResult<GroupDto>> Get(int groupId)
         {
-            var group = await _groupService.GetGroup(groupId);
+            var group = await _groupService.GetById(groupId);
             return Ok(group.ToDto());
         }
 
@@ -43,7 +43,7 @@ namespace Message_Backend.Controllers
         public async Task<IActionResult> Put([FromBody] GroupDto group)
         {
            var groupBo=group.ToBo();
-           await _groupService.UpdateGroup(groupBo);
+           await _groupService.Update(groupBo);
            return Ok("Group updated");
         }
 
@@ -51,7 +51,7 @@ namespace Message_Backend.Controllers
         [Authorize(Policy = "RequireAdminRoleInGroup")]
         public async Task<IActionResult> Delete(int groupId)
         {
-            await _groupService.DeleteGroup(groupId);
+            await _groupService.Delete(groupId);
             return Ok("Group deleted");
         }
 

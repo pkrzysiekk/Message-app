@@ -100,8 +100,15 @@ builder.Services.AddSwaggerGen(c =>
 });
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
-builder.Services.AddDbContextPool<MessageContext>(opt=>
-    opt.UseNpgsql(builder.Configuration.GetConnectionString("MessageDb")));
+builder.Services.AddDbContextPool<MessageContext>(opt =>
+    opt.
+        UseNpgsql(builder
+            .Configuration
+            .GetConnectionString("MessageDb"), sqlBuilder =>
+        {
+            sqlBuilder.EnableRetryOnFailure(5, TimeSpan.FromSeconds(10), null);
+        }));
+
 builder.Services.AddIdentityCore<User>(options =>
     {
         options.Password.RequiredLength = 6;

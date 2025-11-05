@@ -41,7 +41,7 @@ public class UserCanDeleteMessageHandler :AuthorizationHandler<UserCanDeleteMess
         }
         var message = await _messageService.GetById(messageId);
         var chat = await _chatService.Get(message.ChatId);
-        var group= await _groupService.GetGroup(chat.GroupId); 
+        var group= await _groupService.GetById(chat.GroupId); 
         var userRole= await _groupService.GetUserRoleInGroup(int.Parse(callersId),group.Id);
         if (userRole is null)
         {
