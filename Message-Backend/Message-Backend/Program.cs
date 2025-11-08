@@ -1,13 +1,16 @@
 using System.Text;
-using Message_Backend.AuthHandlers;
-using Message_Backend.AuthRequirements;
-using Message_Backend.Data;
-using Message_Backend.Exceptions;
-using Message_Backend.Helpers;
-using Message_Backend.Hubs;
-using Message_Backend.Models;
-using Message_Backend.Repository;
-using Message_Backend.Service;
+using Message_Backend.Application.Helpers;
+using Message_Backend.Application.Interfaces;
+using Message_Backend.Application.Interfaces.Repository;
+using Message_Backend.Application.Interfaces.Services;
+using Message_Backend.Application.Services;
+using Message_Backend.Domain.Entities;
+using Message_Backend.Domain.Exceptions;
+using Message_Backend.Infrastructure.Data;
+using Message_Backend.Infrastructure.Repository;
+using Message_Backend.Presentation.AuthHandlers;
+using Message_Backend.Presentation.AuthRequirements;
+using Message_Backend.Presentation.Hubs;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Diagnostics;
@@ -15,7 +18,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using UserIsSender = Message_Backend.AuthRequirements.UserIsSender;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -107,6 +109,7 @@ builder.Services.AddDbContextPool<MessageContext>(opt =>
             .GetConnectionString("MessageDb"), sqlBuilder =>
         {
             sqlBuilder.EnableRetryOnFailure(5, TimeSpan.FromSeconds(10), null);
+            sqlBuilder.MigrationsAssembly("Message-Backend");
         }));
 
 builder.Services.AddIdentityCore<User>(options =>

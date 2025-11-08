@@ -1,0 +1,47 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net9.0</TargetFramework>
+        <RootNamespace>Message_Backend.Infrastructure</RootNamespace>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <Reference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore">
+        <HintPath>..\..\..\..\..\..\.nuget\packages\microsoft.aspnetcore.identity.entityframeworkcore\9.0.9\lib\net9.0\Microsoft.AspNetCore.Identity.EntityFrameworkCore.dll</HintPath>
+      </Reference>
+      <Reference Include="Microsoft.EntityFrameworkCore">
+        <HintPath>..\..\..\..\..\..\.nuget\packages\microsoft.entityframeworkcore\9.0.9\lib\net8.0\Microsoft.EntityFrameworkCore.dll</HintPath>
+      </Reference>
+      <Reference Include="Microsoft.EntityFrameworkCore.Abstractions">
+        <HintPath>..\..\..\..\..\..\.nuget\packages\microsoft.entityframeworkcore.abstractions\9.0.9\lib\net8.0\Microsoft.EntityFrameworkCore.Abstractions.dll</HintPath>
+      </Reference>
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Message-Backend.Domain\Message-Backend.Domain.csproj" />
+        <ProjectReference Include="..\Message-Backend.Application\Message-Backend.Application.csproj" />
+
+    </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="9.0.9" />
+        <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="9.0.9" />
+        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.7"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.9">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="9.0.9" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.9" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.9">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="9.0.0" />
+        <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.4" />
+        <PackageReference Include="SignalRSwaggerGen" Version="4.8.0" />
+        <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="9.0.4" />
+        <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="9.0.4" />
+    </ItemGroup>
+</Project>

@@ -1,0 +1,62 @@
+using System.Security.Claims;
+using Message_Backend.Application.Helpers;
+using Message_Backend.Application.Interfaces;
+using Message_Backend.Application.Interfaces.Services;
+using Message_Backend.Domain.Entities;
+using Message_Backend.Domain.Models.Enums;
+using Message_Backend.Presentation.AuthRequirements;
+using Message_Backend.Presentation.Helpers;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Routing;
+
+namespace Message_Backend.Presentation.AuthHandlers;
+
+public class UserCanDeleteMessageHandler :AuthorizationHandler<UserCanDeleteMessage>
+{
+    private readonly IMessageService _messageService;
+    private readonly IChatService _chatService;
+    private readonly IGroupService _groupService;
+
+    public UserCanDeleteMessageHandler
+        (IMessageService messageService, IChatService chatService, IGroupService groupService)
+    {
+        _messageService = messageService;
+        _chatService = chatService;
+        _groupService = groupService;
+    }
+    
+    protected override async Task HandleRequirementAsync(AuthorizationHandlerContext context, UserCanDeleteMessage requirement)
+    {
+        var callersId = context.User
+            .FindFirstValue(ClaimTypes.NameIdentifier);
+        var httpContext=RequestBodyHelper.GetHttpContext(context);
+       
+        if (callersId is null || httpContext is null)
+        {
+            context.Fail();
+            return;
+        } 
+        bool parsed=
+            Int32.TryParse(httpContext.GetRouteValue("messageId").ToString(),out int messageId);
+        if (!parsed)
+        {
+            context.Fail();
+            return;
+        }
+        var message = await _messageService.GetById(messageId);
+        var chat = await _chatService.Get(message.ChatId);
+        var group= await _groupService.GetById(chat.GroupId); 
+        var userRole= await _groupService.GetUserRoleInGroup(int.Parse(callersId),group.Id);
+        if (userRole is null)
+        {
+            context.Fail();
+            return;
+        }
+
+        bool canDelete = Int32.Parse(callersId) == message.SenderId || userRole is GroupRole.Admin or GroupRole.Owner;
+        if (canDelete)
+            context.Succeed(requirement);
+    }
+
+    
+}

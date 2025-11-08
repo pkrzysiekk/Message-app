@@ -1,0 +1,32 @@
+using Message_Backend.Application.Helpers;
+using Message_Backend.Application.Interfaces;
+using Message_Backend.Application.Interfaces.Services;
+using Message_Backend.Domain.Models.RSA;
+using Message_Backend.Presentation.ApiRequests;
+using Microsoft.AspNetCore.Mvc;
+
+namespace Message_Backend.Presentation.Controllers
+{
+    [Route("api/[controller]")]
+
+    public class AuthController : Controller
+    {
+        private readonly IAuthService _authService;
+        private readonly JwtOptions _jwtOptions;
+        public AuthController(IAuthService authService)
+        {
+            _authService = authService;
+            _jwtOptions=RsaHelper.JwtOptions;
+        }
+        
+        [HttpPost]
+        public async Task<ActionResult<string>> Post([FromBody] UserAuthorizationRequest request)
+        { 
+            bool authenticationResult = await _authService.ValidateUserCredentials(request.Username, request.Password);
+            if (!authenticationResult)
+                return Unauthorized();
+            var token = await _authService.GenerateToken(_jwtOptions,request.Username);
+            return Ok(token);
+        }
+    }
+}
