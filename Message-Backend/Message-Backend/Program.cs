@@ -190,8 +190,7 @@ app.UseExceptionHandler(errorApp =>
         {
             NotFoundException => StatusCodes.Status404NotFound,
             UserManagerException => StatusCodes.Status403Forbidden,
-            EntityAlreadyExistsException => StatusCodes.Status409Conflict,
-            UserAlreadyInGroupException => StatusCodes.Status409Conflict,
+            EntityAlreadyExistsException or UserAlreadyInGroupException => StatusCodes.Status409Conflict,
             UserNotInGroupException => StatusCodes.Status406NotAcceptable,
             _ => StatusCodes.Status500InternalServerError,
         };
