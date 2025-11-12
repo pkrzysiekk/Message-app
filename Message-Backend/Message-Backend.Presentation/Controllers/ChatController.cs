@@ -63,6 +63,7 @@ namespace Message_Backend.Presentation.Controllers
         }
 
         [HttpGet("chat/{userId}")]
+        [Authorize(Policy = "SameUser")]
         //For Development Only
         public async Task<ActionResult<IEnumerable<ChatDto>>> GetAllUserChats([FromRoute] int userId)
         {

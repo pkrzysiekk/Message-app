@@ -22,7 +22,7 @@ public class SameUserHandler :AuthorizationHandler<SameUserRequirement>
            return Task.CompletedTask; 
        }
 
-       string userIdFromEndpoint;
+       string? userIdFromEndpoint;
        userIdFromEndpoint = httpContext.Request.Query["userId"].ToString();
        
        if (string.IsNullOrEmpty(userIdFromEndpoint))

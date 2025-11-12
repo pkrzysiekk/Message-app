@@ -176,7 +176,6 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
     app.UseSwagger();
     app.UseSwaggerUI();
-
 }
 
 //Define Error handling middleware
@@ -191,6 +190,7 @@ app.UseExceptionHandler(errorApp =>
         {
             NotFoundException => StatusCodes.Status404NotFound,
             UserManagerException => StatusCodes.Status403Forbidden,
+            EntityAlreadyExistsException => StatusCodes.Status409Conflict,
             _ => StatusCodes.Status500InternalServerError,
         };
         await context.Response.WriteAsJsonAsync(new{error=exception?.Message});
