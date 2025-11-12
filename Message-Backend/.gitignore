@@ -83,3 +83,12 @@ publish/
 
 ## Generated files
 Generated_Code/
+# Ignore all .dll files anywhere
+*.dll
+# Build output
+
+
+# Libraries and packages
+[Ll]ib/
+[Pp]ackages/
+[Tt]ools/

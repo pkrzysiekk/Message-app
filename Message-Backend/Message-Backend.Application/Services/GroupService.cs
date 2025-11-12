@@ -54,52 +54,28 @@ public class GroupService :BaseService<Group,int>,IGroupService
     {
        var groupToAddUserTo = await GetById(groupId);
        var userToAdd = await _userService.GetById(userId);
-       bool isAlreadyAdded = groupToAddUserTo.UserGroups.Any(ug => ug.UserId == userId);
-       if (isAlreadyAdded)
-           throw new KeyNotFoundException("User with this group already exists");
-       
-       var userGroup = new UserGroup()
-       {
-           UserId = userId,
-           GroupId = groupId,
-           Role = role,
-       };
-       groupToAddUserTo.UserGroups.Add(userGroup);
+       groupToAddUserTo.AddUser(userToAdd.Id,role);
        await _repository.SaveChanges();
     }
 
     public async Task RemoveUserFromGroup(int userId, int groupId)
     {
         var groupToRemoveUserFrom = await GetById(groupId);
-        
-        var userGroupToRemove = groupToRemoveUserFrom.UserGroups.
-            FirstOrDefault
-                (g => g.UserId == userId && g.GroupId == groupId);
-        if (userGroupToRemove == null)
-            throw new KeyNotFoundException("User does not belong to that group");
-        groupToRemoveUserFrom.UserGroups.Remove(userGroupToRemove);
+        var userToRemove = await _userService.GetById(userId);
+        groupToRemoveUserFrom.RemoveUser(userToRemove.Id);
         await _repository.SaveChanges();
     }
 
     public async Task UpdateUserRoleInGroup(int userId, int groupId, GroupRole role)
     {
       var groupToUpdate = await GetById(groupId);
-      
-      var userGroupToUpdate = groupToUpdate.
-          UserGroups.
-          FirstOrDefault(ug => ug.UserId == userId && ug.GroupId == groupId);
-      if (userGroupToUpdate == null)
-          throw new KeyNotFoundException("User does not belong to this group or group doesn't exist");
-      userGroupToUpdate.Role = role;
+      groupToUpdate.SetUserRole(userId, role);
       await _repository.SaveChanges();
     }
 
     public async Task<GroupRole?> GetUserRoleInGroup(int userId, int groupId)
     {
         var groupToGet = await GetById(groupId);
-        var userGroup = groupToGet.UserGroups
-            .FirstOrDefault
-                (uc => uc.UserId == userId && groupId == uc.GroupId);
-        return userGroup?.Role;
+        return groupToGet.GetUserRole(userId);
     }
 }
