@@ -19,7 +19,7 @@ public class Group : IEntity<int>
     {
         bool isAlreadyAdded = UserGroups.Any(ug => ug.UserId == userId);
         if (isAlreadyAdded)
-            throw new Exception("User with this group already exists");
+            throw new UserAlreadyInGroupException("User with this group already exists");
        
         var userGroup = new UserGroup()
         {
@@ -34,7 +34,7 @@ public class Group : IEntity<int>
     {
         var userGroupToRemove = UserGroups.FirstOrDefault(ug => ug.UserId == userId);
         if (userGroupToRemove == null)
-            throw new Exception("User doest not belong to this group");
+            throw new UserNotInGroupException("User doest not belong to this group");
         UserGroups.Remove(userGroupToRemove);
     }
 
@@ -42,7 +42,7 @@ public class Group : IEntity<int>
     {
         var userIsInGroup = UserGroups.Any(ug => ug.UserId == userId);
         if (!userIsInGroup)
-            throw new Exception("User doest not belong to this group");
+            throw new UserNotInGroupException("User doest not belong to this group");
         var userGroupToUpdate = UserGroups.First(ug => ug.UserId == userId);
         userGroupToUpdate.Role = role;
     }
