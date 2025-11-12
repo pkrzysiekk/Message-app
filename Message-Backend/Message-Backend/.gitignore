@@ -1,0 +1,85 @@
+## Build results
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+bld/
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+
+## Rider / JetBrains
+.idea/
+*.sln.iml
+
+## Visual Studio
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+## NuGet
+*.nupkg
+# Paket dependency manager
+.paket/
+paket-files/
+
+## .NET Core
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+## Test results
+[Tt]est[Rr]esult*/
+[Bb]uild[Ll]og.*
+*.trx
+*.coverage
+*.coveragexml
+
+## Visual Studio Code
+.vscode/
+
+## Other tools
+_ReSharper*/
+*.[Rr]e[Ss]harper
+*.DotSettings.user
+
+## Temporary files
+*.tmp
+*.temp
+*.bak
+*.old
+*.swp
+*.orig
+
+## OS-specific
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+## Rider Local History
+.idea/.idea.LocalHistory/
+
+## Secrets
+*.pfx
+*.snk
+*.key
+*.pem
+secrets.json
+
+## Publish
+publish/
+*.Publish.xml
+
+## Generated files
+Generated_Code/
