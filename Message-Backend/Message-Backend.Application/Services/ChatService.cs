@@ -7,32 +7,24 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Message_Backend.Application.Services;
 
-public class ChatService : IChatService
+public class ChatService : BaseService<Chat,int>, IChatService
 {
-    private readonly IRepository<Chat,int> _repository;
     private readonly IGroupService _groupService;
     private readonly IUserService _userService;
     public ChatService
-        (IRepository<Chat,int> repository, IGroupService groupService,IUserService userService)
+        (IRepository<Chat,int> repository, IGroupService groupService,IUserService userService):base(repository)
     {
-        _repository = repository;
         _groupService = groupService;
         _userService = userService;
     }
     
-    public async Task<Chat> Get(int id)
-    {
-        var chat = await _repository.GetById(id);
-        return chat ?? throw new NotFoundException("Chat not found");
-    }
-
     public async Task<IEnumerable<Chat>> GetAllGroupChats(int groupId)
     {
         var groups= await _repository
             .GetAll().Where(x => x.GroupId == groupId).ToListAsync();
         return groups;
     }
-    
+
 
     public async Task<Chat> Create(Chat chat)
     {
@@ -46,10 +38,6 @@ public class ChatService : IChatService
         return updatedChat;
     }
 
-    public async Task Delete(int id)
-    {
-        await _repository.Delete(id);
-    }
     
     public async Task AddChatToGroup(Chat chat)
     {

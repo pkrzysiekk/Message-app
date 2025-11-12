@@ -22,7 +22,7 @@ namespace Message_Backend.Presentation.Controllers
         [Authorize(Policy = "UserHasRequiredRoleInGroup")]
         public async Task<ActionResult<ChatDto>> Get([FromRoute] int chatId)
         {
-            var chat = await _chatService.Get(chatId);
+            var chat = await _chatService.GetById(chatId);
             return Ok(chat.ToDto());
         }
 

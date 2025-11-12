@@ -35,7 +35,7 @@ public class UserIsSenderHandler :AuthorizationHandler<UserIsSender>
         var messageId = Int32.Parse(httpContext.GetRouteValue("messageId").ToString());
         
         var fetchedMessage = await _messageService.GetById(messageId);
-        var fetchedChat = await _chatService.Get(fetchedMessage.ChatId);
+        var fetchedChat = await _chatService.GetById(fetchedMessage.ChatId);
         var groupRole = await _groupService.GetUserRoleInGroup(Int32.Parse(callersId),fetchedMessage.ChatId);
         
         bool isSenderSameAsCaller = fetchedMessage.SenderId == Int32.Parse(callersId);

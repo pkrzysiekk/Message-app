@@ -36,7 +36,7 @@ public class CanReadMessageHandler :AuthorizationHandler<CanReadMessage>
         int userId=int.Parse(callersId); 
         var messageId = Int32.Parse(httpContext.GetRouteValue("messageId").ToString());
         var message= await _messageService.GetById(messageId);
-        var chat = await _chatService.Get(message.ChatId);
+        var chat = await _chatService.GetById(message.ChatId);
         var userRole = await _groupService.GetUserRoleInGroup(userId,chat.GroupId);
 
         if (userRole >= chat.ForRole)

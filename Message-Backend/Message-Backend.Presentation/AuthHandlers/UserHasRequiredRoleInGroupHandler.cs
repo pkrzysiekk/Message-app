@@ -49,7 +49,7 @@ public class UserHasRequiredRoleInGroupHandler : AuthorizationHandler<UserHasReq
         var chatId = await RequestBodyHelper.GetChatIdFromChatEndpointRequest(httpContext);
         if (!chatId.HasValue) 
             return false;
-        var chat = await _chatService.Get(chatId.Value);
+        var chat = await _chatService.GetById(chatId.Value);
         userRole = await _groupService.GetUserRoleInGroup(userId, chat.GroupId);
         return userRole >= chat.ForRole;
     }

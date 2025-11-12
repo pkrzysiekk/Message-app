@@ -2,13 +2,11 @@ using Message_Backend.Domain.Entities;
 
 namespace Message_Backend.Application.Interfaces.Services;
 
-public interface IChatService
+public interface IChatService :IBaseService<Chat,int>
 {
-   public Task<Chat> Get(int id); 
    public Task<IEnumerable<Chat>> GetAllGroupChats(int groupId);
    public Task<Chat> Create(Chat chat);
    public Task<Chat> Update(Chat chat);
-   public Task Delete(int id);
    public Task AddChatToGroup(Chat chat);
    public Task<IEnumerable<Chat>> GetUserChats(int userId);
 }

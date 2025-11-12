@@ -48,7 +48,7 @@ public class UserHasRequiredChatRoleHandler : AuthorizationHandler<UserHasRequir
 
         try
         {
-            fetchedChat = await _chatService.Get(messageDto.ChatId);
+            fetchedChat = await _chatService.GetById(messageDto.ChatId);
             userRoleInGroup = await _groupService
                 .GetUserRoleInGroup(Int32.Parse(callersId), fetchedChat.GroupId);
         }
