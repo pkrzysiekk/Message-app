@@ -47,28 +47,34 @@ namespace Message_Backend.Presentation.Controllers
         }
         
         [HttpPost]
-        public async Task<ActionResult> Post([FromBody] FriendsDto friendsDto)
+        [Authorize(Policy = "SameUser")]
+        public async Task<ActionResult> 
+            Invite([FromQuery] int userId,[FromBody] FriendsDto friendsDto)
         {
+            if(userId != friendsDto.UserId)
+                return BadRequest("UserId does not match");
             await _friendsService.SendInvite(friendsDto.UserId,friendsDto.FriendId);
             return CreatedAtAction(nameof(Get), new { id = friendsDto.FriendId }, friendsDto);
         }
 
-        [HttpPut("/acceptInvite/{userId}/{friendId}")]
-        public async Task<ActionResult> AcceptInvite([FromRoute] int userId,[FromRoute] int friendId)
+        [HttpPut("/acceptInvite")]
+        [Authorize(Policy = "SameUser")]
+        public async Task<ActionResult> AcceptInvite([FromQuery] int userId,[FromQuery] int friendId)
         {
             await _friendsService.AcceptInvite(userId, friendId);
             return Ok("Friends updated");
         }
-        [HttpPut("/declineInvite/{userId}/{friendId}")]
-        public async Task<ActionResult> DeclineInvite([FromRoute] int userId,[FromRoute] int friendId)
+        [HttpPut("/declineInvite")]
+        [Authorize(Policy = "SameUser")]
+        public async Task<ActionResult> DeclineInvite([FromQuery] int userId,[FromQuery] int friendId)
         {
             await _friendsService.DeclineInvite(userId, friendId);
             return Ok("Friends updated");
         } 
 
-        [HttpDelete("/{userId}/{friendId}")]
+        [HttpDelete("/deleteFriend")]
         [Authorize(Policy = "SameUser")]
-        public async Task<ActionResult> RemoveFriend([FromRoute] int userId,[FromRoute] int friendId)
+        public async Task<ActionResult> RemoveFriend([FromQuery] int userId,[FromQuery] int friendId)
         {
             await _friendsService.RemoveFriend(userId, friendId);
             return Ok("Friends deleted");
