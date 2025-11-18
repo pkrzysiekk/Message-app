@@ -113,9 +113,11 @@ builder.Services.AddDbContextPool<MessageContext>(opt =>
 
 builder.Services.AddIdentityCore<User>(options =>
     {
+        var allowedCharacters="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789ąĄćĆęĘłŁńŃóÓśŚźŹżŻ";
         options.Password.RequiredLength = 6;
         options.Password.RequireNonAlphanumeric = false;
         options.Password.RequireUppercase = false;
+        options.User.AllowedUserNameCharacters = allowedCharacters;
     })
     .AddEntityFrameworkStores<MessageContext>()
     .AddSignInManager();               
