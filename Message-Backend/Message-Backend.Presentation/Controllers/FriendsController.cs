@@ -23,7 +23,7 @@ namespace Message_Backend.Presentation.Controllers
         [Authorize(Policy = "SameUser")]
         public async Task<ActionResult<FriendsDto>> Get([FromQuery] int userId,[FromQuery]int friendId)
         {
-            var friends = await _friendsService.FindById(userId, friendId);
+            var friends = await _friendsService.GetFriendsByUserIds(userId, friendId);
             return friends.ToDto();
         }
 
@@ -37,6 +37,7 @@ namespace Message_Backend.Presentation.Controllers
         }
 
         [HttpGet("/users/{userId}/invites")]
+        [Authorize(Policy = "SameUser")]
         public async Task<ActionResult<IEnumerable<FriendsDto>>>
             GetUserPendingInvites([FromRoute] int userId)
         {
@@ -52,19 +53,24 @@ namespace Message_Backend.Presentation.Controllers
             return CreatedAtAction(nameof(Get), new { id = friendsDto.FriendId }, friendsDto);
         }
 
-        [HttpPut]
-        public async Task<ActionResult> Put([FromBody] FriendsDto friendsDto)
+        [HttpPut("/acceptInvite/{userId}/{friendId}")]
+        public async Task<ActionResult> AcceptInvite([FromRoute] int userId,[FromRoute] int friendId)
         {
-            var friends=friendsDto.ToBo();
-            await _friendsService.Update(friends);
+            await _friendsService.AcceptInvite(userId, friendId);
             return Ok("Friends updated");
         }
+        [HttpPut("/declineInvite/{userId}/{friendId}")]
+        public async Task<ActionResult> DeclineInvite([FromRoute] int userId,[FromRoute] int friendId)
+        {
+            await _friendsService.DeclineInvite(userId, friendId);
+            return Ok("Friends updated");
+        } 
 
         [HttpDelete("/{userId}/{friendId}")]
         [Authorize(Policy = "SameUser")]
-        public async Task<ActionResult> Delete([FromRoute] int userId,[FromRoute] int friendId)
+        public async Task<ActionResult> RemoveFriend([FromRoute] int userId,[FromRoute] int friendId)
         {
-            await _friendsService.Delete(userId, friendId);
+            await _friendsService.RemoveFriend(userId, friendId);
             return Ok("Friends deleted");
         }
     }

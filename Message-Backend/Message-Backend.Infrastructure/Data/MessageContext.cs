@@ -43,9 +43,6 @@ public class MessageContext :IdentityUserContext<User,int>
          .HasForeignKey(ug => ug.GroupId);
       
       modelBuilder.Entity<Friends>()
-         .HasKey(f => new { f.FriendId, f.UserId });
-      
-      modelBuilder.Entity<Friends>()
          .HasOne(f => f.Friend)
          .WithMany()
          .HasForeignKey(f => f.FriendId);
