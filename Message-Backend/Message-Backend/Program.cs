@@ -193,6 +193,7 @@ app.UseExceptionHandler(errorApp =>
             UserManagerException => StatusCodes.Status403Forbidden,
             EntityAlreadyExistsException or UserAlreadyInGroupException => StatusCodes.Status409Conflict,
             UserNotInGroupException => StatusCodes.Status406NotAcceptable,
+            InviteNotValidException => StatusCodes.Status400BadRequest,
             _ => StatusCodes.Status500InternalServerError,
         };
         await context.Response.WriteAsJsonAsync(new{error=exception?.Message});

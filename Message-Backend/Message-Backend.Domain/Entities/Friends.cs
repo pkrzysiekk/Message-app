@@ -15,4 +15,5 @@ public class Friends : IEntity<int>
     public User Friend { get; set; }
 
     public void SetUserStatus(FriendInvitationStatus status) => Status = status;
+    public void SetFriendsSince(DateTime dateTime) => FriendsSince = dateTime;
 }

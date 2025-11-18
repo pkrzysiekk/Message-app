@@ -31,8 +31,8 @@ public class FriendsService :
         {
             UserId = userId,
             FriendId = friendId,
-            Status = FriendInvitationStatus.Pending
         };
+        invite.SetUserStatus(FriendInvitationStatus.Pending);
         await _repository.Create(invite);
     }
 
@@ -76,6 +76,7 @@ public class FriendsService :
     {
         var invite = await GetValidPendingInvite(recipientId, senderId); 
         invite.SetUserStatus(FriendInvitationStatus.Accepted);
+        invite.SetFriendsSince(DateTime.UtcNow);
         await _repository.Update(invite);
     }
 
@@ -109,7 +110,7 @@ public class FriendsService :
         bool isPending = invite.Status == FriendInvitationStatus.Pending;
 
         if (!isCorrectReceiver || !isPending)
-            throw new Exception("Invite not valid");
+            throw new InviteNotValidException("Invite not valid");
 
         return invite;
     }
