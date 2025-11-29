@@ -12,6 +12,9 @@
   "prettier": {
     "printWidth": 100,
     "singleQuote": true,
+    "plugins": [
+      "prettier-plugin-tailwindcss"
+    ],
     "overrides": [
       {
         "files": "*.html",
@@ -48,6 +51,8 @@
     "@types/express": "^5.0.1",
     "@types/node": "^20.17.19",
     "jsdom": "^27.1.0",
+    "prettier": "^3.7.3",
+    "prettier-plugin-tailwindcss": "^0.7.1",
     "typescript": "~5.9.2",
     "vitest": "^4.0.8"
   }
