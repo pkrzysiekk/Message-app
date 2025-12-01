@@ -25,12 +25,12 @@
   }
 
   .auth-button {
-    @apply mt-3 w-3/4 cursor-pointer rounded-full border-2 border-transparent p-4 text-2xl;
+    @apply mt-3 w-3/4 cursor-pointer rounded-full border-5 border-transparent p-4 text-2xl;
     background-color: var(--brilliant-azure);
     color: white;
   }
 
   .auth-button:hover {
-    border-color: white;
+    @apply border-(--mint-leaf);
   }
 }

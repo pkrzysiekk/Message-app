@@ -1,9 +1,16 @@
 <div class="flex h-screen w-screen items-center justify-center">
-  <div class="h-1/2 w-1/2 border-4 border-zinc-950">
+  <div class="h-1/2 w-1/2 border-4 border-(--prussian-blue) backdrop-blur-xs">
     <div class="flex h-full flex-col items-center justify-center">
+      <div class="flex flex-col items-center justify-center">
+        <span class="text-4xl text-white">Welcome Back,</span>
+        <span class="text-2xl text-white">Log in</span>
+      </div>
       <input type="text" placeholder="Username" class="auth-input" />
       <input type="password" placeholder="Password" class="auth-input" />
       <button type="button" class="auth-button">Log in</button>
+      <a [routerLink]="['/auth/register']" class="mt-2 w-2/3 text-start dark:text-white"
+        >Don't have an account? Register here!</a
+      >
     </div>
   </div>
 </div>
