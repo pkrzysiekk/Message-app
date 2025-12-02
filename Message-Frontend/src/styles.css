@@ -1,6 +1,7 @@
 /* You can add global styles to this file, and also import other style files */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
 @import 'tailwindcss';
-:root {
+html {
   all: unset;
 }
 @theme {
@@ -10,6 +11,7 @@
   --honey-bronze: #eca72c;
   --mint-leaf: #03cea4;
   --burgundy: #550c18;
+  --font-roboto: 'Roboto';
 }
 
 @layer components {

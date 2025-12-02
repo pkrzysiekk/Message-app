@@ -1,1 +1,28 @@
-<p>register works!</p>
+<div class="flex h-screen w-screen items-center justify-center">
+  <div class="h-6/10 w-6/10 border-4 border-(--prussian-blue) backdrop-blur-xs">
+    <div class="flex h-full flex-col items-center justify-center">
+      <div class="flex flex-col items-center justify-center">
+        <span class="text-6xl text-white">Well Met!</span>
+        <span class="text-2xl text-white">Create an account</span>
+      </div>
+      <div class="grid grid-cols-2 place-content-center justify-center">
+        <input type="text" placeholder="Username" class="auth-input col-span-2 w-full" />
+        <input
+          type="password"
+          placeholder="Password"
+          class="auth-input justify-self-center text-3xl"
+        />
+        <input
+          type="password"
+          placeholder="Confirm Password"
+          class="auth-input justify-self-center text-3xl"
+        />
+        <input type="email" placeholder="E-mail" class="auth-input col-span-2 w-full" />
+      </div>
+      <button type="button" class="auth-button w-4/5">Register</button>
+      <a [routerLink]="['/auth/login']" class="mt-2 w-2/3 text-start dark:text-white"
+        >Have an account? Log in here!</a
+      >
+    </div>
+  </div>
+</div>
