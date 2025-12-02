@@ -36,8 +36,9 @@ html {
     @apply border-(--mint-leaf);
   }
   .auth-container {
-    @apply h-6/10 w-6/10 border-4 backdrop-blur-xs;
+    @apply h-full w-6/10 border-4 backdrop-blur-xs md:h-7/10;
     border-color: var(--prussian-blue);
+    overflow: auto;
     color: var(--brilliant-azure);
   }
   .auth-header-message {
