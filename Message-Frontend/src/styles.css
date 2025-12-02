@@ -35,4 +35,12 @@ html {
   .auth-button:hover {
     @apply border-(--mint-leaf);
   }
+  .auth-container {
+    @apply h-6/10 w-6/10 border-4 backdrop-blur-xs;
+    border-color: var(--prussian-blue);
+    color: var(--brilliant-azure);
+  }
+  .auth-header-message {
+    @apply flex flex-col items-center justify-center dark:text-amber-50;
+  }
 }
