@@ -1,10 +1,22 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { LoginForm } from '../models/login.form.model';
+import {form,Field, required} from '@angular/forms/signals'
 
 @Component({
   selector: 'app-login',
-  imports: [RouterLink],
+  imports: [RouterLink, Field],
   templateUrl: './login.html',
   styleUrl: './login.css',
 })
-export class Login {}
+export class Login {
+   loginModel =signal<LoginForm>({
+    username:"",
+    password:""
+  })
+
+  loginForm=form(this.loginModel,(schemaPath)=>{
+    required(schemaPath.username,{message:"Username is required"})
+    required(schemaPath.password,{message:"Password is required"})
+  })
+}

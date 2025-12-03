@@ -5,8 +5,27 @@
         <span class="text-6xl">Welcome Back,</span>
         <span class="text-2xl">Log in</span>
       </div>
-      <input type="text" placeholder="Username" class="auth-input" />
-      <input type="password" placeholder="Password" class="auth-input" />
+      <input type="text" placeholder="Username" class="auth-input" [field]="loginForm.username" />
+      @if (loginForm.username().invalid() && loginForm.username().touched())
+      {
+        <div class="flex justify-start items-start min-w-3/4 my-1 px-1 text-red-500">
+        @for (error of loginForm.username().errors(); track error)
+        {
+        <p>{{error.message}}</p>
+        }
+        </div>
+      }
+      <input type="password" placeholder="Password" class="auth-input" [field]="loginForm.password" />
+
+      @if (loginForm.password().invalid() && loginForm.password().touched())
+      {
+        <div class="flex justify-start items-start min-w-3/4 my-1 px-1 text-red-500">
+        @for (error of loginForm.password().errors(); track error)
+        {
+        <p>{{error.message}}</p>
+        }
+        </div>
+      }
       <button type="button" class="auth-button">Log in</button>
       <a [routerLink]="['/auth/register']" class="mt-2 w-2/3 text-start dark:text-white"
         >Don't have an account? Register here!</a
