@@ -1,6 +1,6 @@
 import { Component, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { LoginForm } from '../models/login.form.model';
+import { loginModel } from '../models/login.form.model';
 import {form,Field, required} from '@angular/forms/signals'
 
 @Component({
@@ -10,7 +10,7 @@ import {form,Field, required} from '@angular/forms/signals'
   styleUrl: './login.css',
 })
 export class Login {
-   loginModel =signal<LoginForm>({
+   loginModel =signal<loginModel>({
     username:"",
     password:""
   })

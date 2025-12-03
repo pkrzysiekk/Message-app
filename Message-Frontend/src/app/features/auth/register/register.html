@@ -5,24 +5,59 @@
         <span class="text-6xl">Well Met!</span>
         <span class="text-2xl">Create an account</span>
       </div>
-      <div class="grid grid-cols-1 justify-items-center min-w-full">
-        <input type="text" placeholder="Username" class="auth-input" />
+      <div class="grid min-w-full grid-cols-1 justify-items-center">
+        <input
+          type="text"
+          placeholder="Username"
+          class="auth-input"
+          [field]="registerForm.username"
+        />
+        @if (registerForm.username().invalid() && registerForm.username().touched()) {
+          <div class="auth-errors">
+            @for (error of registerForm.username().errors(); track error) {
+              <p>{{ error.message }}</p>
+            }
+          </div>
+        }
         <input
           type="password"
           placeholder="Password"
           class="auth-input"
+          [field]="registerForm.password"
         />
+        @if (registerForm.password().invalid() && registerForm.password().touched()) {
+          <div class="auth-errors">
+            @for (error of registerForm.password().errors(); track error) {
+              <p>{{ error.message }}</p>
+            }
+          </div>
+        }
         <input
           type="password"
           placeholder="Confirm Password"
           class="auth-input"
+          [field]="registerForm.confirmPassword"
         />
-        <input type="email" placeholder="E-mail" class="auth-input" /> <button type="button" class="auth-button w-4/5">Register</button>
-      <a [routerLink]="['/auth/login']" class="mt-2 w-2/3 text-start dark:text-white"
-        >Have an account? Log in here!</a
-      >
+        @if (registerForm.confirmPassword().invalid() && registerForm.confirmPassword().touched()) {
+          <div class="auth-errors">
+            @for (error of registerForm.confirmPassword().errors(); track error) {
+              <p>{{ error.message }}</p>
+            }
+          </div>
+        }
+        <input type="email" placeholder="E-mail" class="auth-input" [field]="registerForm.email" />
+        @if (registerForm.email().invalid() && registerForm.email().touched()) {
+          <div class="auth-errors">
+            @for (error of registerForm.email().errors(); track error) {
+              <p>{{ error.message }}</p>
+            }
+          </div>
+        }
+        <button type="button" class="auth-button w-4/5">Register</button>
+        <a [routerLink]="['/auth/login']" class="mt-2 w-2/3 text-start dark:text-white"
+          >Have an account? Log in here!</a
+        >
       </div>
-     
     </div>
   </div>
 </div>
