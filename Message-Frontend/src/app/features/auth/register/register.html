@@ -5,7 +5,7 @@
         <span class="text-6xl">Well Met!</span>
         <span class="text-2xl">Create an account</span>
       </div>
-      <div class="grid grid-cols-1 justify-items-center">
+      <div class="grid grid-cols-1 justify-items-center min-w-full">
         <input type="text" placeholder="Username" class="auth-input" />
         <input
           type="password"
@@ -17,12 +17,12 @@
           placeholder="Confirm Password"
           class="auth-input"
         />
-        <input type="email" placeholder="E-mail" class="auth-input" />
-      </div>
-      <button type="button" class="auth-button w-4/5">Register</button>
+        <input type="email" placeholder="E-mail" class="auth-input" /> <button type="button" class="auth-button w-4/5">Register</button>
       <a [routerLink]="['/auth/login']" class="mt-2 w-2/3 text-start dark:text-white"
         >Have an account? Log in here!</a
       >
+      </div>
+     
     </div>
   </div>
 </div>

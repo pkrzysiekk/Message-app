@@ -44,4 +44,7 @@ html {
   .auth-header-message {
     @apply flex flex-col items-center justify-center dark:text-amber-50;
   }
+  .auth-errors{
+    @apply flex justify-start items-start min-w-3/4 my-1 px-1 text-red-500;
+  }
 }

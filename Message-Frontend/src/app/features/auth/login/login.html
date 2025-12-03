@@ -8,7 +8,7 @@
       <input type="text" placeholder="Username" class="auth-input" [field]="loginForm.username" />
       @if (loginForm.username().invalid() && loginForm.username().touched())
       {
-        <div class="flex justify-start items-start min-w-3/4 my-1 px-1 text-red-500">
+        <div class="auth-errors">
         @for (error of loginForm.username().errors(); track error)
         {
         <p>{{error.message}}</p>
@@ -19,7 +19,7 @@
 
       @if (loginForm.password().invalid() && loginForm.password().touched())
       {
-        <div class="flex justify-start items-start min-w-3/4 my-1 px-1 text-red-500">
+        <div class="auth-errors">
         @for (error of loginForm.password().errors(); track error)
         {
         <p>{{error.message}}</p>
