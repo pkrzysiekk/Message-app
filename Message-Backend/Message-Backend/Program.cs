@@ -54,9 +54,9 @@ builder.Services.AddCors(options =>
     options.AddDefaultPolicy(
         builder =>
         {
-            builder.WithOrigins("https:localhost:3000")
+            builder.WithOrigins("http://localhost:4200")
                 .AllowAnyHeader()
-                .WithMethods("GET", "POST")
+                .WithMethods("GET", "POST","DELETE","PUT")
                 .AllowCredentials();
         });
 });
@@ -201,7 +201,7 @@ app.UseExceptionHandler(errorApp =>
     });
 });
 app.UseHttpsRedirection();
-
+app.UseCors();
 app.UseAuthentication();
 app.UseAuthorization();
 

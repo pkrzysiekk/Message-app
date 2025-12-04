@@ -21,7 +21,7 @@ namespace Message_Backend.Presentation.Controllers
             _jwtOptions=RsaHelper.JwtOptions;
         }
         
-        [HttpPost("/login")]
+        [HttpPost("login")]
         [AnonymousOnly]
         public async Task<ActionResult<string>> LogIn([FromBody] UserAuthorizationRequest request)
         { 
@@ -32,7 +32,7 @@ namespace Message_Backend.Presentation.Controllers
             return Ok(token);
         }
 
-        [HttpPost("/register")]
+        [HttpPost("register")]
         [Authorize(Policy = "AnonymousOnly")]
         [AnonymousOnly]
         public async Task<ActionResult> Register([FromBody] RegisterRequest request)
