@@ -14,10 +14,12 @@ namespace Message_Backend.Application.Services;
 public class AuthService: IAuthService
 {
     private readonly UserManager<User> _userManager;
+    IUserService _userService;
 
     public AuthService(UserManager<User> userManager, IUserService userService)
     {
        _userManager = userManager;
+       _userService = userService;
     }
     public async Task<string> GenerateToken(JwtOptions jwtOptions,string username)
     {
@@ -58,6 +60,12 @@ public class AuthService: IAuthService
         if (userToCheck == null)
             throw new NotFoundException("User not found");
         return await _userManager.CheckPasswordAsync(userToCheck,password);
+    }
+
+    public async Task RegisterUser(string username, string password)
+    {
+        var user= new User{UserName = username};
+        await _userService.Add(user, password);
     }
 
 }

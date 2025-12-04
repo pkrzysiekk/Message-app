@@ -3,6 +3,7 @@ using Message_Backend.Application.Interfaces;
 using Message_Backend.Application.Interfaces.Services;
 using Message_Backend.Domain.Models.RSA;
 using Message_Backend.Presentation.ApiRequests;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Message_Backend.Presentation.Controllers
@@ -20,6 +21,7 @@ namespace Message_Backend.Presentation.Controllers
         }
         
         [HttpPost]
+        [AllowAnonymous]
         public async Task<ActionResult<string>> Post([FromBody] UserAuthorizationRequest request)
         { 
             bool authenticationResult = await _authService.ValidateUserCredentials(request.Username, request.Password);
@@ -27,6 +29,14 @@ namespace Message_Backend.Presentation.Controllers
                 return Unauthorized();
             var token = await _authService.GenerateToken(_jwtOptions,request.Username);
             return Ok(token);
+        }
+
+        [HttpPost("/register")]
+        [AllowAnonymous]
+        public async Task<ActionResult> Register([FromBody] UserAuthorizationRequest request)
+        {
+            await _authService.RegisterUser(request.Username, request.Password);
+            return Ok();
         }
     }
 }

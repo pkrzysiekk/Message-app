@@ -35,16 +35,6 @@ namespace Message_Backend.Presentation.Controllers
             return Ok(usersDto);
         }
 
-        // POST api/<UserController>
-        [HttpPost]
-        [AllowAnonymous]
-        public async Task<ActionResult>Post([FromBody] UserDto userDto,string password)
-        {
-            var user = userDto.ToBo();
-            await _userService.Add(user, password);
-            return CreatedAtAction(nameof(Get), new { id = user.Id }, user.ToDto()); 
-        }
-
         // PUT api/<UserController>/5
         [HttpPut("{userId}")]
         [Authorize(Policy = "SameUser")]
