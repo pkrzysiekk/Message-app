@@ -33,7 +33,6 @@ namespace Message_Backend.Presentation.Controllers
         }
 
         [HttpPost("register")]
-        [Authorize(Policy = "AnonymousOnly")]
         [AnonymousOnly]
         public async Task<ActionResult> Register([FromBody] RegisterRequest request)
         {
