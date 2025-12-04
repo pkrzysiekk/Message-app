@@ -3,6 +3,7 @@ using Message_Backend.Application.Interfaces;
 using Message_Backend.Application.Interfaces.Services;
 using Message_Backend.Domain.Models.RSA;
 using Message_Backend.Presentation.ApiRequests;
+using Message_Backend.Presentation.Atributes;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -20,9 +21,9 @@ namespace Message_Backend.Presentation.Controllers
             _jwtOptions=RsaHelper.JwtOptions;
         }
         
-        [HttpPost]
-        [AllowAnonymous]
-        public async Task<ActionResult<string>> Post([FromBody] UserAuthorizationRequest request)
+        [HttpPost("/login")]
+        [AnonymousOnly]
+        public async Task<ActionResult<string>> LogIn([FromBody] UserAuthorizationRequest request)
         { 
             bool authenticationResult = await _authService.ValidateUserCredentials(request.Username, request.Password);
             if (!authenticationResult)
@@ -32,7 +33,8 @@ namespace Message_Backend.Presentation.Controllers
         }
 
         [HttpPost("/register")]
-        [AllowAnonymous]
+        [Authorize(Policy = "AnonymousOnly")]
+        [AnonymousOnly]
         public async Task<ActionResult> Register([FromBody] UserAuthorizationRequest request)
         {
             await _authService.RegisterUser(request.Username, request.Password);
