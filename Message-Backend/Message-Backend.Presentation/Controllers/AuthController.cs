@@ -35,9 +35,9 @@ namespace Message_Backend.Presentation.Controllers
         [HttpPost("/register")]
         [Authorize(Policy = "AnonymousOnly")]
         [AnonymousOnly]
-        public async Task<ActionResult> Register([FromBody] UserAuthorizationRequest request)
+        public async Task<ActionResult> Register([FromBody] RegisterRequest request)
         {
-            await _authService.RegisterUser(request.Username, request.Password);
+            await _authService.RegisterUser(request.Username, request.Password,request.Email);
             return Ok();
         }
     }

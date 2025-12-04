@@ -62,9 +62,9 @@ public class AuthService: IAuthService
         return await _userManager.CheckPasswordAsync(userToCheck,password);
     }
 
-    public async Task RegisterUser(string username, string password)
+    public async Task RegisterUser(string username, string password,string email)
     {
-        var user= new User{UserName = username};
+        var user= new User{UserName = username,Email =  email};
         await _userService.Add(user, password);
     }
 

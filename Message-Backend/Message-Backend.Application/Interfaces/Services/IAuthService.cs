@@ -6,5 +6,5 @@ public interface IAuthService
 {
     public Task<string> GenerateToken(JwtOptions jwtOptions,string username);
     public Task<bool> ValidateUserCredentials(string username, string password);
-    public Task RegisterUser(string username, string password);
+    public Task RegisterUser(string username, string password,string email);
 }
