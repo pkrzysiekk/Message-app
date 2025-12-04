@@ -1,5 +1,5 @@
 import { computed, Injectable, Signal, signal, WritableSignal } from '@angular/core';
-import { AuthUser } from '../models/auth-user.model';
+import { AuthUser } from './models/auth-user.model';
 
 @Injectable({
   providedIn: 'root',
