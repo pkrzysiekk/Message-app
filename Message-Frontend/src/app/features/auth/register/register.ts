@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 
 import { RouterLink } from '@angular/router';
 import { RegisterModel } from '../models/register.form.model';
@@ -14,6 +14,8 @@ import {
 } from '@angular/forms/signals';
 import { equal } from 'assert';
 import { error } from 'console';
+import { HttpClient } from '@angular/common/http';
+import { AuthService } from '../../../core/services/auth/auth.service';
 @Component({
   selector: 'app-register',
   imports: [RouterLink, Field],
@@ -21,12 +23,15 @@ import { error } from 'console';
   styleUrl: './register.css',
 })
 export class Register {
+  authService = inject(AuthService);
+
   registerModel = signal<RegisterModel>({
     username: '',
     password: '',
     confirmPassword: '',
     email: '',
   });
+
   requiredUsernameLength = 6;
   requiredPasswordLength = 6;
 
@@ -74,4 +79,13 @@ export class Register {
       return null;
     });
   });
+
+  onRegister = () => {
+    if (this.registerForm().invalid()) return;
+    this.authService.register({
+      username: this.registerModel().username,
+      password: this.registerModel().password,
+      email: this.registerModel().email,
+    });
+  };
 }
