@@ -1,7 +1,7 @@
 import { Component, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { loginModel } from '../models/login.form.model';
-import {form,Field, required} from '@angular/forms/signals'
+import { LoginModel } from '../models/login.form.model';
+import { form, Field, required } from '@angular/forms/signals';
 
 @Component({
   selector: 'app-login',
@@ -10,13 +10,13 @@ import {form,Field, required} from '@angular/forms/signals'
   styleUrl: './login.css',
 })
 export class Login {
-   loginModel =signal<loginModel>({
-    username:"",
-    password:""
-  })
+  loginModel = signal<LoginModel>({
+    username: '',
+    password: '',
+  });
 
-  loginForm=form(this.loginModel,(schemaPath)=>{
-    required(schemaPath.username,{message:"Username is required"})
-    required(schemaPath.password,{message:"Password is required"})
-  })
+  loginForm = form(this.loginModel, (schemaPath) => {
+    required(schemaPath.username, { message: 'Username is required' });
+    required(schemaPath.password, { message: 'Password is required' });
+  });
 }
