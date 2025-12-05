@@ -5,13 +5,16 @@ import { routes } from './app.routes';
 import { provideClientHydration, withEventReplay } from '@angular/platform-browser';
 import { provideHttpClient, withFetch, withInterceptors } from '@angular/common/http';
 import { httpErrorInterceptor } from './core/interceptors/error-interceptor/http-error-interceptor';
-import { authInterceptor } from './core/interceptors/auth-interceptor/auth-interceptor';
+import { credentialsInterceptor } from './core/interceptors/credentials-interceptor/credentials-interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
     provideRouter(routes),
     provideClientHydration(withEventReplay()),
-    provideHttpClient(withFetch(), withInterceptors([httpErrorInterceptor, authInterceptor])),
+    provideHttpClient(
+      withFetch(),
+      withInterceptors([httpErrorInterceptor, credentialsInterceptor]),
+    ),
   ],
 };
