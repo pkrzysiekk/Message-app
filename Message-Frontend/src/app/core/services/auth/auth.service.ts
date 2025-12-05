@@ -3,6 +3,7 @@ import { AuthUser } from './models/auth-user.model';
 import { HttpBackend, HttpClient } from '@angular/common/http';
 import { LoginRequest } from './models/login.request';
 import { RegisterRequest } from './models/register.request';
+import * as signalR from '@microsoft/signalr';
 
 @Injectable({
   providedIn: 'root',
@@ -39,4 +40,12 @@ export class AuthService {
       .get('https://localhost/api' + `/friends/users/${id}/invites`, { withCredentials: true })
       .subscribe((response) => console.log(response));
   }
+  // async chat() {
+  //   const connection = new signalR.HubConnectionBuilder()
+  //     .withUrl('https://localhost/ChatHub', { withCredentials: true })
+  //     .withAutomaticReconnect()
+  //     .build();
+
+  //   await connection.start();
+  // }
 }
