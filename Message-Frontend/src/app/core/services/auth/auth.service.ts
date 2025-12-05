@@ -13,19 +13,15 @@ export class AuthService {
   baseApiUrl = 'https://localhost/api/auth';
   authUser = signal<AuthUser>({
     username: null,
-    authToken: null,
   });
 
-  isUserAuthenticated = computed(() => {
-    return !!this.authUser().authToken;
-  });
+  isUserAuthenticated = signal<boolean>(false);
 
   login = (credentials: LoginRequest) => {
     this.http
       .post<string>(this.baseApiUrl + '/login', credentials, { withCredentials: true })
-      .subscribe((token) => {
-        console.log('done');
-        this.getUser(3);
+      .subscribe(() => {
+        this.isUserAuthenticated.set(true);
       });
   };
   register = (registerRequest: RegisterRequest) => {
@@ -36,6 +32,11 @@ export class AuthService {
   getUser(id: number) {
     this.http
       .get('https://localhost/api' + `/user/${id}`, { withCredentials: true })
+      .subscribe((response) => console.log(response));
+  }
+  getInvites(id: number) {
+    this.http
+      .get('https://localhost/api' + `/friends/users/${id}/invites`, { withCredentials: true })
       .subscribe((response) => console.log(response));
   }
 }
