@@ -16,16 +16,19 @@ export class AuthService {
     authToken: null,
   });
 
-  isUserAuthenticated = computed<Boolean>(() => {
-    return this.authUser().authToken ? true : false;
+  isUserAuthenticated = computed(() => {
+    return !!this.authUser().authToken;
   });
 
   login = (credentials: LoginRequest) => {
     this.http
       .post<string>(this.baseApiUrl + '/login', credentials, { responseType: 'text' as 'json' })
       .subscribe((token) => {
-        this.authUser().username = credentials.username;
-        this.authUser().authToken = token;
+        this.authUser.set({
+          username: credentials.username,
+          authToken: token,
+        });
+        console.log(this.authUser());
       });
   };
   register = (registerRequest: RegisterRequest) => {
