@@ -1,0 +1,32 @@
+.auth-input {
+  @apply my-2 w-full border-0 border-b-3 px-2 text-5xl md:w-3/4 dark:text-white;
+  border-color: var(--prussian-blue);
+  caret-color: var(--prussian-blue);
+  outline: none;
+}
+
+.auth-input:focus {
+  border-color: var(--mint-leaf);
+}
+
+.auth-button {
+  @apply mt-3 w-3/4 cursor-pointer rounded-full border-5 border-transparent p-4 text-2xl;
+  background-color: var(--brilliant-azure);
+  color: white;
+}
+
+.auth-button:hover {
+  @apply border-(--mint-leaf);
+}
+.auth-container {
+  @apply h-full w-6/10 border-4 backdrop-blur-xs md:h-7/10;
+  border-color: var(--prussian-blue);
+  overflow: auto;
+  color: var(--brilliant-azure);
+}
+.auth-header-message {
+  @apply flex flex-col items-center justify-center dark:text-amber-50;
+}
+.auth-errors {
+  @apply my-1 flex min-w-3/4 items-start justify-start px-1 text-red-500;
+}
