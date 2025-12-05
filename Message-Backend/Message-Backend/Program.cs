@@ -54,7 +54,7 @@ builder.Services.AddCors(options =>
     options.AddDefaultPolicy(
         builder =>
         {
-            builder.WithOrigins("http://localhost:4200")
+            builder.WithOrigins("https://localhost:4200")
                 .AllowAnyHeader()
                 .WithMethods("GET", "POST","DELETE","PUT")
                 .AllowCredentials();
@@ -132,7 +132,16 @@ builder.Services
     .AddJwtBearer(x =>
     {
         x.RequireHttpsMetadata = false;
-        x.SaveToken = true;
+        x.SaveToken = true; x.Events = new JwtBearerEvents
+        {
+            OnMessageReceived = context =>
+            {
+                // Pobieramy token z HttpOnly cookie
+                if (context.Request.Cookies.ContainsKey("token"))
+                    context.Token = context.Request.Cookies["token"];
+                return Task.CompletedTask;
+            }
+        };
         x.TokenValidationParameters = new TokenValidationParameters
         {
             IssuerSigningKey = new RsaSecurityKey(RsaHelper.PublicKey),

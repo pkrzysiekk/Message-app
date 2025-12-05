@@ -5,6 +5,7 @@ using Message_Backend.Domain.Models.RSA;
 using Message_Backend.Presentation.ApiRequests;
 using Message_Backend.Presentation.Atributes;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Message_Backend.Presentation.Controllers
@@ -22,14 +23,21 @@ namespace Message_Backend.Presentation.Controllers
         }
         
         [HttpPost("login")]
-        [AnonymousOnly]
+        [AllowAnonymous]
         public async Task<ActionResult<string>> LogIn([FromBody] UserAuthorizationRequest request)
         { 
             bool authenticationResult = await _authService.ValidateUserCredentials(request.Username, request.Password);
             if (!authenticationResult)
                 return Unauthorized();
             var token = await _authService.GenerateToken(_jwtOptions,request.Username);
-            return Ok(token);
+            Response.Cookies.Append("token", token, new CookieOptions
+            {
+                HttpOnly = true,
+                Secure = true,         
+                SameSite = SameSiteMode.None
+            });
+
+            return Ok();
         }
 
         [HttpPost("register")]

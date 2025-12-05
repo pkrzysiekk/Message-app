@@ -10,7 +10,7 @@ import { RegisterRequest } from './models/register.request';
 export class AuthService {
   handler = inject(HttpBackend);
   http = new HttpClient(this.handler);
-  baseApiUrl = 'https://localhost:5000/api/auth';
+  baseApiUrl = 'https://localhost/api/auth';
   authUser = signal<AuthUser>({
     username: null,
     authToken: null,
@@ -22,13 +22,10 @@ export class AuthService {
 
   login = (credentials: LoginRequest) => {
     this.http
-      .post<string>(this.baseApiUrl + '/login', credentials, { responseType: 'text' as 'json' })
+      .post<string>(this.baseApiUrl + '/login', credentials, { withCredentials: true })
       .subscribe((token) => {
-        this.authUser.set({
-          username: credentials.username,
-          authToken: token,
-        });
-        console.log(this.authUser());
+        console.log('done');
+        this.getUser(3);
       });
   };
   register = (registerRequest: RegisterRequest) => {
@@ -36,4 +33,9 @@ export class AuthService {
       console.log(response);
     });
   };
+  getUser(id: number) {
+    this.http
+      .get('https://localhost/api' + `/user/${id}`, { withCredentials: true })
+      .subscribe((response) => console.log(response));
+  }
 }
