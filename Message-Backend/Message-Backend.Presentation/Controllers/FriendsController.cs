@@ -27,7 +27,7 @@ namespace Message_Backend.Presentation.Controllers
             return friends.ToDto();
         }
 
-        [HttpGet("/users/{userId}/friends")]
+        [HttpGet("users/{userId}/friends")]
         [Authorize(Policy = "SameUser")]
         public async Task<ActionResult<IEnumerable<FriendsDto>>> GetFriends([FromRoute] int userId)
         {
@@ -36,7 +36,7 @@ namespace Message_Backend.Presentation.Controllers
             return friendsDto;
         }
 
-        [HttpGet("/users/{userId}/invites")]
+        [HttpGet("users/{userId}/invites")]
         [Authorize(Policy = "SameUser")]
         public async Task<ActionResult<IEnumerable<FriendsDto>>>
             GetUserPendingInvites([FromRoute] int userId)
@@ -57,14 +57,14 @@ namespace Message_Backend.Presentation.Controllers
             return CreatedAtAction(nameof(Get), new { id = friendsDto.FriendId }, friendsDto);
         }
 
-        [HttpPut("/acceptInvite")]
+        [HttpPut("acceptInvite")]
         [Authorize(Policy = "SameUser")]
         public async Task<ActionResult> AcceptInvite([FromQuery] int userId,[FromQuery] int friendId)
         {
             await _friendsService.AcceptInvite(userId, friendId);
             return Ok("Friends updated");
         }
-        [HttpPut("/declineInvite")]
+        [HttpPut("declineInvite")]
         [Authorize(Policy = "SameUser")]
         public async Task<ActionResult> DeclineInvite([FromQuery] int userId,[FromQuery] int friendId)
         {
@@ -72,7 +72,7 @@ namespace Message_Backend.Presentation.Controllers
             return Ok("Friends updated");
         } 
 
-        [HttpDelete("/deleteFriend")]
+        [HttpDelete("deleteFriend")]
         [Authorize(Policy = "SameUser")]
         public async Task<ActionResult> RemoveFriend([FromQuery] int userId,[FromQuery] int friendId)
         {
