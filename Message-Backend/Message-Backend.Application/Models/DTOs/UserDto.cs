@@ -6,5 +6,6 @@ public class UserDto
     public required string Username { get; set; }
     public required string Email { get; set; }
     public DateTime LastSeen { get; set; }
+    public Byte[]? Avatar { get; set; }
     public bool IsOnline { get; set; }
 }
