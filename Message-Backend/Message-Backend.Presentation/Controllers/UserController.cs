@@ -2,6 +2,7 @@ using Message_Backend.Application.Interfaces;
 using Message_Backend.Application.Interfaces.Services;
 using Message_Backend.Application.Mappers;
 using Message_Backend.Application.Models.DTOs;
+using Message_Backend.Presentation.Helpers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -36,10 +37,10 @@ namespace Message_Backend.Presentation.Controllers
         }
 
         // PUT api/<UserController>/5
-        [HttpPut("{userId}")]
-        [Authorize(Policy = "SameUser")]
-        public async Task<ActionResult> Put([FromRoute] int userId,[FromBody] UserDto userDto)
+        [HttpPut]
+        public async Task<ActionResult> Put([FromBody] UserDto userDto)
         {
+            var userId = CookieHelper.GetUserIdFromCookie(User);
             if (userDto.Id != userId)
                 return BadRequest("User id mismatch");
             var user = userDto.ToBo();
@@ -48,40 +49,39 @@ namespace Message_Backend.Presentation.Controllers
         }
 
         // DELETE api/<UserController>/5
-        [HttpDelete("{userId}")]
-        [Authorize(Policy = "SameUser")]
-        public async Task<IActionResult> Delete([FromRoute] int userId)
+        [HttpDelete]
+        public async Task<IActionResult> Delete()
         {
+            var userId = CookieHelper.GetUserIdFromCookie(User);
             await _userService.Delete(userId);
             return Ok("Deleted");
         }
 
-        [HttpPut("{userId}/change-password")]
-        [Authorize(Policy = "SameUser")]
-        public async Task<ActionResult> ChangePassword([FromRoute] int userId, string oldPassword, string newPassword)
-        {
+        [HttpPut("change-password")]
+        public async Task<ActionResult> ChangePassword(string oldPassword, string newPassword)
+        {         
+                var userId = CookieHelper.GetUserIdFromCookie(User);
                 await _userService.ChangePassword(userId, oldPassword, newPassword);
                 return Ok("Password changed");
         }
 
-        [HttpPut("{userId}/change-email")]
-        [Authorize(Policy = "SameUser")]
-        public async Task<ActionResult> ChangeEmail([FromRoute]  int userId, string email)
+        [HttpPut("change-email")]
+        public async Task<ActionResult> ChangeEmail( string email)
         {
+            var userId = CookieHelper.GetUserIdFromCookie(User);
             await _userService.ChangeEmail(userId, email);
             return Ok("Email changed");
         }
 
-        [HttpPut("{userId}/change-avatar")]
-        [Authorize(Policy = "SameUser")]
-        public async Task<ActionResult> ChangeAvatar([FromRoute] int userId,  IFormFile avatar)
+        [HttpPut("change-avatar")]
+        public async Task<ActionResult> ChangeAvatar(IFormFile avatar)
         {
+            var userId = CookieHelper.GetUserIdFromCookie(User);
             await _userService.SetAvatar(userId,avatar);
             return Ok("Avatar changed");
         }
 
         [HttpGet("{userId}/avatar")]
-        [Authorize(Policy = "SameUser")]
         public async Task<ActionResult> GetAvatar([FromRoute] int userId)
         {
             var avatar = await _userService.GetAvatar(userId);
