@@ -47,4 +47,7 @@ html {
   .auth-errors {
     @apply my-1 flex min-w-3/4 items-start justify-start px-1 text-red-500;
   }
+  .search-input {
+    @apply w-3/5 border-b-2 border-indigo-600 p-3 text-center shadow-2xl outline-0 backdrop-contrast-50 focus:border-(--mint-leaf) dark:backdrop-brightness-50 dark:backdrop-contrast-100;
+  }
 }
