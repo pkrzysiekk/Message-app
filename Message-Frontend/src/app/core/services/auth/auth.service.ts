@@ -4,6 +4,7 @@ import { HttpBackend, HttpClient } from '@angular/common/http';
 import { LoginRequest } from './models/login.request';
 import { RegisterRequest } from './models/register.request';
 import * as signalR from '@microsoft/signalr';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root',
@@ -15,7 +16,7 @@ export class AuthService {
   authUser = signal<AuthUser>({
     username: null,
   });
-
+  router = inject(Router);
   isUserAuthenticated = signal<boolean>(false);
 
   login = (credentials: LoginRequest) => {
@@ -23,6 +24,7 @@ export class AuthService {
       .post<string>(this.baseApiUrl + '/login', credentials, { withCredentials: true })
       .subscribe(() => {
         this.isUserAuthenticated.set(true);
+        this.router.navigate(['/app']);
       });
   };
   register = (registerRequest: RegisterRequest) => {
