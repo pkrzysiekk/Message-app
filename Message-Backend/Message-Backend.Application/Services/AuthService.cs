@@ -68,4 +68,10 @@ public class AuthService: IAuthService
         await _userService.Add(user, password);
     }
 
+    public async Task<int> GetUserId(string username)
+    {
+        var user = await _userManager.FindByNameAsync(username);
+        return user == null ? throw new NotFoundException("User not found") : user.Id;
+    }
+
 }
