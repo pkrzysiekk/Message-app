@@ -1,10 +1,10 @@
-import { Avatar } from './avatar';
+import { Image } from './image';
 
 export interface User {
   id: number;
   username: string;
   email: string;
   lastSeen: string;
-  avatar?: Avatar;
+  avatar?: Image;
   isOnline: boolean;
 }

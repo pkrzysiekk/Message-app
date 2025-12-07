@@ -4,10 +4,11 @@ import { FormsModule, NgModel } from '@angular/forms';
 import { Field, form } from '@angular/forms/signals';
 import { debounceTime } from 'rxjs';
 import { User } from '../../../core/models/user';
+import { ImageParsePipe } from '../../../shared/pipes/image-parse-pipe/image-parse-pipe';
 
 @Component({
   selector: 'app-search',
-  imports: [FormsModule],
+  imports: [FormsModule, ImageParsePipe],
   templateUrl: './search.html',
   styleUrl: './search.css',
 })
