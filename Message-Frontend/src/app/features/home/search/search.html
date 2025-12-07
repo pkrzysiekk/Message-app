@@ -12,7 +12,18 @@
     @if (fetchedUsers().length != 0) {
       <ul class="mt-2 flex w-3/5 flex-col">
         @for (user of fetchedUsers(); track user.id) {
-          <li>{{ user.username }}</li>
+          <li
+            class="flex cursor-pointer items-center px-3 backdrop-grayscale-50 hover:backdrop-brightness-75"
+          >
+            <div>
+              <img
+                [src]="'data:' + user.avatar?.contentType + ';base64,' + user.avatar?.content"
+                alt=""
+                class="aspect-square w-full max-w-35 rounded-full object-cover"
+              />
+            </div>
+            <div class="px-4 italic">{{ user.username }}</div>
+          </li>
         }
       </ul>
     }
