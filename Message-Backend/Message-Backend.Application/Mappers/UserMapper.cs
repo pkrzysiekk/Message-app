@@ -13,7 +13,11 @@ public static class UserMapper
             Username = user.UserName!,
             LastSeen = user.LastSeen,
             IsOnline = user.IsOnline,
-            Avatar=user?.Avatar?.Content
+            Avatar= user.Avatar != null ? new AvatarDto()
+            {
+                Content = user.Avatar.Content,
+                ContentType = user.Avatar.ContentType,
+            } :  null
         };
 
     public static User ToBo(this UserDto dto) =>
