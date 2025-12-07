@@ -10,7 +10,7 @@
       (input)="onSearch()"
     />
     @if (fetchedUsers().length != 0) {
-      <ul class="mt-2 flex w-3/5 flex-col">
+      <ul class="mt-2 flex w-3/5 flex-col" (appClickedOutside)="deleteFetchedUsers()">
         @for (user of fetchedUsers(); track user.id) {
           <li
             class="flex cursor-pointer items-center px-3 backdrop-grayscale-50 hover:backdrop-brightness-75"
