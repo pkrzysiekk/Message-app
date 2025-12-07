@@ -1,4 +1,4 @@
-export interface Avatar {
+export interface Image {
   content: Blob;
   contentType: string;
 }
