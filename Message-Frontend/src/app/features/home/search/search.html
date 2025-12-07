@@ -1,7 +1,5 @@
 <div class="flex w-screen justify-center">
-  <div
-    class="m-4 flex w-full flex-col items-center justify-center text-3xl text-cyan-800 dark:text-(--brilliant-azure)"
-  >
+  <div class="search-container">
     <input
       type="text"
       class="search-input"
@@ -12,9 +10,7 @@
     @if (fetchedUsers().length != 0) {
       <ul class="mt-2 flex w-3/5 flex-col" (appClickedOutside)="deleteFetchedUsers()">
         @for (user of fetchedUsers(); track user.id) {
-          <li
-            class="flex cursor-pointer items-center px-3 backdrop-grayscale-50 hover:backdrop-brightness-75"
-          >
+          <li class="search-list">
             <div>
               <img
                 [src]="(user.avatar | imageParse) ?? 'https://pic.re/image'"
