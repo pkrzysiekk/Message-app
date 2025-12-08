@@ -17,15 +17,22 @@ export class Login {
     password: '',
   });
 
+  loginError = signal<Error | null>(null);
+
   loginForm = form(this.loginModel, (schemaPath) => {
     required(schemaPath.username, { message: 'Username is required' });
     required(schemaPath.password, { message: 'Password is required' });
   });
 
   handleLogin = () => {
-    this.authService.login({
-      username: this.loginModel().username,
-      password: this.loginModel().password,
-    });
+    this.authService
+      .login({
+        username: this.loginModel().username,
+        password: this.loginModel().password,
+      })
+      .subscribe({
+        next: () => {},
+        error: (e) => this.loginError.set(e),
+      });
   };
 }

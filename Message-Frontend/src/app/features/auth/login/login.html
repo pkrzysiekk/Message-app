@@ -27,6 +27,11 @@
           }
         </div>
       }
+      @if (loginError()) {
+        <div class="auth-errors">
+          <p>Invalid login or password</p>
+        </div>
+      }
       <button type="button" class="auth-button" (click)="handleLogin()">Log in</button>
       <a [routerLink]="['/auth/register']" class="mt-2 w-2/3 text-start dark:text-white"
         >Don't have an account? Register here!</a
