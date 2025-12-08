@@ -58,7 +58,7 @@ public class AuthService: IAuthService
     {
         var userToCheck = await _userManager.FindByNameAsync(username);
         if (userToCheck == null)
-            throw new NotFoundException("User not found");
+            return false;
         return await _userManager.CheckPasswordAsync(userToCheck,password);
     }
 
