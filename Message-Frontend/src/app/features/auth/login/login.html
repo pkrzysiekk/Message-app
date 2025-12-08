@@ -32,7 +32,14 @@
           <p>{{ loginError() }}</p>
         </div>
       }
-      <button type="button" class="auth-button" (click)="handleLogin()">Log in</button>
+      <button
+        type="button"
+        class="auth-button"
+        [class.cursor-progress]="isLoading()"
+        (click)="handleLogin()"
+      >
+        Log in
+      </button>
       <a [routerLink]="['/auth/register']" class="mt-2 w-2/3 text-start dark:text-white"
         >Don't have an account? Register here!</a
       >

@@ -58,7 +58,14 @@
             <p>{{ registerError()?.error }}</p>
           </div>
         }
-        <button type="button" class="auth-button w-4/5" (click)="onRegister()">Register</button>
+        <button
+          type="button"
+          class="auth-button w-4/5"
+          [class.cursor-progress]="isLoading()"
+          (click)="onRegister()"
+        >
+          Register
+        </button>
         <a [routerLink]="['/auth/login']" class="mt-2 w-2/3 text-start dark:text-white"
           >Have an account? Log in here!</a
         >

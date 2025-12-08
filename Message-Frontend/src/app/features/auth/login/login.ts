@@ -4,6 +4,7 @@ import { LoginModel } from '../models/login.form.model';
 import { form, Field, required } from '@angular/forms/signals';
 import { AuthService } from '../../../core/services/auth/auth.service';
 import { HttpErrorResponse } from '@angular/common/http';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-login',
@@ -19,18 +20,21 @@ export class Login {
   });
 
   loginError = signal<HttpErrorResponse | null>(null);
-
+  isLoading = signal<boolean>(false);
   loginForm = form(this.loginModel, (schemaPath) => {
     required(schemaPath.username, { message: 'Username is required' });
     required(schemaPath.password, { message: 'Password is required' });
   });
 
   handleLogin = () => {
+    if (this.loginForm().invalid()) return;
+    this.isLoading.set(true);
     this.authService
       .login({
         username: this.loginModel().username,
         password: this.loginModel().password,
       })
+      .pipe(finalize(() => this.isLoading.set(false)))
       .subscribe({
         next: () => {},
         error: (e: HttpErrorResponse) => this.loginError.set(e.error),
