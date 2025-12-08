@@ -5,30 +5,36 @@ import { LoginRequest } from './models/login.request';
 import { RegisterRequest } from './models/register.request';
 import * as signalR from '@microsoft/signalr';
 import { Router } from '@angular/router';
+import { error } from 'console';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
   handler = inject(HttpBackend);
-  http = new HttpClient(this.handler);
+  http = inject(HttpClient);
   baseApiUrl = 'https://localhost/api/auth';
   authUser = signal<AuthUser>({
     username: null,
   });
+  authErr = signal<Error | null>(null);
   router = inject(Router);
   isUserAuthenticated = signal<boolean>(false);
 
   login = (credentials: LoginRequest) => {
     this.http
       .post<string>(this.baseApiUrl + '/login', credentials, { withCredentials: true })
-      .subscribe(() => {
-        this.isUserAuthenticated.set(true);
-        this.router.navigate(['/app']);
+      .subscribe({
+        next: () => {
+          this.authUser.set({ username: credentials.username });
+        },
+        error: (err) => {
+          this.authErr.set(err);
+        },
       });
   };
   register = (registerRequest: RegisterRequest) => {
-    this.http.post(this.baseApiUrl + '/register', registerRequest).subscribe((response) => {
+    return this.http.post(this.baseApiUrl + '/register', registerRequest).subscribe((response) => {
       console.log(response);
       this.router.navigate(['/auth/register-success']);
     });
