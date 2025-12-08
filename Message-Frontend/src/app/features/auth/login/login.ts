@@ -3,6 +3,7 @@ import { RouterLink } from '@angular/router';
 import { LoginModel } from '../models/login.form.model';
 import { form, Field, required } from '@angular/forms/signals';
 import { AuthService } from '../../../core/services/auth/auth.service';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-login',
@@ -17,7 +18,7 @@ export class Login {
     password: '',
   });
 
-  loginError = signal<Error | null>(null);
+  loginError = signal<HttpErrorResponse | null>(null);
 
   loginForm = form(this.loginModel, (schemaPath) => {
     required(schemaPath.username, { message: 'Username is required' });
@@ -32,7 +33,7 @@ export class Login {
       })
       .subscribe({
         next: () => {},
-        error: (e) => this.loginError.set(e),
+        error: (e: HttpErrorResponse) => this.loginError.set(e.error),
       });
   };
 }
