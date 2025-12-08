@@ -4,6 +4,7 @@ import path from 'path';
 import { AuthLayout } from './auth-layout/auth-layout';
 import { Register } from './register/register';
 import { unauthenticatedGuard } from '../../core/route-guards/unauthenticated-guard';
+import { RegisterSuccessful } from './register-successful/register-successful';
 
 export const authRoutes: Routes = [
   {
@@ -14,6 +15,7 @@ export const authRoutes: Routes = [
       { path: '', redirectTo: 'login', pathMatch: 'full' },
       { path: 'login', component: Login },
       { path: 'register', component: Register },
+      { path: 'register-success', component: RegisterSuccessful },
     ],
   },
 ];

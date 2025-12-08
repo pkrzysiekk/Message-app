@@ -30,6 +30,7 @@ export class AuthService {
   register = (registerRequest: RegisterRequest) => {
     this.http.post(this.baseApiUrl + '/register', registerRequest).subscribe((response) => {
       console.log(response);
+      this.router.navigate(['/auth/register-success']);
     });
   };
   getUser(id: number) {
