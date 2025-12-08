@@ -29,7 +29,7 @@ namespace Message_Backend.Presentation.Controllers
             string unauthorizedMessageError="Wrong username or password";
             bool authenticationResult = await _authService.ValidateUserCredentials(request.Username, request.Password);
             if (!authenticationResult)
-                return Unauthorized(unauthorisedMessageError);
+                return Unauthorized(unauthorizedMessageError);
             var token = await _authService.GenerateToken(_jwtOptions,request.Username);
             Response.Cookies.Append("token", token, new CookieOptions
             {
