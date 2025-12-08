@@ -14,7 +14,7 @@ import {
 } from '@angular/forms/signals';
 import { equal } from 'assert';
 import { error } from 'console';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { AuthService } from '../../../core/services/auth/auth.service';
 @Component({
   selector: 'app-register',
@@ -31,6 +31,8 @@ export class Register {
     confirmPassword: '',
     email: '',
   });
+
+  registerError = signal<HttpErrorResponse | null>(null);
 
   requiredUsernameLength = 6;
   requiredPasswordLength = 6;
@@ -82,10 +84,12 @@ export class Register {
 
   onRegister = () => {
     if (this.registerForm().invalid()) return;
-    this.authService.register({
-      username: this.registerModel().username,
-      password: this.registerModel().password,
-      email: this.registerModel().email,
-    });
+    this.authService
+      .register({
+        username: this.registerModel().username,
+        password: this.registerModel().password,
+        email: this.registerModel().email,
+      })
+      .subscribe({ error: (e: HttpErrorResponse) => this.registerError.set(e.error) });
   };
 }

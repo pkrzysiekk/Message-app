@@ -1,6 +1,6 @@
 import { computed, inject, Injectable, Signal, signal, WritableSignal } from '@angular/core';
 import { AuthUser } from './models/auth-user.model';
-import { HttpBackend, HttpClient } from '@angular/common/http';
+import { HttpBackend, HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { LoginRequest } from './models/login.request';
 import { RegisterRequest } from './models/register.request';
 import * as signalR from '@microsoft/signalr';
@@ -18,7 +18,7 @@ export class AuthService {
   authUser = signal<AuthUser>({
     username: null,
   });
-  authErr = signal<Error | null>(null);
+  authErr = signal<HttpErrorResponse | null>(null);
   router = inject(Router);
   isUserAuthenticated = signal<boolean>(false);
 
