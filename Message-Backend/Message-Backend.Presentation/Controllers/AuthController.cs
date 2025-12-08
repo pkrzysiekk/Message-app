@@ -26,10 +26,10 @@ namespace Message_Backend.Presentation.Controllers
         [AllowAnonymous]
         public async Task<ActionResult<string>> LogIn([FromBody] UserAuthorizationRequest request)
         { 
-            string unauthorisedMessageErr="Wrong username or password";
+            string unauthorizedMessageError="Wrong username or password";
             bool authenticationResult = await _authService.ValidateUserCredentials(request.Username, request.Password);
             if (!authenticationResult)
-                return Unauthorized(unauthorisedMessageErr);
+                return Unauthorized(unauthorisedMessageError);
             var token = await _authService.GenerateToken(_jwtOptions,request.Username);
             Response.Cookies.Append("token", token, new CookieOptions
             {
