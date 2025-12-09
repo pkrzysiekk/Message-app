@@ -37,11 +37,6 @@ export class AuthService {
       .pipe(tap(() => this.router.navigate(['/auth/register-success'])));
   };
 
-  getUser(id: number) {
-    this.http
-      .get('https://localhost/api' + `/user/${id}`, { withCredentials: true })
-      .subscribe((response) => console.log(response));
-  }
   getInvites(id: number) {
     this.http
       .get('https://localhost/api' + `/friends/users/${id}/invites`, { withCredentials: true })
