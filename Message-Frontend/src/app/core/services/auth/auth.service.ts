@@ -32,7 +32,9 @@ export class AuthService {
   };
 
   register = (registerRequest: RegisterRequest) => {
-    return this.http.post(this.baseApiUrl + '/register', registerRequest);
+    return this.http
+      .post(this.baseApiUrl + '/register', registerRequest)
+      .pipe(tap(() => this.router.navigate(['/auth/register-success'])));
   };
 
   getUser(id: number) {
