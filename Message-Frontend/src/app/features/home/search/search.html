@@ -10,15 +10,17 @@
     @if (fetchedUsers().length != 0) {
       <ul class="mt-2 flex w-3/5 flex-col" (appClickedOutside)="deleteFetchedUsers()">
         @for (user of fetchedUsers(); track user.id) {
-          <li class="search-list">
-            <div>
-              <img
-                [src]="(user.avatar | imageParse) ?? 'https://pic.re/image'"
-                alt=""
-                class="aspect-square w-full max-w-18 rounded-full object-cover"
-              />
-            </div>
-            <div class="px-4 italic">{{ user.username }}</div>
+          <li>
+            <a [routerLink]="['/user', user.id]" class="search-list">
+              <div>
+                <img
+                  [src]="(user.avatar | imageParse) ?? 'https://pic.re/image'"
+                  alt=""
+                  class="aspect-square w-full max-w-18 rounded-full object-cover"
+                />
+              </div>
+              <div class="px-4 italic">{{ user.username }}</div>
+            </a>
           </li>
         }
       </ul>

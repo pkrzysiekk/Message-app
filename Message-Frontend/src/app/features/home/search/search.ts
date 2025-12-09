@@ -6,10 +6,11 @@ import { debounceTime } from 'rxjs';
 import { User } from '../../../core/models/user';
 import { ImageParsePipe } from '../../../shared/pipes/image-parse-pipe/image-parse-pipe';
 import { ClickedOutside } from '../../../shared/directives/clicked-outside/clicked-outside';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-search',
-  imports: [FormsModule, ImageParsePipe, ClickedOutside],
+  imports: [FormsModule, ImageParsePipe, ClickedOutside, RouterLink],
   templateUrl: './search.html',
   styleUrl: './search.css',
 })
