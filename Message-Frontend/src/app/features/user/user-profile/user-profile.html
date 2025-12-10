@@ -1,5 +1,22 @@
 <div class="flex h-full w-full items-center justify-center">
-  <div class="w-6/10 border-4 backdrop-blur-xs md:h-7/10">
-    <div class="text-white">{{ fetchedUser()?.username }}</div>
+  <div class="border-4 backdrop-blur-xs">
+    <div class="py-1">
+      <img
+        [src]="(fetchedUser()?.avatar | imageParse) ?? 'https://pic.re/image'"
+        alt=""
+        class="mx-30 aspect-square max-w-sm min-w-8 shrink-0 rounded-full object-cover"
+      />
+      <div class="text-center text-3xl text-white">{{ fetchedUser()?.username }}</div>
+      <div class="flex items-center justify-center">
+        <div class="p-2 text-xl text-white">
+          {{ fetchedUser()?.isOnline ? 'Online' : 'Offline' }}
+        </div>
+        <div
+          class="h-4 w-4 rounded-full"
+          [class.bg-red-500]="!fetchedUser()?.isOnline"
+          [class.bg-green-500]="fetchedUser()?.isOnline"
+        ></div>
+      </div>
+    </div>
   </div>
 </div>

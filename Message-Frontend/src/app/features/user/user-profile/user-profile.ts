@@ -4,10 +4,11 @@ import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
 import { User } from '../../../core/models/user';
 import { error } from 'console';
 import { finalize } from 'rxjs';
+import { ImageParsePipe } from '../../../shared/pipes/image-parse-pipe/image-parse-pipe';
 
 @Component({
   selector: 'app-user-profile',
-  imports: [],
+  imports: [ImageParsePipe],
   templateUrl: './user-profile.html',
   styleUrl: './user-profile.css',
 })
