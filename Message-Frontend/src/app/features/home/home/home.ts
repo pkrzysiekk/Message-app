@@ -1,6 +1,5 @@
 import { Component, signal, Signal } from '@angular/core';
-import { Search } from '../search/search';
-import { User } from '../../../core/models/user';
+import { Search } from '../../user/search/search';
 
 @Component({
   selector: 'app-home',

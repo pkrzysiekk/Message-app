@@ -41,8 +41,13 @@ export class UserProfile {
   };
 
   constructor() {
-    this.userId.set(this.route.snapshot.paramMap.get('id'));
-    console.log(this.userId());
-    this.loadData();
+    this.route.paramMap.subscribe((params) => {
+      const id = params.get('id');
+      this.userId.set(id);
+    });
+
+    effect(() => {
+      this.loadData();
+    });
   }
 }

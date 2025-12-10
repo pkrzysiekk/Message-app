@@ -1,5 +1,5 @@
-<div class="flex w-screen justify-center">
-  <div class="search-container">
+<div class="z-20 flex h-auto min-w-screen justify-center">
+  <div class="search-container relative">
     <input
       type="text"
       class="search-input"
@@ -8,15 +8,18 @@
       (input)="onSearch()"
     />
     @if (fetchedUsers().length != 0) {
-      <ul class="mt-2 flex w-3/5 flex-col" (appClickedOutside)="deleteFetchedUsers()">
+      <ul
+        class="absolute top-full z-50 flex max-h-[50vh] w-3/5 flex-col overflow-y-auto"
+        (appClickedOutside)="deleteFetchedUsers()"
+      >
         @for (user of fetchedUsers(); track user.id) {
           <li>
             <a [routerLink]="['/user', user.id]" class="search-list">
-              <div>
+              <div class="py-1">
                 <img
                   [src]="(user.avatar | imageParse) ?? 'https://pic.re/image'"
                   alt=""
-                  class="aspect-square w-full max-w-18 rounded-full object-cover"
+                  class="aspect-square w-full max-w-18 min-w-8 shrink-0 rounded-full object-cover"
                 />
               </div>
               <div class="px-4 italic">{{ user.username }}</div>
