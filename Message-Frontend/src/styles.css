@@ -54,7 +54,7 @@ html {
     @apply m-4 flex w-full flex-col items-center justify-center text-3xl text-cyan-800 dark:text-(--brilliant-azure);
   }
   .search-list {
-    @apply flex cursor-pointer items-center px-3 backdrop-grayscale-50 transition-opacity delay-700 hover:backdrop-brightness-75;
+    @apply flex cursor-pointer items-center px-3 backdrop-grayscale-70 transition-opacity delay-700 hover:backdrop-brightness-75;
   }
   .btn-invite {
     @apply mb-2 cursor-pointer rounded-2xl border-2 p-5 font-bold text-(--mint-leaf) transition-colors duration-300 hover:bg-(--mint-leaf) hover:text-(--prussian-blue);
