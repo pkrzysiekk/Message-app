@@ -56,4 +56,7 @@ html {
   .search-list {
     @apply flex cursor-pointer items-center px-3 backdrop-grayscale-50 transition-opacity delay-700 hover:backdrop-brightness-75;
   }
+  .btn-invite {
+    @apply mb-2 cursor-pointer rounded-2xl border-2 p-5 font-bold text-(--mint-leaf) transition-colors duration-300 hover:bg-(--mint-leaf) hover:text-(--prussian-blue);
+  }
 }

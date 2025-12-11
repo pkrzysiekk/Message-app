@@ -18,11 +18,41 @@
         ></div>
       </div>
       <div class="flex justify-center">
-        <button
-          class="text-bold mb-2 cursor-pointer rounded-2xl border-2 p-5 font-bold text-(--mint-leaf) transition-colors duration-300 hover:bg-(--mint-leaf) hover:text-(--prussian-blue)"
-        >
-          Invite to friends
-        </button>
+        @switch (true) {
+          @case (isInvited()) {
+            <div class="flex flex-col items-center">
+              <span class="text-2xl text-(--mint-leaf)">Invite sent! We wish you well!</span>
+              <button
+                class="btn-invite text-(--honey-bronze) hover:bg-(--honey-bronze) hover:text-(--burgundy)"
+                (click)="onRemove()"
+              >
+                Cancel Invite
+              </button>
+            </div>
+          }
+
+          @case (isInvited() === false) {
+            <span class="text-2xl text-red-500">Removed</span>
+          }
+
+          @case (friendsStatus() === null) {
+            <button class="btn-invite" (click)="onInvite()">Invite to friends</button>
+          }
+
+          @case (friendsStatus() === FriendsInvStatus.Pending) {
+            <div class="flex flex-col items-center">
+              <button
+                class="btn-invite text-(--honey-bronze) hover:bg-(--honey-bronze) hover:text-(--burgundy)"
+                (click)="onRemove()"
+              >
+                Cancel Invite
+              </button>
+            </div>
+          }
+          @case (friendsStatus() === FriendsInvStatus.Accepted) {
+            <span class="text-2xl text-green-500 italic">You are Friends!</span>
+          }
+        }
       </div>
     </div>
   </div>

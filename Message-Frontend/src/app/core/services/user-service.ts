@@ -8,7 +8,7 @@ import { User } from '../models/user';
 export class UserService {
   userApiUrl = 'https://localhost/api/user';
   http = inject(HttpClient);
-  getUser(id: string) {
+  getUser(id: number) {
     return this.http.get<User>(`${this.userApiUrl}/${id}`);
   }
 }

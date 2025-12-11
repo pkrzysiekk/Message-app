@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { FriendsInvitation } from '../../DTO/friendsInvitation';
+import { FriendsInvitationStatus } from '../../DTO/FriendsInvitationStatus';
 
 @Injectable({
   providedIn: 'root',
@@ -13,23 +14,29 @@ export class FriendsService {
     return this.http.get<FriendsInvitation[]>(this.baseApiUrl);
   }
 
-  sendInvite(invite: FriendsInvitation) {
-    return this.http.post(this.baseApiUrl, invite);
+  sendInvite(friendId: number) {
+    return this.http.post(this.baseApiUrl, friendId);
   }
 
   getPendingInvites() {
     return this.http.get<FriendsInvitation[]>(this.baseApiUrl + '/invites');
   }
 
-  acceptInvite(friendId: string) {
+  acceptInvite(friendId: number) {
     return this.http.put(this.baseApiUrl + '/acceptInvite' + `?friendId=${friendId}`, {});
   }
 
-  declineInvite(friendId: string) {
+  declineInvite(friendId: number) {
     return this.http.put(this.baseApiUrl + '/declineInvite' + `?friendId=${friendId}`, {});
   }
 
-  removeFriend(friendId: string) {
+  removeFriend(friendId: number) {
     return this.http.delete(this.baseApiUrl + '/deleteFriend' + `?friendId=${friendId}`);
+  }
+
+  getFriendsStatus(friendId: number) {
+    return this.http.get<FriendsInvitationStatus>(
+      this.baseApiUrl + '/getFriendsStatus' + `?friendId=${friendId}`,
+    );
   }
 }

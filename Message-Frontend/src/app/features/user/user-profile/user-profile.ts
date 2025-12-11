@@ -5,6 +5,9 @@ import { User } from '../../../core/models/user';
 import { error } from 'console';
 import { finalize } from 'rxjs';
 import { ImageParsePipe } from '../../../shared/pipes/image-parse-pipe/image-parse-pipe';
+import { FriendsService } from '../../../core/services/friends/friends-service';
+import { FriendsInvitation } from '../../../core/DTO/friendsInvitation';
+import { FriendsInvitationStatus } from '../../../core/DTO/FriendsInvitationStatus';
 
 @Component({
   selector: 'app-user-profile',
@@ -16,10 +19,13 @@ export class UserProfile {
   userService = inject(UserService);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
-
+  protected friendsService = inject(FriendsService);
+  FriendsInvStatus = FriendsInvitationStatus;
   fetchedUser = signal<User | null>(null);
-  readonly userId = signal<string | null>(null);
+  readonly userId = signal<number | null>(null);
   private isLoading = signal<boolean>(false);
+  protected friendsStatus = signal<FriendsInvitationStatus | null>(null);
+  protected isInvited = signal<boolean | null>(null);
 
   loadData = () => {
     this.isLoading.set(true);
@@ -44,11 +50,40 @@ export class UserProfile {
   constructor() {
     this.route.paramMap.subscribe((params) => {
       const id = params.get('id');
-      this.userId.set(id);
+
+      this.userId.set(parseFloat(id!));
     });
 
     effect(() => {
-      this.loadData();
+      const id = this.userId();
+      if (id) {
+        this.loadData();
+        this.loadFriendsStatus();
+        console.log(this.isInvited());
+      }
     });
   }
+  loadFriendsStatus = () => {
+    this.friendsService.getFriendsStatus(this.userId()!).subscribe({
+      next: (result) => {
+        console.log(result);
+        this.friendsStatus.set(result);
+      },
+    });
+  };
+  onInvite = () => {
+    this.friendsService.sendInvite(this.userId()!).subscribe({
+      next: () => {
+        this.isInvited.set(true);
+      },
+    });
+  };
+
+  onRemove = () => {
+    this.friendsService.removeFriend(this.userId()!).subscribe({
+      next: () => {
+        this.isInvited.set(false);
+      },
+    });
+  };
 }
