@@ -2,6 +2,7 @@ using Message_Backend.Application.Interfaces;
 using Message_Backend.Application.Interfaces.Services;
 using Message_Backend.Application.Mappers;
 using Message_Backend.Application.Models.DTOs;
+using Message_Backend.Domain.Models.Enums;
 using Message_Backend.Presentation.Helpers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -76,7 +77,15 @@ namespace Message_Backend.Presentation.Controllers
         {
             int userId = CookieHelper.GetUserIdFromCookie(User);
             await _friendsService.RemoveFriend(userId, friendId);
-            return Ok("Friends deleted");
+            return Ok();
+        }
+
+        [HttpGet("getFriendsStatus")]
+        public async Task<ActionResult<FriendInvitationStatus?>> GetFriendsStatus([FromQuery] int friendId)
+        {
+            int userId=CookieHelper.GetUserIdFromCookie(User);
+            var status = await _friendsService.GetFriendsStatus(userId, friendId);
+            return Ok(status);
         }
     }
 }

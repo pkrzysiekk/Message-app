@@ -22,7 +22,7 @@ public class FriendsService :
     
     public async Task SendInvite(int userId,int friendId)
     {
-        if (await IsFriend(userId, friendId))
+        if (await AreInvited(userId, friendId))
             throw new EntityAlreadyExistsException("Already Friends");
         
         var user = await _userService.GetById(userId);
@@ -94,15 +94,22 @@ public class FriendsService :
         await _repository.Delete(friend.Id);
     }
 
-    public async Task<bool> IsFriend(int userId, int friendId)
+    public async Task<bool> AreInvited(int userId, int friendId)
     {
         bool isFriend= await _repository
             .GetAll()
             .AnyAsync(f => (f.UserId == userId && f.FriendId == friendId)
-                      || (f.UserId == friendId && f.FriendId == userId)); 
+                           || (f.UserId == friendId && f.FriendId == userId)); 
         return isFriend;
     }
-    
+    public async Task<FriendInvitationStatus?> GetFriendsStatus(int userId, int friendId)
+    {
+        var invite = await _repository
+            .GetAll()
+            .FirstOrDefaultAsync(f => (f.UserId == userId && f.FriendId == friendId)
+                                      || (f.UserId == friendId && f.FriendId == userId));
+        return invite?.Status;
+    } 
     private async Task<Friends> GetValidPendingInvite(int recipientId, int senderId)
     {
         var invite = await GetFriendsByUserIds(recipientId, senderId);
