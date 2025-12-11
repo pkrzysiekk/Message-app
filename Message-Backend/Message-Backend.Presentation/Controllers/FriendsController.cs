@@ -2,6 +2,7 @@ using Message_Backend.Application.Interfaces;
 using Message_Backend.Application.Interfaces.Services;
 using Message_Backend.Application.Mappers;
 using Message_Backend.Application.Models.DTOs;
+using Message_Backend.Presentation.Helpers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -20,62 +21,60 @@ namespace Message_Backend.Presentation.Controllers
         }
         
         [HttpGet]
-        [Authorize(Policy = "SameUser")]
-        public async Task<ActionResult<FriendsDto>> Get([FromQuery] int userId,[FromQuery]int friendId)
+        public async Task<ActionResult<FriendsDto>> Get([FromQuery]int friendId)
         {
+            int userId = CookieHelper.GetUserIdFromCookie(User);
             var friends = await _friendsService.GetFriendsByUserIds(userId, friendId);
             return friends.ToDto();
         }
 
-        [HttpGet("users/{userId}/friends")]
-        [Authorize(Policy = "SameUser")]
-        public async Task<ActionResult<IEnumerable<FriendsDto>>> GetFriends([FromRoute] int userId)
+        [HttpGet("friends")]
+        public async Task<ActionResult<IEnumerable<FriendsDto>>> GetFriends()
         {
+            int  userId = CookieHelper.GetUserIdFromCookie(User);
             var friends = await _friendsService.GetAllUserFriends(userId);
             var friendsDto=friends.Select(x=>x.ToDto()).ToList();
             return friendsDto;
         }
 
-        [HttpGet("users/{userId}/invites")]
-        [Authorize(Policy = "SameUser")]
+        [HttpGet("invites")]
         public async Task<ActionResult<IEnumerable<FriendsDto>>>
-            GetUserPendingInvites([FromRoute] int userId)
+            GetUserPendingInvites()
         {
+            int userId= CookieHelper.GetUserIdFromCookie(User);
             var invites = await _friendsService.GetAllUserPendingInvites(userId);
             var invitesDto = invites.Select(x => x.ToDto()).ToList();
             return invitesDto;
         }
         
         [HttpPost]
-        [Authorize(Policy = "SameUser")]
         public async Task<ActionResult> 
-            Invite([FromQuery] int userId,[FromBody] FriendsDto friendsDto)
+            Invite([FromBody] FriendsDto friendsDto)
         {
-            if(userId != friendsDto.UserId)
-                return BadRequest("UserId does not match");
+            int  userId = CookieHelper.GetUserIdFromCookie(User);
             await _friendsService.SendInvite(friendsDto.UserId,friendsDto.FriendId);
             return CreatedAtAction(nameof(Get), new { id = friendsDto.FriendId }, friendsDto);
         }
 
         [HttpPut("acceptInvite")]
-        [Authorize(Policy = "SameUser")]
-        public async Task<ActionResult> AcceptInvite([FromQuery] int userId,[FromQuery] int friendId)
+        public async Task<ActionResult> AcceptInvite([FromQuery] int friendId)
         {
+            int userId = CookieHelper.GetUserIdFromCookie(User);
             await _friendsService.AcceptInvite(userId, friendId);
             return Ok("Friends updated");
         }
         [HttpPut("declineInvite")]
-        [Authorize(Policy = "SameUser")]
-        public async Task<ActionResult> DeclineInvite([FromQuery] int userId,[FromQuery] int friendId)
+        public async Task<ActionResult> DeclineInvite([FromQuery] int friendId)
         {
+            int userId = CookieHelper.GetUserIdFromCookie(User);
             await _friendsService.DeclineInvite(userId, friendId);
             return Ok("Friends updated");
         } 
 
         [HttpDelete("deleteFriend")]
-        [Authorize(Policy = "SameUser")]
-        public async Task<ActionResult> RemoveFriend([FromQuery] int userId,[FromQuery] int friendId)
+        public async Task<ActionResult> RemoveFriend([FromQuery] int friendId)
         {
+            int userId = CookieHelper.GetUserIdFromCookie(User);
             await _friendsService.RemoveFriend(userId, friendId);
             return Ok("Friends deleted");
         }
