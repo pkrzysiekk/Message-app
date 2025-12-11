@@ -1,8 +1,8 @@
 import { FriendsInvitationStatus } from './FriendsInvitationStatus';
 
 export interface FriendsInvitation {
-  userId: number;
-  friendId: number;
+  userId: string;
+  friendId: string;
   status: FriendsInvitationStatus;
   friendsSince: string;
 }
