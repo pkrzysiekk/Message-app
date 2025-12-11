@@ -31,6 +31,7 @@ public class FriendsService :
         {
             UserId = userId,
             FriendId = friendId,
+            
         };
         invite.SetUserStatus(FriendInvitationStatus.Pending);
         await _repository.Create(invite);

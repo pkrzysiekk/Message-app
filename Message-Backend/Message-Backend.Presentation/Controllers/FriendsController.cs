@@ -49,11 +49,11 @@ namespace Message_Backend.Presentation.Controllers
         
         [HttpPost]
         public async Task<ActionResult> 
-            Invite([FromBody] FriendsDto friendsDto)
+            Invite([FromBody] int friendId)
         {
             int  userId = CookieHelper.GetUserIdFromCookie(User);
-            await _friendsService.SendInvite(friendsDto.UserId,friendsDto.FriendId);
-            return CreatedAtAction(nameof(Get), new { id = friendsDto.FriendId }, friendsDto);
+            await _friendsService.SendInvite(userId,friendId);
+            return Ok();
         }
 
         [HttpPut("acceptInvite")]
