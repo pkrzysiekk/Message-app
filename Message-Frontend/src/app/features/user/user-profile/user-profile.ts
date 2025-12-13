@@ -8,10 +8,11 @@ import { ImageParsePipe } from '../../../shared/pipes/image-parse-pipe/image-par
 import { FriendsService } from '../../../core/services/friends/friends-service';
 import { FriendsInvitation } from '../../../core/DTO/friendsInvitation';
 import { FriendsInvitationStatus } from '../../../core/DTO/FriendsInvitationStatus';
+import { Search } from '../search/search';
 
 @Component({
   selector: 'app-user-profile',
-  imports: [ImageParsePipe],
+  imports: [ImageParsePipe, Search],
   templateUrl: './user-profile.html',
   styleUrl: './user-profile.css',
 })
