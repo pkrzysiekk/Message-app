@@ -38,7 +38,7 @@ namespace Message_Backend.Presentation.Controllers
                 SameSite = SameSiteMode.None
             });
 
-            return Ok();
+            return Ok(await _authService.GetUserId(request.Username));
         }
 
         [HttpPost("register")]
