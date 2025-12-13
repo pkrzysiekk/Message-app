@@ -5,7 +5,7 @@ import { Navbar } from '../../../shared/components/navbar/navbar';
 
 @Component({
   selector: 'app-user-layout',
-  imports: [RouterOutlet, Search, Navbar],
+  imports: [RouterOutlet, Navbar],
   templateUrl: './user-layout.html',
   styleUrl: './user-layout.css',
 })

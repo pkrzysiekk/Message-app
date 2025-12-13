@@ -1,5 +1,5 @@
 import { Component, effect, inject, signal } from '@angular/core';
-import { UserService } from '../../../core/services/user-service';
+import { UserService } from '../../../core/services/user/user-service';
 import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
 import { User } from '../../../core/models/user';
 import { error } from 'console';

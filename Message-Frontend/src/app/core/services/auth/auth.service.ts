@@ -17,15 +17,17 @@ export class AuthService {
   baseApiUrl = 'https://localhost/api/auth';
   authUser = signal<AuthUser>({
     username: null,
+    userId: null,
   });
   authErr = signal<HttpErrorResponse | null>(null);
   router = inject(Router);
   isUserAuthenticated = signal<boolean>(false);
 
   login = (credentials: LoginRequest) => {
-    return this.http.post<string>(this.baseApiUrl + '/login', credentials).pipe(
-      tap(() => {
-        this.authUser.set({ username: credentials.username });
+    return this.http.post<number>(this.baseApiUrl + '/login', credentials).pipe(
+      tap((userId) => {
+        console.log(userId);
+        this.authUser.set({ username: credentials.username, userId: userId });
         this.router.navigate(['/app']);
       }),
     );
