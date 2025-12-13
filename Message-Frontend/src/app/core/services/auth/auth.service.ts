@@ -7,6 +7,7 @@ import * as signalR from '@microsoft/signalr';
 import { Router } from '@angular/router';
 import { error } from 'console';
 import { tap } from 'rxjs';
+import { UserService } from '../user/user-service';
 
 @Injectable({
   providedIn: 'root',
@@ -21,6 +22,7 @@ export class AuthService {
   });
   authErr = signal<HttpErrorResponse | null>(null);
   router = inject(Router);
+  userService = inject(UserService);
   isUserAuthenticated = signal<boolean>(false);
 
   login = (credentials: LoginRequest) => {
@@ -28,6 +30,7 @@ export class AuthService {
       tap((userId) => {
         console.log(userId);
         this.authUser.set({ username: credentials.username, userId: userId });
+        this.userService.setLocalUser();
         this.router.navigate(['/app']);
       }),
     );
