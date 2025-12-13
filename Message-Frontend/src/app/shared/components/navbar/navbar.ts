@@ -15,13 +15,12 @@ export class Navbar {
   userService = inject(UserService);
   authService = inject(AuthService);
 
-  user = signal<User | null>(null);
-  constructor() {
-    const userId = this.authService.authUser().userId;
-    this.userService.getUser(userId!).subscribe({
-      next: (fetchedUser) => {
-        this.user.set(fetchedUser);
-      },
-    });
-  }
+  // constructor() {
+  //   const userId = this.authService.authUser().userId;
+  //   this.userService.getUser(userId!).subscribe({
+  //     next: (fetchedUser) => {
+  //       this.user.set(fetchedUser);
+  //     },
+  //   });
+  // }
 }

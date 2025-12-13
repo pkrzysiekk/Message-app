@@ -32,7 +32,7 @@
     </a>
     <a [routerLink]="['/profile']"
       ><img
-        [src]="user()?.avatar | imageParse"
+        [src]="userService.localUser()?.avatar | imageParse"
         class="aspect-square w-full max-w-18 min-w-8 shrink-0 rounded-full object-cover"
     /></a>
   </div>
