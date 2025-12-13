@@ -51,6 +51,7 @@ export class UserProfile {
     this.route.paramMap.subscribe((params) => {
       const id = params.get('id');
 
+      this.isInvited.set(null);
       this.userId.set(parseFloat(id!));
     });
 
