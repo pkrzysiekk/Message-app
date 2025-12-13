@@ -1,9 +1,12 @@
 using Message_Backend.Application.Helpers;
 using Message_Backend.Application.Interfaces;
 using Message_Backend.Application.Interfaces.Services;
+using Message_Backend.Application.Mappers;
+using Message_Backend.Application.Models.DTOs;
 using Message_Backend.Domain.Models.RSA;
 using Message_Backend.Presentation.ApiRequests;
 using Message_Backend.Presentation.Atributes;
+using Message_Backend.Presentation.Helpers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -48,5 +51,6 @@ namespace Message_Backend.Presentation.Controllers
             await _authService.RegisterUser(request.Username, request.Password,request.Email);
             return Ok();
         }
+
     }
 }

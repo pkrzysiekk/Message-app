@@ -87,5 +87,13 @@ namespace Message_Backend.Presentation.Controllers
             var avatar = await _userService.GetAvatar(userId);
             return File(avatar.Content,avatar.ContentType);
         }
+        
+        [HttpGet("me")]
+        public async Task<ActionResult<UserDto>> GetLoggedUser()
+        {
+            var userId = CookieHelper.GetUserIdFromCookie(User);
+            var currentUser= await _userService.GetById(userId);
+            return Ok(currentUser.ToDto());
+        } 
     }
 }
