@@ -5,9 +5,11 @@ import { authRoutes } from './features/auth/auth.routes';
 import { unauthenticatedGuard } from './core/route-guards/unauthenticated-guard';
 import { homeRoutes } from './features/home/home.routes';
 import { userRoutes } from './features/user/user.routes';
+import { profileRoutes } from './features/account/profile.routes';
 export const routes: Routes = [
   { path: '', component: App },
   { path: 'auth', children: authRoutes },
   { path: 'app', children: homeRoutes },
   { path: 'user', children: userRoutes },
+  { path: 'profile', children: profileRoutes },
 ];

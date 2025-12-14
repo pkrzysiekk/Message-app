@@ -1,0 +1,29 @@
+<div class="flex min-h-full min-w-full items-center justify-center">
+  <div class="mt-8 w-3/5 border-2 border-amber-50">
+    <div class="grid max-h-full grid-cols-1 justify-center py-4 md:grid-cols-2">
+      <div class="flex items-center justify-center">
+        <img
+          class="w-50 rounded-full sm:w-30 md:w-80 lg:w-100 xl:w-120"
+          [src]="userService.localUser()?.avatar | imageParse"
+        />
+      </div>
+      <div class="flex flex-col items-center justify-center gap-5 py-6 text-3xl text-amber-50">
+        <h1 class="p-3 text-5xl">Account Information</h1>
+        <p class="font-bold">Username</p>
+        <span class="italic"> {{ userService.localUser()?.username }}</span>
+        <p class="font-bold">E-mail</p>
+        <span class="italic">{{ userService.localUser()?.email }}</span>
+        <button
+          class="cursor-pointer rounded-3xl border-5 border-transparent bg-(--brilliant-azure) p-2 text-3xl font-bold transition-colors duration-500 ease-out hover:border-(--mint-leaf)"
+        >
+          Change email
+        </button>
+        <button
+          class="cursor-pointer rounded-3xl border-5 border-transparent bg-(--brilliant-azure) p-2 text-3xl font-bold transition-colors duration-500 ease-out hover:border-(--mint-leaf)"
+        >
+          Change password
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
