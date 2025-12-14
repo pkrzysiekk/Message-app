@@ -2,6 +2,7 @@ using Message_Backend.Application.Interfaces;
 using Message_Backend.Application.Interfaces.Services;
 using Message_Backend.Application.Mappers;
 using Message_Backend.Application.Models.DTOs;
+using Message_Backend.Presentation.ApiRequests;
 using Message_Backend.Presentation.Helpers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -58,10 +59,10 @@ namespace Message_Backend.Presentation.Controllers
         }
 
         [HttpPut("change-password")]
-        public async Task<ActionResult> ChangePassword(string oldPassword, string newPassword)
+        public async Task<ActionResult> ChangePassword([FromBody] ChangePasswordRequest req)
         {         
                 var userId = CookieHelper.GetUserIdFromCookie(User);
-                await _userService.ChangePassword(userId, oldPassword, newPassword);
+                await _userService.ChangePassword(userId, req.OldPassword, req.NewPassword);
                 return Ok("Password changed");
         }
 
