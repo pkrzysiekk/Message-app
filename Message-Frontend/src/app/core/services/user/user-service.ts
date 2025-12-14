@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
 import { User } from '../../models/user';
 import { get } from 'http';
+import { ChangePasswordRequest } from './DTO/changePasswordRequest';
 
 @Injectable({
   providedIn: 'root',
@@ -27,5 +28,13 @@ export class UserService {
 
   getUser(id: number) {
     return this.http.get<User>(`${this.userApiUrl}/${id}`);
+  }
+
+  changeEmail(email: string) {
+    return this.http.put(`${this.userApiUrl}/change-email`, email);
+  }
+
+  changePassword(req: ChangePasswordRequest) {
+    return this.http.put(`${this.userApiUrl}/change-password`, req);
   }
 }
