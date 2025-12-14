@@ -4,7 +4,7 @@ import { Navbar } from '../../../shared/components/navbar/navbar';
 
 @Component({
   selector: 'app-home',
-  imports: [Search, Navbar],
+  imports: [Navbar],
   templateUrl: './home.html',
   styleUrl: './home.css',
 })
