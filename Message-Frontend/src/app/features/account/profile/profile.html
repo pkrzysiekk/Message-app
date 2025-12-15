@@ -1,6 +1,6 @@
 <div class="flex min-h-full min-w-full items-center justify-center">
   <div class="mt-8 w-3/5 border-2 border-amber-50">
-    <div class="grid max-h-full grid-cols-1 justify-center py-4 md:grid-cols-2">
+    <div class="grid max-h-full grid-cols-1 justify-center py-4">
       <div class="flex items-center justify-center">
         <img
           class="w-50 rounded-full sm:w-30 md:w-80 lg:w-100 xl:w-120"
@@ -13,16 +13,37 @@
         <span class="italic"> {{ userService.localUser()?.username }}</span>
         <p class="font-bold">E-mail</p>
         <span class="italic">{{ userService.localUser()?.email }}</span>
-        <button
-          class="cursor-pointer rounded-3xl border-5 border-transparent bg-(--brilliant-azure) p-2 text-3xl font-bold transition-colors duration-500 ease-out hover:border-(--mint-leaf)"
-        >
-          Change e-mail
-        </button>
-        <button
-          class="cursor-pointer rounded-3xl border-5 border-transparent bg-(--brilliant-azure) p-2 text-3xl font-bold transition-colors duration-500 ease-out hover:border-(--mint-leaf)"
-        >
-          Change password
-        </button>
+        <button class="auth-button w-1/2" (click)="showEmailForm()">Change e-mail</button>
+        @if (showEmailChange()) {
+          <div class="flex flex-col items-center justify-center">
+            <input
+              class="auth-input w-full text-2xl"
+              type="email"
+              placeholder="E-mail"
+              [field]="changeEmailForm.email"
+            />
+            <button class="auth-button" (click)="onEmailChange()">Submit</button>
+          </div>
+        }
+
+        <button (click)="showPasswordForm()" class="auth-button w-1/2">Change password</button>
+        @if (showPasswordChange()) {
+          <div class="flex flex-col items-center justify-center">
+            <input
+              class="auth-input"
+              type="password"
+              [field]="changePasswordForm.oldPassword"
+              placeholder="Old password"
+            />
+            <input
+              class="auth-input"
+              type="password"
+              [field]="changePasswordForm.newPassword"
+              placeholder="New password"
+            />
+            <button class="auth-button" (click)="onPasswordChange()">Submit</button>
+          </div>
+        }
       </div>
     </div>
   </div>

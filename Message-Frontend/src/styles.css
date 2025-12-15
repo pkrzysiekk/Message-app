@@ -16,14 +16,10 @@ html {
 
 @layer components {
   .auth-input {
-    @apply my-2 w-full border-0 border-b-3 px-2 text-5xl md:w-3/4 dark:text-white;
+    @apply my-2 w-full border-0 border-b-3 px-2 text-5xl focus:border-(--mint-leaf) md:w-3/4 dark:text-white;
     border-color: var(--prussian-blue);
     caret-color: var(--prussian-blue);
     outline: none;
-  }
-
-  .auth-input:focus {
-    border-color: var(--mint-leaf);
   }
 
   .auth-button {
@@ -62,4 +58,13 @@ html {
   .navbar-icon {
     @apply m-1 aspect-square size-10 bg-cover stroke-white object-cover transition-colors duration-500 ease-out hover:fill-(--mint-leaf);
   }
+}
+
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  font-family: Roboto, 'Helvetica Neue', sans-serif;
 }
