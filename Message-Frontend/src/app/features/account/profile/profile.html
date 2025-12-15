@@ -1,5 +1,5 @@
 <div class="flex min-h-full min-w-full items-center justify-center">
-  <div class="mt-8 w-3/5 border-2 border-amber-50">
+  <div class="mt-8 w-3/5 border-2 border-(--brilliant-azure) backdrop-blur-xs">
     <div class="grid max-h-full grid-cols-1 justify-center py-4">
       <div class="flex items-center justify-center">
         <img
@@ -7,7 +7,9 @@
           [src]="userService.localUser()?.avatar | imageParse"
         />
       </div>
-      <div class="flex flex-col items-center justify-center gap-5 py-6 text-3xl text-amber-50">
+      <div
+        class="flex flex-col items-center justify-center gap-5 py-6 text-3xl text-(--brilliant-azure) dark:text-amber-50"
+      >
         <h1 class="p-3 text-5xl">Account Information</h1>
         <p class="font-bold">Username</p>
         <span class="italic"> {{ userService.localUser()?.username }}</span>
@@ -15,14 +17,21 @@
         <span class="italic">{{ userService.localUser()?.email }}</span>
         <button class="auth-button w-1/2" (click)="showEmailForm()">Change e-mail</button>
         @if (showEmailChange()) {
-          <div class="flex flex-col items-center justify-center">
+          <div class="flex flex-col">
             <input
               class="auth-input w-full text-2xl"
               type="email"
               placeholder="E-mail"
               [field]="changeEmailForm.email"
             />
-            <button class="auth-button" (click)="onEmailChange()">Submit</button>
+            @if (changeEmailForm.email().invalid() && changeEmailForm.email().touched()) {
+              <div class="auth-errors text-xl">
+                @for (error of changeEmailForm.email().errors(); track error) {
+                  <p>{{ error.message }}</p>
+                }
+              </div>
+            }
+            <button class="auth-button mx-auto" (click)="onEmailChange()">Submit</button>
           </div>
         }
 
@@ -30,17 +39,37 @@
         @if (showPasswordChange()) {
           <div class="flex flex-col items-center justify-center">
             <input
-              class="auth-input"
+              class="auth-input text-2xl"
               type="password"
               [field]="changePasswordForm.oldPassword"
               placeholder="Old password"
             />
+            @if (
+              changePasswordForm.oldPassword().invalid() &&
+              changePasswordForm.oldPassword().touched()
+            ) {
+              <div class="auth-errors text-xl">
+                @for (error of changePasswordForm.newPassword().errors(); track error) {
+                  <p>{{ error.message }}</p>
+                }
+              </div>
+            }
             <input
-              class="auth-input"
+              class="auth-input text-2xl"
               type="password"
               [field]="changePasswordForm.newPassword"
               placeholder="New password"
             />
+            @if (
+              changePasswordForm.newPassword().invalid() &&
+              changePasswordForm.newPassword().touched()
+            ) {
+              <div class="auth-errors text-xl">
+                @for (error of changePasswordForm.newPassword().errors(); track error) {
+                  <p>{{ error.message }}</p>
+                }
+              </div>
+            }
             <button class="auth-button" (click)="onPasswordChange()">Submit</button>
           </div>
         }
