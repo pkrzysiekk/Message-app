@@ -63,15 +63,15 @@ namespace Message_Backend.Presentation.Controllers
         {         
                 var userId = CookieHelper.GetUserIdFromCookie(User);
                 await _userService.ChangePassword(userId, req.OldPassword, req.NewPassword);
-                return Ok("Password changed");
+                return Ok();
         }
 
         [HttpPut("change-email")]
-        public async Task<ActionResult> ChangeEmail( string email)
+        public async Task<ActionResult> ChangeEmail([FromBody] ChangeEmailRequest req)
         {
             var userId = CookieHelper.GetUserIdFromCookie(User);
-            await _userService.ChangeEmail(userId, email);
-            return Ok("Email changed");
+            await _userService.ChangeEmail(userId, req.Email);
+            return Ok();
         }
 
         [HttpPut("change-avatar")]
@@ -79,7 +79,7 @@ namespace Message_Backend.Presentation.Controllers
         {
             var userId = CookieHelper.GetUserIdFromCookie(User);
             await _userService.SetAvatar(userId,avatar);
-            return Ok("Avatar changed");
+            return Ok();
         }
 
         [HttpGet("{userId}/avatar")]
