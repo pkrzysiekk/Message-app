@@ -11,7 +11,7 @@ export class FriendsService {
   baseApiUrl = 'https://localhost/api/friends';
 
   getFriends() {
-    return this.http.get<FriendsInvitation[]>(this.baseApiUrl);
+    return this.http.get<FriendsInvitation[]>(this.baseApiUrl + '/friends');
   }
 
   sendInvite(friendId: number) {
