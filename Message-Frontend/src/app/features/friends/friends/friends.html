@@ -2,9 +2,42 @@
   <div class="h-full w-3/5 border-2">
     <div>
       <h2 class="text-2xl">Pending Invites</h2>
+      <ul class="my-3">
+        @for (inv of inviters(); track inv.id) {
+          <li class="flex items-center justify-evenly gap-2">
+            <img
+              [src]="(inv.avatar | imageParse) ?? 'https://pic.re/image'"
+              class="aspect-square w-10 rounded-full sm:w-15 md:w-30 lg:w-40 xl:w-50"
+            />
+            <p class="text-2xl">{{ inv.username }}</p>
+            <div class="flex gap-3">
+              <button class="cursor-pointer border-2 text-2xl" (click)="onAccept(inv.id)">
+                Accept
+              </button>
+              <button class="cursor-pointer border-2 text-2xl" (click)="onReject(inv.id)">
+                Reject
+              </button>
+            </div>
+          </li>
+        }
+      </ul>
     </div>
     <div>
       <h2 class="text-2xl">Friends</h2>
+      <ul class="my-3">
+        @for (inv of friends(); track inv.id) {
+          <li class="flex items-center justify-evenly gap-2">
+            <img
+              [src]="(inv.avatar | imageParse) ?? 'https://pic.re/image'"
+              class="aspect-square w-10 rounded-full sm:w-15 md:w-30 lg:w-40 xl:w-50"
+            />
+            <p class="text-2xl">{{ inv.username }}</p>
+            <div class="flex gap-3">
+              <button>Remove</button>
+            </div>
+          </li>
+        }
+      </ul>
     </div>
   </div>
 </div>

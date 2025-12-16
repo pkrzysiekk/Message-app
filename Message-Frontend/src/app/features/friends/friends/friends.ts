@@ -5,10 +5,11 @@ import { error } from 'console';
 import { UserService } from '../../../core/services/user/user-service';
 import { User } from '../../../core/models/user';
 import { forkJoin } from 'rxjs';
+import { ImageParsePipe } from '../../../shared/pipes/image-parse-pipe/image-parse-pipe';
 
 @Component({
   selector: 'app-friends',
-  imports: [],
+  imports: [ImageParsePipe],
   templateUrl: './friends.html',
   styleUrl: './friends.css',
 })
@@ -75,6 +76,16 @@ export class Friends {
         },
       });
       onCleanup(() => sub.unsubscribe());
+    });
+  }
+  onAccept(friendId: number) {
+    this.friendsService.acceptInvite(friendId).subscribe(() => {
+      console.log('done');
+    });
+  }
+  onReject(friendId: number) {
+    this.friendsService.declineInvite(friendId).subscribe(() => {
+      console.log('removed');
     });
   }
 }
