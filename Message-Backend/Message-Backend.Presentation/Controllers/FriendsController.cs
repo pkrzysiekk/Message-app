@@ -62,14 +62,14 @@ namespace Message_Backend.Presentation.Controllers
         {
             int userId = CookieHelper.GetUserIdFromCookie(User);
             await _friendsService.AcceptInvite(userId, friendId);
-            return Ok("Friends updated");
+            return Ok();
         }
         [HttpPut("declineInvite")]
         public async Task<ActionResult> DeclineInvite([FromQuery] int friendId)
         {
             int userId = CookieHelper.GetUserIdFromCookie(User);
             await _friendsService.DeclineInvite(userId, friendId);
-            return Ok("Friends updated");
+            return Ok();
         } 
 
         [HttpDelete("deleteFriend")]
