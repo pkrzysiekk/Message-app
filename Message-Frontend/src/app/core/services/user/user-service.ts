@@ -23,7 +23,6 @@ export class UserService {
   };
 
   setLocalUser() {
-    if (this.localUser()) return;
     this.getLocalUserData();
   }
 

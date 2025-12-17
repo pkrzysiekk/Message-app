@@ -4,23 +4,27 @@ import { UserService } from '../../../core/services/user/user-service';
 import { AuthService } from '../../../core/services/auth/auth.service';
 import { User } from '../../../core/models/user';
 import { ImageParsePipe } from '../../pipes/image-parse-pipe/image-parse-pipe';
+import { ClickedOutside } from '../../directives/clicked-outside/clicked-outside';
 
 @Component({
   selector: 'app-navbar',
-  imports: [RouterLink, ImageParsePipe],
+  imports: [RouterLink, ImageParsePipe, ClickedOutside],
   templateUrl: './navbar.html',
   styleUrl: './navbar.css',
 })
 export class Navbar {
-  userService = inject(UserService);
   authService = inject(AuthService);
+  userService = inject(UserService);
+  showProfileContextMenu = signal<boolean>(false);
 
-  // constructor() {
-  //   const userId = this.authService.authUser().userId;
-  //   this.userService.getUser(userId!).subscribe({
-  //     next: (fetchedUser) => {
-  //       this.user.set(fetchedUser);
-  //     },
-  //   });
-  // }
+  onProfileContextMenuClick() {
+    this.showProfileContextMenu.set(!this.showProfileContextMenu());
+  }
+  onHideContextMenu() {
+    this.showProfileContextMenu.set(false);
+  }
+
+  onLogOut() {
+    this.authService.logout().subscribe();
+  }
 }

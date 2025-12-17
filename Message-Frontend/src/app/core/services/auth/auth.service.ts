@@ -47,12 +47,13 @@ export class AuthService {
       .get('https://localhost/api' + `/friends/users/${id}/invites`, { withCredentials: true })
       .subscribe((response) => console.log(response));
   }
-  // async chat() {
-  //   const connection = new signalR.HubConnectionBuilder()
-  //     .withUrl('https://localhost/ChatHub', { withCredentials: true })
-  //     .withAutomaticReconnect()
-  //     .build();
 
-  //   await connection.start();
-  // }
+  logout = () => {
+    return this.http.put(this.baseApiUrl + '/logout', {}).pipe(
+      tap(() => {
+        this.userService.setLocalUser();
+        this.router.navigate(['/auth']);
+      }),
+    );
+  };
 }

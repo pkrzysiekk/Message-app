@@ -42,10 +42,27 @@
         />
       </svg>
     </a>
-    <a [routerLink]="['/profile']"
+    <a (click)="onProfileContextMenuClick()" class="relative cursor-pointer pl-2"
       ><img
         [src]="userService.localUser()?.avatar | imageParse"
         class="my-1 aspect-square w-full max-w-18 min-w-8 shrink-0 rounded-full border-2 object-cover transition-colors duration-500 ease-out hover:border-(--mint-leaf)"
-    /></a>
+      />
+      @if (showProfileContextMenu()) {
+        <ul
+          class="absolute flex flex-col gap-2 bg-(--brilliant-azure) px-2 pb-2 text-xs md:text-sm dark:bg-(--prussian-blue)"
+          (appClickedOutside)="onHideContextMenu()"
+        >
+          <li
+            [routerLink]="['/profile']"
+            class="cursor-pointer py-2 hover:bg-(--prussian-blue) hover:text-(--brilliant-azure)"
+          >
+            Profile
+          </li>
+          <li class="cursor-pointer hover:text-(--brilliant-azure)" (click)="onLogOut()">
+            Log out
+          </li>
+        </ul>
+      }
+    </a>
   </div>
 </div>
