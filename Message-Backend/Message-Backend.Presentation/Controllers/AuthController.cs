@@ -52,5 +52,12 @@ namespace Message_Backend.Presentation.Controllers
             return Ok();
         }
 
+        [HttpPut("logout")]
+        public async Task<ActionResult> LogOut()
+        {
+            HttpContext.Response.Cookies.Delete("token");
+            return Ok();
+        }
+
     }
 }
