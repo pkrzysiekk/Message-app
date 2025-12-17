@@ -22,6 +22,7 @@ export class Friends {
   private inviterIds = signal<string[]>([]);
   friends = signal<User[]>([]);
   inviters = signal<User[]>([]);
+  showInvites = signal<boolean>(true);
 
   fetchFriends() {
     this.friendsService.getFriends().subscribe({
@@ -80,12 +81,23 @@ export class Friends {
   }
   onAccept(friendId: number) {
     this.friendsService.acceptInvite(friendId).subscribe(() => {
-      console.log('done');
+      this.fetchInvites();
     });
   }
   onReject(friendId: number) {
     this.friendsService.declineInvite(friendId).subscribe(() => {
-      console.log('removed');
+      this.fetchInvites();
     });
+  }
+  onRemove(friendId: number) {
+    this.friendsService.removeFriend(friendId).subscribe({
+      next: () => {
+        this.fetchFriends();
+      },
+    });
+  }
+
+  onInviteListCollapse() {
+    this.showInvites.set(!this.showInvites());
   }
 }

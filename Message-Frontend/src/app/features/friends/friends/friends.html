@@ -1,43 +1,81 @@
 <div class="mt-12 flex h-full w-full items-center justify-center text-amber-50">
-  <div class="h-full w-3/5 border-2">
-    <div>
-      <h2 class="text-2xl">Pending Invites</h2>
-      <ul class="my-3">
-        @for (inv of inviters(); track inv.id) {
-          <li class="flex items-center justify-evenly gap-2">
-            <img
-              [src]="(inv.avatar | imageParse) ?? 'https://pic.re/image'"
-              class="aspect-square w-10 rounded-full sm:w-15 md:w-30 lg:w-40 xl:w-50"
-            />
-            <p class="text-2xl">{{ inv.username }}</p>
-            <div class="flex gap-3">
-              <button class="cursor-pointer border-2 text-2xl" (click)="onAccept(inv.id)">
-                Accept
-              </button>
-              <button class="cursor-pointer border-2 text-2xl" (click)="onReject(inv.id)">
-                Reject
-              </button>
-            </div>
-          </li>
+  <div class="h-full w-3/5 border-2 border-(--brilliant-azure) p-1 backdrop-blur-sm">
+    <div class="px-2">
+      <span class="text-xl">Friends List</span>
+      @if (inviters().length > 0) {
+        <div class="flex">
+          <h2 class="flex-1 text-2xl">Pending Invites ({{ inviters().length }})</h2>
+          <button
+            class="m-1 cursor-pointer justify-self-end rounded-full bg-(--mint-leaf) p-2"
+            (click)="onInviteListCollapse()"
+          >
+            {{ showInvites() ? 'Hide Invites' : 'Show Invites' }}
+          </button>
+        </div>
+
+        @if (showInvites()) {
+          <ul class="my-3">
+            @for (inv of inviters(); track inv.id) {
+              <li
+                class="my-1 flex items-center gap-4 rounded-full bg-lime-200/60 px-4 hover:backdrop-sepia-50"
+              >
+                <img
+                  [src]="(inv.avatar | imageParse) ?? 'https://pic.re/image'"
+                  class="friend-icon shrink-0"
+                />
+
+                <p class="flex-1 truncate text-center text-2xl">
+                  {{ inv.username }}
+                </p>
+
+                <div class="flex gap-3 truncate">
+                  <button
+                    class="cursor-pointer rounded-full border-2 p-2 text-2xl transition-colors duration-500 hover:border-(--burgundy) hover:bg-(--mint-leaf)"
+                    (click)="onAccept(inv.id)"
+                  >
+                    Accept
+                  </button>
+
+                  <button
+                    class="cursor-pointer rounded-full border-2 p-2 text-2xl transition-colors hover:border-(--burgundy) hover:bg-red-500"
+                    (click)="onReject(inv.id)"
+                  >
+                    Reject
+                  </button>
+                </div>
+              </li>
+            }
+          </ul>
         }
-      </ul>
+      }
     </div>
     <div>
-      <h2 class="text-2xl">Friends</h2>
-      <ul class="my-3">
-        @for (inv of friends(); track inv.id) {
-          <li class="flex items-center justify-evenly gap-2">
-            <img
-              [src]="(inv.avatar | imageParse) ?? 'https://pic.re/image'"
-              class="aspect-square w-10 rounded-full sm:w-15 md:w-30 lg:w-40 xl:w-50"
-            />
-            <p class="text-2xl">{{ inv.username }}</p>
-            <div class="flex gap-3">
-              <button>Remove</button>
-            </div>
-          </li>
-        }
-      </ul>
+      @if (friends().length > 0) {
+        <h2 class="text-2xl">Friends</h2>
+        <ul class="my-3">
+          @for (inv of friends(); track inv.id) {
+            <li class="flex items-center justify-evenly gap-2">
+              <img
+                [src]="(inv.avatar | imageParse) ?? 'https://pic.re/image'"
+                class="friend-icon"
+              />
+              <p class="text-2xl">{{ inv.username }}</p>
+              <div class="flex gap-3">
+                <button
+                  class="cursor-pointer rounded-full border-2 p-2 text-2xl transition-colors hover:border-(--burgundy) hover:bg-red-500/90"
+                  (click)="onRemove(inv.id)"
+                >
+                  Remove
+                </button>
+              </div>
+            </li>
+          }
+        </ul>
+      } @else {
+        <div class="flex w-full items-center">
+          <span class="text-center text-2xl">No friends yet, search for some!</span>
+        </div>
+      }
     </div>
   </div>
 </div>

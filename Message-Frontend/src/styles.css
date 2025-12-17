@@ -58,6 +58,9 @@ html {
   .navbar-icon {
     @apply m-1 aspect-square size-10 bg-cover stroke-white object-cover transition-colors duration-500 ease-out hover:fill-(--mint-leaf);
   }
+  .friend-icon {
+    @apply aspect-square w-8 rounded-full sm:w-8 md:w-15 lg:w-20 xl:w-25;
+  }
 }
 
 html,
