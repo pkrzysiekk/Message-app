@@ -6,6 +6,7 @@ import { ChangePasswordRequest } from '../../../core/services/user/DTO/changePas
 import { error } from 'node:console';
 import { HttpErrorResponse } from '@angular/common/http';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Router, RouterLink } from '@angular/router';
 @Component({
   selector: 'app-profile',
   imports: [ImageParsePipe, Field],
@@ -17,6 +18,7 @@ export class Profile {
   showPasswordChange = signal<boolean>(false);
   showEmailChange = signal<boolean>(false);
   userErrorResult = signal<string | null>(null);
+  router = inject(Router);
   snackBar = inject(MatSnackBar);
 
   changeEmailModel = signal({
@@ -83,6 +85,19 @@ export class Profile {
       },
       error: (err: HttpErrorResponse) => {
         this.snackBar.open('An error has occurred');
+      },
+    });
+  }
+  onFileSelected(event: Event) {
+    const input = event.target as HTMLInputElement;
+
+    if (!input.files || input.files.length === 0) return;
+
+    const file = input.files[0];
+
+    this.userService.changeAvatar(file).subscribe({
+      next: () => {
+        this.userService.setLocalUser();
       },
     });
   }

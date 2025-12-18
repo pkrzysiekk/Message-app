@@ -2,10 +2,39 @@
   <div class="mt-8 w-3/5 border-2 border-(--brilliant-azure) backdrop-blur-xs">
     <div class="grid max-h-full grid-cols-1 justify-center py-4">
       <div class="flex items-center justify-center">
-        <img
-          class="w-50 rounded-full sm:w-30 md:w-80 lg:w-100 xl:w-120"
-          [src]="userService.localUser()?.avatar | imageParse"
-        />
+        <div class="group relative">
+          <img
+            class="w-50 rounded-full sm:w-30 md:w-80 lg:w-100 xl:w-120"
+            [src]="userService.localUser()?.avatar | imageParse"
+          />
+          <div
+            class="absolute inset-0 rounded-full bg-black/50 opacity-0 transition group-hover:opacity-100"
+          ></div>
+          <button
+            class="tanstition absolute inset-0 flex cursor-pointer items-center justify-center opacity-0 group-hover:opacity-100"
+            (click)="fileInput.click()"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="currentColor"
+              class="size-20 fill-(--brilliant-azure) stroke-(--brilliant-azure) dark:fill-amber-50 dark:stroke-amber-50"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M12 3.75a.75.75 0 0 1 .75.75v6.75h6.75a.75.75 0 0 1 0 1.5h-6.75v6.75a.75.75 0 0 1-1.5 0v-6.75H4.5a.75.75 0 0 1 0-1.5h6.75V4.5a.75.75 0 0 1 .75-.75Z"
+                clip-rule="evenodd"
+              />
+            </svg>
+          </button>
+          <input
+            #fileInput
+            type="file"
+            accept="image/*"
+            class="hidden"
+            (change)="onFileSelected($event)"
+          />
+        </div>
       </div>
       <div
         class="flex flex-col items-center justify-center gap-5 truncate py-6 text-3xl text-(--brilliant-azure) dark:text-amber-50"

@@ -17,12 +17,12 @@
           <ul class="my-3">
             @for (inv of inviters(); track inv.id) {
               <li
-                class="my-1 flex cursor-pointer items-center gap-4 rounded-full bg-lime-200/60 px-4 hover:backdrop-sepia-50"
-                [routerLink]="['/user', inv.id]"
+                class="my-1 flex items-center gap-4 rounded-full bg-lime-200/60 px-4 hover:backdrop-sepia-50"
               >
                 <img
                   [src]="(inv.avatar | imageParse) ?? 'https://pic.re/image'"
                   class="friend-icon shrink-0"
+                  [routerLink]="['/user', inv.id]"
                 />
 
                 <p class="flex-1 truncate text-center text-2xl">
@@ -56,12 +56,12 @@
         <ul class="my-3">
           @for (inv of friends(); track inv.id) {
             <li
-              class="my-1 flex cursor-pointer items-center gap-4 rounded-full bg-slate-200/60 px-4 hover:backdrop-sepia-50"
-              [routerLink]="['/user', inv.id]"
+              class="my-1 flex items-center gap-4 rounded-full bg-slate-200/60 px-4 hover:backdrop-sepia-50"
             >
               <img
                 [src]="(inv.avatar | imageParse) ?? 'https://pic.re/image'"
-                class="friend-icon shrink-0"
+                class="friend-icon my-1 shrink-0 cursor-pointer"
+                [routerLink]="['/user', inv.id]"
               />
 
               <p class="flex-1 truncate text-center text-2xl">
