@@ -17,7 +17,8 @@
           <ul class="my-3">
             @for (inv of inviters(); track inv.id) {
               <li
-                class="my-1 flex items-center gap-4 rounded-full bg-lime-200/60 px-4 hover:backdrop-sepia-50"
+                class="my-1 flex cursor-pointer items-center gap-4 rounded-full bg-lime-200/60 px-4 hover:backdrop-sepia-50"
+                [routerLink]="['/user', inv.id]"
               >
                 <img
                   [src]="(inv.avatar | imageParse) ?? 'https://pic.re/image'"
@@ -54,9 +55,9 @@
         <h2 class="text-2xl">Friends</h2>
         <ul class="my-3">
           @for (inv of friends(); track inv.id) {
-            <li class="flex items-center justify-evenly gap-2"></li>
             <li
-              class="my-1 flex items-center gap-4 rounded-full bg-slate-200/60 px-4 hover:backdrop-sepia-50"
+              class="my-1 flex cursor-pointer items-center gap-4 rounded-full bg-slate-200/60 px-4 hover:backdrop-sepia-50"
+              [routerLink]="['/user', inv.id]"
             >
               <img
                 [src]="(inv.avatar | imageParse) ?? 'https://pic.re/image'"
