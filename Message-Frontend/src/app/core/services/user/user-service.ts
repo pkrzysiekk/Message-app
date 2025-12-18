@@ -4,6 +4,7 @@ import { User } from '../../models/user';
 import { get } from 'http';
 import { ChangePasswordRequest } from './DTO/changePasswordRequest';
 import { ChangeEmailRequest } from './DTO/changeEmailRequest';
+import { Image } from '../../models/image';
 
 @Injectable({
   providedIn: 'root',
@@ -36,5 +37,11 @@ export class UserService {
 
   changePassword(req: ChangePasswordRequest) {
     return this.http.put(`${this.userApiUrl}/change-password`, req);
+  }
+
+  changeAvatar(content: File) {
+    const formData = new FormData();
+    formData.append('avatar', content);
+    return this.http.put(`${this.userApiUrl}/change-avatar`, formData);
   }
 }
