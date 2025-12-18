@@ -82,11 +82,13 @@ export class Friends {
   onAccept(friendId: number) {
     this.friendsService.acceptInvite(friendId).subscribe(() => {
       this.fetchInvites();
+      this.fetchFriends();
     });
   }
   onReject(friendId: number) {
     this.friendsService.declineInvite(friendId).subscribe(() => {
       this.fetchInvites();
+      this.fetchFriends();
     });
   }
   onRemove(friendId: number) {

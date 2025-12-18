@@ -1,4 +1,4 @@
-<div class="mt-12 flex h-full w-full items-center justify-center text-amber-50">
+<div class="mt-12 flex h-full w-full items-center justify-center font-bold text-amber-50">
   <div class="h-full w-3/5 border-2 border-(--brilliant-azure) p-1 backdrop-blur-sm">
     <div class="px-2">
       <span class="text-xl">Friends List</span>
@@ -6,7 +6,7 @@
         <div class="flex">
           <h2 class="flex-1 text-2xl">Pending Invites ({{ inviters().length }})</h2>
           <button
-            class="m-1 cursor-pointer justify-self-end rounded-full bg-(--mint-leaf) p-2"
+            class="m-1 cursor-pointer justify-self-end rounded-full bg-(--mint-leaf) p-2 font-bold"
             (click)="onInviteListCollapse()"
           >
             {{ showInvites() ? 'Hide Invites' : 'Show Invites' }}
@@ -49,25 +49,30 @@
         }
       }
     </div>
-    <div>
+    <div class="px-2">
       @if (friends().length > 0) {
         <h2 class="text-2xl">Friends</h2>
         <ul class="my-3">
           @for (inv of friends(); track inv.id) {
-            <li class="flex items-center justify-evenly gap-2">
+            <li class="flex items-center justify-evenly gap-2"></li>
+            <li
+              class="my-1 flex items-center gap-4 rounded-full bg-slate-200/60 px-4 hover:backdrop-sepia-50"
+            >
               <img
                 [src]="(inv.avatar | imageParse) ?? 'https://pic.re/image'"
-                class="friend-icon"
+                class="friend-icon shrink-0"
               />
-              <p class="text-2xl">{{ inv.username }}</p>
-              <div class="flex gap-3">
-                <button
-                  class="cursor-pointer rounded-full border-2 p-2 text-2xl transition-colors hover:border-(--burgundy) hover:bg-red-500/90"
-                  (click)="onRemove(inv.id)"
-                >
-                  Remove
-                </button>
-              </div>
+
+              <p class="flex-1 truncate text-center text-2xl">
+                {{ inv.username }}
+              </p>
+
+              <button
+                class="cursor-pointer rounded-full border-2 p-2 text-2xl transition-colors hover:border-(--burgundy) hover:bg-red-500"
+                (click)="onRemove(inv.id)"
+              >
+                Remove
+              </button>
             </li>
           }
         </ul>
