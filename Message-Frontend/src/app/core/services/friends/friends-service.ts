@@ -14,6 +14,10 @@ export class FriendsService {
     return this.http.get<FriendsInvitation[]>(this.baseApiUrl + '/friends');
   }
 
+  tryGetFriend(friendId: number) {
+    return this.http.get<FriendsInvitation>(this.baseApiUrl + `?friendId=${friendId}`);
+  }
+
   sendInvite(friendId: number) {
     return this.http.post(this.baseApiUrl, friendId);
   }

@@ -27,6 +27,8 @@ export class UserProfile {
   private isLoading = signal<boolean>(false);
   protected friendsStatus = signal<FriendsInvitationStatus | null>(null);
   protected isInvited = signal<boolean | null>(null);
+  protected isCurrentUserInviting = signal<boolean>(false);
+  localUserId = this.userService.localUser()?.id;
 
   loadData = () => {
     this.isLoading.set(true);
@@ -72,6 +74,15 @@ export class UserProfile {
         this.friendsStatus.set(result);
       },
     });
+    this.friendsService.tryGetFriend(this.userId()!).subscribe({
+      next: (inv) => {
+        if (parseInt(inv.userId!) == this.localUserId) {
+          this.isCurrentUserInviting.set(true);
+          this.isInvited.set(null);
+        } else this.isCurrentUserInviting.set(false);
+        console.log(this.isCurrentUserInviting());
+      },
+    });
   };
   onInvite = () => {
     this.friendsService.sendInvite(this.userId()!).subscribe({
@@ -85,6 +96,14 @@ export class UserProfile {
     this.friendsService.removeFriend(this.userId()!).subscribe({
       next: () => {
         this.isInvited.set(false);
+      },
+    });
+  };
+
+  onAccept = () => {
+    this.friendsService.acceptInvite(this.userId()!).subscribe({
+      next: () => {
+        this.loadFriendsStatus();
       },
     });
   };
