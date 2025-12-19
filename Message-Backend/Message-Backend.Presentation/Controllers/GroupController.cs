@@ -3,6 +3,7 @@ using Message_Backend.Application.Interfaces.Services;
 using Message_Backend.Application.Mappers;
 using Message_Backend.Application.Models.DTOs;
 using Message_Backend.Presentation.ApiRequests;
+using Message_Backend.Presentation.Helpers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -43,7 +44,7 @@ namespace Message_Backend.Presentation.Controllers
         {
            var groupBo=group.ToBo();
            await _groupService.UpdateGroup(groupBo);
-           return Ok("Group updated");
+           return Ok();
         }
 
         [HttpDelete("{groupId}")]
@@ -51,14 +52,14 @@ namespace Message_Backend.Presentation.Controllers
         public async Task<IActionResult> Delete(int groupId)
         {
             await _groupService.Delete(groupId);
-            return Ok("Group deleted");
+            return Ok();
         }
 
         [HttpGet("{userId}/user-groups")]
-        [Authorize(Policy = "SameUser")]
         public async Task<ActionResult<IEnumerable<GroupDto>>> GetUserGroups
-            ([FromRoute] int userId,[FromQuery] int page,[FromQuery] int pageSize)
+            ([FromQuery] int page,[FromQuery] int pageSize)
         {
+            var userId = CookieHelper.GetUserIdFromCookie(User);
             var userGroups= await _groupService.GetPaginatedUserGroups(userId,page,pageSize);
             var userGroupsDto = userGroups.Select(ug => ug.ToDto());
             return Ok(userGroupsDto);
@@ -70,7 +71,7 @@ namespace Message_Backend.Presentation.Controllers
             ([FromRoute] int userId, [FromBody] UserGroupRoleRequest roleRequest)
         {
            await _groupService.AddUserToGroup(userId, roleRequest.GroupId, roleRequest.Role); 
-           return Ok("User added to group");
+           return Ok();
         }
 
         [HttpDelete("{userId}/remove-user-from-group")]
@@ -78,7 +79,7 @@ namespace Message_Backend.Presentation.Controllers
         public async Task<ActionResult> RemoveUserFromGroup([FromRoute] int userId, [FromQuery] int groupId)
         {
             await  _groupService.RemoveUserFromGroup(userId, groupId);
-            return Ok("User removed from group");   
+            return Ok();   
         }
 
         [HttpPut("{userId}/update-group-role")]
@@ -87,7 +88,7 @@ namespace Message_Backend.Presentation.Controllers
             ([FromRoute] int userId,[FromBody] UserGroupRoleRequest request)
         {
             await _groupService.UpdateUserRoleInGroup(userId,request.GroupId, request.Role);
-            return Ok("User role updated");
+            return Ok();
         }
     }
 }
