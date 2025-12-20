@@ -2,6 +2,7 @@ using Message_Backend.Application.Interfaces;
 using Message_Backend.Application.Interfaces.Services;
 using Message_Backend.Application.Mappers;
 using Message_Backend.Application.Models.DTOs;
+using Message_Backend.Presentation.Helpers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -62,11 +63,12 @@ namespace Message_Backend.Presentation.Controllers
             return Ok(chatsDto);
         }
 
-        [HttpGet("chat/{userId}")]
+        [HttpGet("user-chats")]
         [Authorize(Policy = "SameUser")]
         //For Development Only
-        public async Task<ActionResult<IEnumerable<ChatDto>>> GetAllUserChats([FromRoute] int userId)
+        public async Task<ActionResult<IEnumerable<ChatDto>>> GetAllUserChats()
         {
+            var userId = CookieHelper.GetUserIdFromCookie(User);
             var userChats=await _chatService.GetUserChats(userId);
             return Ok(userChats.Select(x=>x.ToDto()).ToList());
         }
