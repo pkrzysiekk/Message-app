@@ -51,7 +51,7 @@ export class AuthService {
   logout = () => {
     return this.http.put(this.baseApiUrl + '/logout', {}).pipe(
       tap(() => {
-        this.userService.setLocalUser();
+        this.userService.clearLocalUser();
         this.router.navigate(['/auth']);
       }),
     );

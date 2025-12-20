@@ -24,7 +24,12 @@ export class UserService {
   };
 
   setLocalUser() {
+    if (this.localUser()) return;
     this.getLocalUserData();
+  }
+
+  clearLocalUser() {
+    this.localUser.set(null);
   }
 
   getUser(id: number) {
