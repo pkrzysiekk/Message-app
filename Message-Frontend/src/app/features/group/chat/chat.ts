@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, effect, inject, signal } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 @Component({
@@ -16,5 +16,7 @@ export class Chat {
       if (!id) return;
       this.groupId.set(parseInt(id));
     });
+
+    effect(() => {});
   }
 }
