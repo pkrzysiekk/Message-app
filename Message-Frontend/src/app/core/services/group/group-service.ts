@@ -6,7 +6,7 @@ import { UserRoleRequest } from './requests/userRoleRequest';
 @Injectable({
   providedIn: 'root',
 })
-export class Groups {
+export class GroupService {
   http = inject(HttpClient);
   baseApiUrl = 'https://localhost/api/group';
 
