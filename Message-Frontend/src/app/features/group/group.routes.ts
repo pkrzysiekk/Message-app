@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { GroupLayout } from './group-layout/group-layout';
-import { Group } from './group/group';
+import { Groups } from './group/group';
+import { Chat } from './chat/chat';
 
 export const groupRoutes: Routes = [
   {
@@ -8,7 +9,8 @@ export const groupRoutes: Routes = [
     component: GroupLayout,
     children: [
       { path: '', redirectTo: 'groups', pathMatch: 'full' },
-      { path: 'groups', component: Group },
+      { path: 'groups', component: Groups },
+      { path: 'groups:id', component: Chat },
     ],
   },
 ];

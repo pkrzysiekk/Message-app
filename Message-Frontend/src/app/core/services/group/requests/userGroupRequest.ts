@@ -1,4 +1,4 @@
-import { Group } from '../../../../feautures/group/group/group';
+import { Group } from '../models/group';
 
 export interface UserGroupRequest {
   group: Group;
