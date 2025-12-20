@@ -1,0 +1,18 @@
+<div class="grid h-full w-full grid-cols-[1fr_10fr]">
+  <aside class="flex flex-col border-r p-4">
+    <ul class="backdrop-grayscale-40">
+      @for (group of groups(); track group.id) {
+        <li
+          (click)="onSelectedGroup(group)"
+          class="cursor-pointer text-xl text-cyan-700 hover:text-white"
+        >
+          {{ group.groupName }}
+        </li>
+      }
+    </ul>
+  </aside>
+
+  <main class="max-h-3/4 min-h-0 w-full justify-self-center border-2 border-amber-100">
+    <app-group [selectedGroup]="selectedGroup()"></app-group>
+  </main>
+</div>
