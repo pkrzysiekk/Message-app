@@ -1,2 +1,16 @@
-<p>group works!</p>
-<span class="text-white">{{ selectedGroup()?.groupName }}</span>
+<div class="grid h-full w-full grid-cols-[1fr_10fr]">
+  <aside class="flex flex-col border-r p-4">
+    <h2 class="mb-2 text-2xl text-nowrap text-amber-50">Group Chats</h2>
+    <ul class="backdrop-grayscale-40">
+      @for (chat of groupChats(); track chat.id) {
+        <li class="cursor-pointer text-xl text-cyan-700 hover:text-white">
+          {{ chat.chatName }}
+        </li>
+      }
+    </ul>
+  </aside>
+
+  <main class="min-h-full w-full justify-self-center border-2 border-amber-100">
+    <span>eueueue</span>
+  </main>
+</div>
