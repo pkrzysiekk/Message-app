@@ -30,11 +30,11 @@ namespace Message_Backend.Presentation.Controllers
         }
 
         [HttpPost]
-        [Authorize(Policy = "UserCreatesGroupForThemselves")]
-        public async Task<ActionResult> Post([FromBody] UserGroupRequest request)
+        public async Task<ActionResult> Post([FromBody] GroupDto group)
         {
-            var groupBo=request.Group.ToBo();
-            await _groupService.CreateGroup(groupBo,request.userId);
+            var userId = CookieHelper.GetUserIdFromCookie(User);
+            var groupBo=group.ToBo();
+            await _groupService.CreateGroup(groupBo,userId);
             return  CreatedAtAction(nameof(Get), new { groupId = groupBo.Id }, groupBo.ToDto());
         }
 
