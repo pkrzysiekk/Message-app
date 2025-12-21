@@ -19,6 +19,7 @@ export class Groups {
   page = signal<number>(1);
   pageSize = signal<number>(10);
   showCreateForm = signal<boolean>(false);
+  showGroupList = signal<boolean>(true);
 
   createGroupModel = signal({ groupName: '' });
   createGroupForm = form(this.createGroupModel, (schema) => {
@@ -53,5 +54,9 @@ export class Groups {
         this.fetchGroups();
       },
     });
+  }
+
+  onGroupListClick() {
+    this.showGroupList.set(!this.showGroupList());
   }
 }
