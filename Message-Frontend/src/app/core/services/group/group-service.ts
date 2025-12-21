@@ -1,7 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { Group } from './models/group';
 import { HttpClient } from '@angular/common/http';
-import { UserGroupRequest } from './requests/userGroupRequest';
 import { UserRoleRequest } from './requests/userRoleRequest';
 import { UserService } from '../user/user-service';
 @Injectable({
@@ -17,14 +16,11 @@ export class GroupService {
   }
 
   createGroup(groupName: string) {
-    const req: UserGroupRequest = {
-      userId: this.userService.localUser()?.id!,
-      group: {
-        groupName: groupName,
-        groupType: 1,
-      },
+    const group: Group = {
+      groupName: groupName,
+      groupType: 1,
     };
-    return this.http.post(`${this.baseApiUrl}`, req);
+    return this.http.post(`${this.baseApiUrl}`, group);
   }
 
   updateGroup(group: Group) {

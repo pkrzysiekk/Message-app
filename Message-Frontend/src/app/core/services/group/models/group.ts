@@ -1,7 +1,7 @@
 import { GroupType } from './groupType';
 
 export interface Group {
-  id?: number;
+  groupId?: number;
   groupName: string;
   createdAt?: string;
   groupType: GroupType;

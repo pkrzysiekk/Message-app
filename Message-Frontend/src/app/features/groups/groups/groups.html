@@ -1,7 +1,7 @@
 <div class="grid h-full w-full grid-cols-[1fr_10fr]">
   <aside class="flex flex-col border-r p-4">
     <ul class="backdrop-grayscale-40">
-      @for (group of groups(); track group.id) {
+      @for (group of groups(); track group.groupId) {
         <li
           (click)="onSelectedGroup(group)"
           class="cursor-pointer text-xl text-cyan-700 hover:text-white"

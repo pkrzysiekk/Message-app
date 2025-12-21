@@ -32,7 +32,7 @@ export class Groups {
   fetchGroups() {
     this.groupService.getUserGroups(this.page(), this.pageSize()).subscribe({
       next: (fetched) => {
-        this.groups.set([...this.groups(), ...fetched]);
+        this.groups.set(fetched);
         console.log(this.groups());
       },
     });
