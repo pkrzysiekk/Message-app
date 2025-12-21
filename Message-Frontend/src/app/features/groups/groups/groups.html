@@ -1,4 +1,4 @@
-<div class="grid h-full w-full grid-cols-[1fr_10fr]">
+<div class="grid min-h-full w-full grid-cols-[1fr_10fr] bg-slate-800/80">
   <aside class="flex flex-col border-r p-4">
     <ul class="backdrop-grayscale-40">
       @for (group of groups(); track group.groupId) {
@@ -54,7 +54,7 @@
     </div>
   </aside>
 
-  <main class="max-h-3/4 min-h-0 w-full justify-self-center border-2 border-amber-100">
+  <main class="min-h-full w-full justify-self-center border-2 border-amber-100">
     <app-group [selectedGroup]="selectedGroup()"></app-group>
   </main>
 </div>
