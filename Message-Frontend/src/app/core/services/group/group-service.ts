@@ -3,18 +3,27 @@ import { Group } from './models/group';
 import { HttpClient } from '@angular/common/http';
 import { UserGroupRequest } from './requests/userGroupRequest';
 import { UserRoleRequest } from './requests/userRoleRequest';
+import { UserService } from '../user/user-service';
 @Injectable({
   providedIn: 'root',
 })
 export class GroupService {
   http = inject(HttpClient);
   baseApiUrl = 'https://localhost/api/group';
+  userService = inject(UserService);
 
   getGroup(groupId: number) {
     return this.http.get<Group>(`${this.baseApiUrl}/${groupId}`);
   }
 
-  createGroup(req: UserGroupRequest) {
+  createGroup(groupName: string) {
+    const req: UserGroupRequest = {
+      userId: this.userService.localUser()?.id!,
+      group: {
+        groupName: groupName,
+        groupType: 1,
+      },
+    };
     return this.http.post(`${this.baseApiUrl}`, req);
   }
 

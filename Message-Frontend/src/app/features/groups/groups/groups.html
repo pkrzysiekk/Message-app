@@ -1,0 +1,60 @@
+<div class="grid h-full w-full grid-cols-[1fr_10fr]">
+  <aside class="flex flex-col border-r p-4">
+    <ul class="backdrop-grayscale-40">
+      @for (group of groups(); track group.id) {
+        <li
+          (click)="onSelectedGroup(group)"
+          class="cursor-pointer text-xl text-cyan-700 hover:text-white"
+        >
+          {{ group.groupName }}
+        </li>
+      }
+    </ul>
+    <div class="flex flex-col items-center justify-center">
+      <button (click)="onShowCreateGroupForm()">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          fill="currentColor"
+          class="size-10 cursor-pointer fill-white hover:fill-(--brilliant-azure)"
+        >
+          <path
+            fill-rule="evenodd"
+            d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25ZM12.75 9a.75.75 0 0 0-1.5 0v2.25H9a.75.75 0 0 0 0 1.5h2.25V15a.75.75 0 0 0 1.5 0v-2.25H15a.75.75 0 0 0 0-1.5h-2.25V9Z"
+            clip-rule="evenodd"
+          />
+        </svg>
+      </button>
+      @if (showCreateForm()) {
+        <div class="fixed inset-0 z-50 flex items-center justify-center bg-slate-500/50">
+          <div
+            class="relative flex flex-col items-center justify-center rounded-2xl bg-gray-800 p-4"
+          >
+            <span
+              class="absolute top-1 right-2 cursor-pointer text-xl text-white hover:font-bold"
+              (click)="onShowCreateGroupForm()"
+              >X</span
+            >
+            <span class="w-full text-xl text-amber-50">Create New Group</span>
+            <input
+              [field]="createGroupForm.groupName"
+              type="text"
+              placeholder="Group Name"
+              class="auth-input mx-3 w-full text-2xl"
+            />
+            <button
+              class="cursor-pointer rounded-full bg-(--brilliant-azure) p-2 text-2xl text-(--prussian-blue) transition-colors hover:bg-(--mint-leaf) hover:text-amber-50"
+              (click)="onGroupCreate()"
+            >
+              Create
+            </button>
+          </div>
+        </div>
+      }
+    </div>
+  </aside>
+
+  <main class="max-h-3/4 min-h-0 w-full justify-self-center border-2 border-amber-100">
+    <app-group [selectedGroup]="selectedGroup()"></app-group>
+  </main>
+</div>

@@ -1,5 +1,5 @@
 import { Component, model, signal } from '@angular/core';
-import { Group } from '../../../core/services/group/models/group';
+import { Group } from '../../core/services/group/models/group';
 
 @Component({
   selector: 'app-group',

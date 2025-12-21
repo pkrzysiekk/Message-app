@@ -1,18 +1,17 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { Group } from './group';
+import { GroupView } from './group-view';
 
 describe('Group', () => {
-  let component: Group;
-  let fixture: ComponentFixture<Group>;
+  let component: GroupView;
+  let fixture: ComponentFixture<GroupView>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [Group]
-    })
-    .compileComponents();
+      imports: [GroupView],
+    }).compileComponents();
 
-    fixture = TestBed.createComponent(Group);
+    fixture = TestBed.createComponent(GroupView);
     component = fixture.componentInstance;
     await fixture.whenStable();
   });
