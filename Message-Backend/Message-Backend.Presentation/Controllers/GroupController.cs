@@ -33,7 +33,7 @@ namespace Message_Backend.Presentation.Controllers
         [Authorize(Policy = "UserCreatesGroupForThemselves")]
         public async Task<ActionResult> Post([FromBody] UserGroupRequest request)
         {
-            var groupBo=request.GroupDto.ToBo();
+            var groupBo=request.Group.ToBo();
             await _groupService.CreateGroup(groupBo,request.userId);
             return  CreatedAtAction(nameof(Get), new { groupId = groupBo.Id }, groupBo.ToDto());
         }
