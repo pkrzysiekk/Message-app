@@ -61,6 +61,18 @@ html {
   .friend-icon {
     @apply aspect-square w-8 rounded-full sm:w-8 md:w-15 lg:w-20 xl:w-25;
   }
+  .pop-up-body {
+    @apply relative flex w-full max-w-md flex-col gap-4 rounded-2xl bg-gray-900 p-6 shadow-2xl;
+  }
+  .pop-up-bg {
+    @apply fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm;
+  }
+  .close-pop-up-btn {
+    @apply absolute top-3 right-3 cursor-pointer text-2xl font-bold text-white transition-colors hover:text-(--brilliant-azure);
+  }
+  .submit-btn {
+    @apply mt-4 w-full cursor-pointer rounded-xl bg-(--brilliant-azure) py-2 text-lg font-semibold text-(--prussian-blue) transition-colors hover:bg-(--mint-leaf) hover:text-amber-50;
+  }
 }
 
 html,

@@ -1,6 +1,65 @@
 <div class="grid h-full w-full grid-cols-[1fr_10fr]">
   <aside class="flex flex-col border-r p-4">
-    <h2 class="mb-2 text-2xl text-nowrap text-amber-50">Group Chats</h2>
+    <div class="flex items-center-safe justify-center">
+      <h2 class="ml-0.5 text-2xl text-nowrap text-amber-50">Group Chats</h2>
+      <button (click)="onShowCreateChatForm()">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          fill="currentColor"
+          class="hover:tran m-1 size-6 cursor-pointer fill-white transition-all hover:scale-130"
+        >
+          <path
+            fill-rule="evenodd"
+            d="M12 3.75a.75.75 0 0 1 .75.75v6.75h6.75a.75.75 0 0 1 0 1.5h-6.75v6.75a.75.75 0 0 1-1.5 0v-6.75H4.5a.75.75 0 0 1 0-1.5h6.75V4.5a.75.75 0 0 1 .75-.75Z"
+            clip-rule="evenodd"
+          />
+        </svg>
+      </button>
+      @if (showCreateChatForm()) {
+        <div class="pop-up-bg">
+          <div class="pop-up-body">
+            <button class="close-pop-up-btn" (click)="onShowCreateChatForm()">✕</button>
+
+            <h2 class="text-center text-2xl font-semibold text-amber-50">Create New Chat</h2>
+
+            <div class="flex flex-col gap-1">
+              <input
+                [field]="createChatForm.chatName"
+                type="text"
+                placeholder="Chat Name"
+                class="w-full rounded-md border border-gray-700 bg-gray-800 px-4 py-2 text-lg text-white placeholder-gray-400 focus:ring-2 focus:ring-(--brilliant-azure) focus:outline-none"
+              />
+              @if (createChatForm.chatName().invalid() && createChatForm.chatName().touched()) {
+                @for (error of createChatForm.chatName().errors(); track error.kind) {
+                  <span class="text-sm text-red-500">{{ error.message }}</span>
+                }
+              }
+            </div>
+
+            <div class="flex flex-col gap-1">
+              <select
+                class="w-full appearance-none rounded-md border border-gray-700 bg-gray-800 px-4 py-2 text-lg text-white focus:ring-2 focus:ring-(--brilliant-azure) focus:outline-none"
+                [field]="createChatForm.ForRole"
+              >
+                <option value="" disabled selected hidden>For what role?</option>
+                @for (role of chatTypeOptions; track role.value) {
+                  <option [value]="role.value">{{ GroupRole[role.value] }}</option>
+                }
+              </select>
+              @if (createChatForm.ForRole().invalid() && createChatForm.ForRole().touched()) {
+                @for (error of createChatForm.ForRole().errors(); track error.kind) {
+                  <span class="text-sm text-red-500">{{ error.message }}</span>
+                }
+              }
+            </div>
+
+            <button class="submit-btn" (click)="onChatCreate()">Create</button>
+          </div>
+        </div>
+      }
+    </div>
+
     <ul class="backdrop-grayscale-40">
       @for (chat of groupChats(); track chat.id) {
         <li class="cursor-pointer text-xl text-cyan-700 hover:text-white">
