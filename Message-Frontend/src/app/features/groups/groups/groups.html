@@ -1,9 +1,9 @@
 <div
-  class="grid h-full w-full bg-(--prussian-blue)/60 transition-all duration-300"
+  class="grid min-h-full w-full bg-(--prussian-blue)/60 transition-all duration-300"
   [class.grid-cols-[1fr_10fr]]="showGroupList()"
   [class.grid-cols-[0fr_1fr]]="!showGroupList()"
 >
-  <aside class="flex flex-col border-r p-4">
+  <aside class="flex min-h-full flex-col border-r p-4">
     <button (click)="onGroupListClick()">
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -19,16 +19,19 @@
       </svg>
     </button>
     @if (showGroupList()) {
-      <ul class="backdrop-grayscale-40">
+      <ul class="flex max-h-1/2 flex-col gap-1 overflow-y-scroll">
         @for (group of groups(); track group.groupId) {
           <li
             (click)="onSelectedGroup(group)"
-            class="cursor-pointer text-xl text-cyan-700 hover:text-white"
+            class="group flex cursor-pointer items-center rounded-md px-3 py-2 text-lg font-medium text-wrap text-gray-300 transition-colors hover:bg-gray-700/60 hover:text-white"
+            [class.bg-gray-700]="selectedGroup()?.groupId === group.groupId"
+            [class.text-white]="selectedGroup()?.groupId === group.groupId"
           >
-            {{ group.groupName }}
+            <span class="truncate">{{ group.groupName }}</span>
           </li>
         }
       </ul>
+
       <div class="flex flex-col items-center justify-center">
         <button (click)="onShowCreateGroupForm()">
           <svg
@@ -45,28 +48,26 @@
           </svg>
         </button>
         @if (showCreateForm()) {
-          <div class="fixed inset-0 z-50 flex items-center justify-center bg-slate-500/50">
-            <div
-              class="relative flex flex-col items-center justify-center rounded-2xl bg-gray-800 p-4"
-            >
-              <span
-                class="absolute top-1 right-2 cursor-pointer text-xl text-white hover:font-bold"
-                (click)="onShowCreateGroupForm()"
-                >X</span
-              >
-              <span class="w-full text-xl text-amber-50">Create New Group</span>
-              <input
-                [field]="createGroupForm.groupName"
-                type="text"
-                placeholder="Group Name"
-                class="auth-input mx-3 w-full text-2xl"
-              />
-              <button
-                class="cursor-pointer rounded-full bg-(--brilliant-azure) p-2 text-2xl text-(--prussian-blue) transition-colors hover:bg-(--mint-leaf) hover:text-amber-50"
-                (click)="onGroupCreate()"
-              >
-                Create
-              </button>
+          <div class="pop-up-bg">
+            <div class="pop-up-body">
+              <span class="close-pop-up-btn" (click)="onShowCreateGroupForm()">X</span>
+              <div class="flex flex-col gap-1.5">
+                <span class="mb-0.5 w-full text-xl text-amber-50">Create New Group</span>
+                <input
+                  [field]="createGroupForm.groupName"
+                  type="text"
+                  placeholder="Group Name"
+                  class="pop-up-input"
+                />
+                @if (
+                  createGroupForm.groupName().invalid() && createGroupForm.groupName().touched()
+                ) {
+                  @for (error of createGroupForm.groupName().errors(); track error.kind) {
+                    <span class="text-sm text-red-500">{{ error.message }}</span>
+                  }
+                }
+                <button class="submit-btn" (click)="onGroupCreate()">Create</button>
+              </div>
             </div>
           </div>
         }
@@ -74,7 +75,7 @@
     }
   </aside>
 
-  <main class="min-h-full w-full justify-self-center border-2 border-amber-100">
+  <main class="min-h-full w-full justify-self-center overflow-y-auto border-2 border-amber-100">
     <app-group [selectedGroup]="selectedGroup()"></app-group>
   </main>
 </div>

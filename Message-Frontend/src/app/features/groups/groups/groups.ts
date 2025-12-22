@@ -21,9 +21,10 @@ export class Groups {
   showCreateForm = signal<boolean>(false);
   showGroupList = signal<boolean>(true);
 
+  requiredFieldMessageError = `This field is required`;
   createGroupModel = signal({ groupName: '' });
   createGroupForm = form(this.createGroupModel, (schema) => {
-    required(schema.groupName);
+    required(schema.groupName, { message: this.requiredFieldMessageError });
   });
 
   constructor() {

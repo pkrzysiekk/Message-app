@@ -28,7 +28,7 @@
                 [field]="createChatForm.chatName"
                 type="text"
                 placeholder="Chat Name"
-                class="w-full rounded-md border border-gray-700 bg-gray-800 px-4 py-2 text-lg text-white placeholder-gray-400 focus:ring-2 focus:ring-(--brilliant-azure) focus:outline-none"
+                class="pop-up-input"
               />
               @if (createChatForm.chatName().invalid() && createChatForm.chatName().touched()) {
                 @for (error of createChatForm.chatName().errors(); track error.kind) {
