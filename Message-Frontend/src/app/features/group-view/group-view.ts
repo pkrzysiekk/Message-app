@@ -5,10 +5,11 @@ import { UserService } from '../../core/services/user/user-service';
 import { ChatService } from '../../core/services/chat/chat-service';
 import { GroupRole } from '../../core/services/chat/models/groupRole';
 import { form, required, Field } from '@angular/forms/signals';
+import { ChatComponent } from '../chat/chat';
 
 @Component({
   selector: 'app-group',
-  imports: [Field],
+  imports: [Field, ChatComponent],
   templateUrl: './group.html',
   styleUrl: './group.css',
 })
@@ -86,7 +87,7 @@ export class GroupView {
       });
   }
 
-  parseEnumSelect(value: any) {
-    console.log('Selected enum:', value);
+  onChatSelect(chat: Chat) {
+    this.selectedChat.set(chat);
   }
 }

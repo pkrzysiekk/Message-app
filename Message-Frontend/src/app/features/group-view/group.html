@@ -62,7 +62,12 @@
 
     <ul class="backdrop-grayscale-40">
       @for (chat of groupChats(); track chat.id) {
-        <li class="cursor-pointer text-xl text-cyan-700 hover:text-white">
+        <li
+          class="cursor-pointer text-xl text-cyan-700 hover:text-white"
+          (click)="onChatSelect(chat)"
+          [class.bg-gray-700]="selectedChat()?.id === chat.id"
+          [class.text-white]="selectedChat()?.id === chat.id"
+        >
           {{ chat.chatName }}
         </li>
       }
@@ -70,6 +75,6 @@
   </aside>
 
   <main class="min-h-full w-full justify-self-center border-2 border-amber-100">
-    <span>eueueue</span>
+    <app-chat [selectedChat]="selectedChat()"></app-chat>
   </main>
 </div>
