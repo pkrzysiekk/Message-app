@@ -29,6 +29,7 @@ public static class MessageMapper
             SenderId = message.SenderId,
             ChatId = message.ChatId,
             Status = message.Status,
+            SentAt = message.SentAt,
             Type = message.Type,
             Content = message.Content.Data,
         };

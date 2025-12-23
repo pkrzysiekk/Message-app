@@ -8,6 +8,7 @@ public class MessageDto
     public int SenderId { get; set; }
     public int ChatId { get; set; }
     public byte[] Content { get; set; }
+    public DateTime SentAt { get; set; }
     public MessageStatus Status { get; set; }
     public MessageType Type { get; set; }
 }
