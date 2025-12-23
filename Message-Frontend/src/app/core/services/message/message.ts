@@ -8,6 +8,7 @@ import { Message } from './models/message';
 export class MessageService {
   private connection: signalR.HubConnection;
   messages = new BehaviorSubject<Message[]>([]);
+  messages$ = this.messages.asObservable();
 
   constructor() {
     this.connection = new signalR.HubConnectionBuilder()

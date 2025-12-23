@@ -2,11 +2,15 @@
   <p>{{ selectedChat()?.chatName }}</p>
   <p>chat works!</p>
   <div class="flex flex-col">
+    @for (message of chatMessages(); track message.messageId) {
+      <h1 class="text-2xl text-white">{{ message.senderName }}: {{ message.content }}</h1>
+    }
     <input
       type="text"
+      [field]="messageToSendForm.message"
       class="absolute bottom-0 mb-1 w-full rounded-2xl bg-black/50 p-2 text-xl outline outline-black backdrop-blur-sm focus:outline-2 focus:outline-gray-500"
     />
-    <button class="cursor-pointer">
+    <button class="cursor-pointer" (click)="onSend()">
       <svg
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 24 24"

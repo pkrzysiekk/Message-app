@@ -3,9 +3,10 @@ import { MessageType } from './message-type';
 
 export interface Message {
   messageId?: number;
-  senderId: number;
+  senderId?: number;
+  senderName?: string;
   chatId: number;
-  content: Blob;
+  content: string;
   sentAt?: string;
   status?: MessageStatus;
   type?: MessageType;
