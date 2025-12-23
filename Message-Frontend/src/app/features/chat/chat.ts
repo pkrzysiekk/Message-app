@@ -1,5 +1,6 @@
-import { Component, model } from '@angular/core';
+import { Component, inject, model } from '@angular/core';
 import { Chat } from '../../core/services/chat/models/chat';
+import { ChatService } from '../../core/services/chat/chat-service';
 
 @Component({
   selector: 'app-chat',
@@ -9,4 +10,7 @@ import { Chat } from '../../core/services/chat/models/chat';
 })
 export class ChatComponent {
   selectedChat = model<Chat | null>(null);
+  chatService = inject(ChatService);
+
+  NgOnInit() {}
 }

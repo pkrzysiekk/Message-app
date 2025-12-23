@@ -5,6 +5,7 @@ import { Group } from '../../../core/services/group/models/group';
 import { GroupView } from '../../group-view/group-view';
 import { ClickedOutside } from '../../../shared/directives/clicked-outside/clicked-outside';
 import { form, required, Field } from '@angular/forms/signals';
+import { MessageService } from '../../../core/services/message/message';
 
 @Component({
   selector: 'app-groups',
@@ -20,6 +21,7 @@ export class Groups {
   pageSize = signal<number>(10);
   showCreateForm = signal<boolean>(false);
   showGroupList = signal<boolean>(true);
+  messageService = inject(MessageService);
 
   requiredFieldMessageError = `This field is required`;
   createGroupModel = signal({ groupName: '' });
@@ -27,8 +29,11 @@ export class Groups {
     required(schema.groupName, { message: this.requiredFieldMessageError });
   });
 
-  constructor() {
+  constructor() {}
+
+  ngOnInit() {
     this.fetchGroups();
+    this.messageService.startConnection();
   }
 
   fetchGroups() {
