@@ -64,15 +64,13 @@ public class ChatHub :Hub<IChatClient>
     {
         if (!isMessageRequestValid(Context, messageDto))
             throw new HubException("Invalid request");
+        var callersId = Context.User.FindFirstValue(ClaimTypes.NameIdentifier);
+        messageDto.SenderId = int.Parse(callersId);
         var messageBo = messageDto.ToBo();
         await _messageService.Add(messageBo);
-        SendMessageRequest request = new SendMessageRequest()
-        {
-            Message = messageBo.ToDto(),
-            SenderName = base.Context.User.Identity.Name
-        };
-        
-        await Clients.Group(messageBo.ChatId.ToString()).ReceiveMessage(request);
+        var finalMessage = messageBo.ToDto();
+        finalMessage.SenderName = Context.User?.Identity?.Name;
+        await Clients.Group(messageBo.ChatId.ToString()).ReceiveMessage(finalMessage);
     }
 
     public async Task SendUserIsTypingEvent(int chatId)
@@ -97,9 +95,8 @@ public class ChatHub :Hub<IChatClient>
             return false;
 
         bool userIsInChat = chatList.Contains(messageDto.ChatId);
-        bool userIsCaller = messageDto.SenderId == int.Parse(callersId);
 
-        return userIsInChat && userIsCaller;
+        return userIsInChat;
     }
 
 }
