@@ -9,7 +9,7 @@ public class Message : IEntity<long>
     public int ChatId { get; set; }
     public int SenderId { get; set; }
     public long MessageContentId { get; set; }
-    public MessageType Type { get; set; }
+    public string Type { get; set; }
     public MessageStatus Status { get; set; }
     public DateTime SentAt { get; set; }
     

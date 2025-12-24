@@ -11,5 +11,5 @@ public class MessageDto
     public byte[] Content { get; set; }
     public DateTime SentAt { get; set; }
     public MessageStatus Status { get; set; }
-    public MessageType Type { get; set; }
+    public string Type { get; set; }
 }
