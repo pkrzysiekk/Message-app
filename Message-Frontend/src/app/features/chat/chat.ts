@@ -29,11 +29,10 @@ export class ChatComponent {
   messageToSendForm = form(this.messageToSendModel);
 
   onSend() {
-    this.messageService.sendMessage({
-      chatId: this.selectedChat()?.id!,
-      content: this.messageToSendModel().message,
-      type: MessageType.Text,
-    });
+    this.messageService.sendTextMessage(
+      this.messageToSendModel().message,
+      this.selectedChat()?.id!,
+    );
   }
 
   NgOnInit() {

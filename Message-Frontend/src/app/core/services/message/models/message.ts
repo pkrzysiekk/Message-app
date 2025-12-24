@@ -9,5 +9,5 @@ export interface Message {
   content: string;
   sentAt?: string;
   status?: MessageStatus;
-  type?: MessageType;
+  type?: string;
 }
