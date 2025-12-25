@@ -1,18 +1,31 @@
-<div class="relative flex h-full w-full flex-col border-8 border-black text-white">
-  <!-- HEADER -->
-  <div class="shrink-0">
-    <p>{{ selectedChat()?.chatName }}</p>
-    <p>chat works!</p>
+<div class="flex h-full w-full flex-col border-8 border-black text-white">
+  <div class="shrink-0 border-b border-gray-300 font-bold italic">
+    <p class="p-1 text-xl">{{ selectedChat()?.chatName }}</p>
   </div>
 
-  <!-- WIADOMOŚCI -->
   <div class="min-h-0 flex-1 overflow-y-auto p-2">
     @for (message of chatMessages(); track message.messageId) {
-      <h1 class="text-2xl text-white">{{ message.senderName }}: {{ message.content }}</h1>
+      <div class="my-2 flex items-start hover:backdrop-brightness-70">
+        @if (avatarFor(message.senderId!)()) {
+          <img
+            class="w-10 rounded-full md:w-12 xl:w-15"
+            [src]="(avatarFor(message.senderId!)() | imageParse) ?? 'https://pic.re/image'"
+            alt=""
+          />
+        }
+        <div class="flex flex-col">
+          <span class="text-md ml-2 justify-self-start text-gray-400"
+            >{{ message.senderName }}
+            {{
+              message.sentAt | date: (isToday(message.sentAt!) ? 'HH:mm' : 'dd.MM.yyyy, HH:mm')
+            }}</span
+          >
+          <span class="text-center text-2xl">{{ message.content }}</span>
+        </div>
+      </div>
     }
   </div>
 
-  <!-- INPUT -->
   <div class="shrink-0 p-2">
     <div class="relative">
       <input
@@ -26,7 +39,7 @@
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 24 24"
           fill="currentColor"
-          class="absolute top-1/2 right-2 size-6 -translate-y-1/2 hover:invert-20"
+          class="absolute top-1/2 right-2 size-6 -translate-y-1/2 cursor-pointer hover:invert-20"
         >
           <path
             d="M3.478 2.404a.75.75 0 0 0-.926.941l2.432 7.905H13.5a.75.75 0 0 1 0 1.5H4.984l-2.432 7.905a.75.75 0 0 0 .926.94 60.519 60.519 0 0 0 18.445-8.986.75.75 0 0 0 0-1.218A60.517 60.517 0 0 0 3.478 2.404Z"
