@@ -1,7 +1,8 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable, Sanitizer } from '@angular/core';
 import * as signalR from '@microsoft/signalr';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { Message } from './models/message';
+import { DomSanitizer } from '@angular/platform-browser';
 @Injectable({
   providedIn: 'root',
 })
@@ -11,6 +12,7 @@ export class MessageService {
   messages$ = this.messages.asObservable();
   textEncoder = new TextEncoder();
   textDecoder = new TextDecoder();
+  fileReader = new FileReader();
 
   constructor() {
     this.connection = new signalR.HubConnectionBuilder()
@@ -35,7 +37,6 @@ export class MessageService {
       const decodedContent = this.decodeBase64Utf8(message.content);
       message.content = decodedContent;
     }
-
     this.messages.next([...this.messages.getValue(), message]);
   }
 
@@ -48,6 +49,21 @@ export class MessageService {
     };
     this.connection.invoke('SendMessage', message);
   }
+
+  async sendFile(file: File, chatId: number) {
+    this.fileReader.readAsDataURL(file);
+    this.fileReader.onload = () => {
+      const content = this.fileReader.result as string;
+      const base64 = content.replace('data:', '').replace(/^.+,/, '');
+      const message: Message = {
+        chatId: chatId,
+        content: base64,
+        type: file.type,
+      };
+      this.connection.invoke('SendMessage', message);
+    };
+  }
+
   decodeBase64Utf8(base64: string) {
     const binary = atob(base64);
     const bytes = Uint8Array.from(binary, (c) => c.charCodeAt(0));
