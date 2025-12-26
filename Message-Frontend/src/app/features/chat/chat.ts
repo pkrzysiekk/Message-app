@@ -11,10 +11,11 @@ import { UserService } from '../../core/services/user/user-service';
 import { Image } from '../../core/models/image';
 import { UserAvatar } from './model/userAvatar';
 import { ImageParsePipe } from '../../shared/pipes/image-parse-pipe/image-parse-pipe';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-chat',
-  imports: [DatePipe, Field, ImageParsePipe],
+  imports: [DatePipe, Field, ImageParsePipe, RouterLink],
   templateUrl: './chat.html',
   styleUrl: './chat.css',
 })
@@ -37,6 +38,9 @@ export class ChatComponent {
     return this.messages().filter((m) => m.chatId === chat.id);
   });
 
+  ngOnDestroy() {
+    this.messageService.endConnection();
+  }
   resetUserAvatars() {
     effect(() => {
       const chat = this.selectedChat();

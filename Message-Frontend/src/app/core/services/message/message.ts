@@ -26,6 +26,10 @@ export class MessageService {
     this.connection.start();
   }
 
+  endConnection() {
+    this.connection.stop().then(() => this.messages.next([]));
+  }
+
   addMessage(message: Message) {
     if (message.type === 'text/plain') {
       const decodedContent = this.decodeBase64Utf8(message.content);
