@@ -4,7 +4,7 @@ import { ChatService } from '../../core/services/chat/chat-service';
 import { MessageService } from '../../core/services/message/message';
 import { map } from 'rxjs';
 import { AsyncPipe, DatePipe } from '@angular/common';
-import { form, Field } from '@angular/forms/signals';
+import { form, Field, required } from '@angular/forms/signals';
 import { MessageType } from '../../core/services/message/models/message-type';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { UserService } from '../../core/services/user/user-service';
@@ -49,13 +49,25 @@ export class ChatComponent {
   }
 
   messageToSendModel = model({ message: '' });
-  messageToSendForm = form(this.messageToSendModel);
+  messageToSendForm = form(this.messageToSendModel, (schema) => {
+    required(schema.message);
+  });
 
   onSend() {
+    if (this.messageToSendForm().invalid()) return;
     this.messageService.sendTextMessage(
       this.messageToSendModel().message,
       this.selectedChat()?.id!,
     );
+    this.messageToSendModel.set({ message: '' });
+  }
+
+  onSendByKey(event: KeyboardEvent) {
+    console.log('eyeye');
+    if (event.key === 'Enter' && !event.shiftKey) {
+      event.preventDefault();
+      this.onSend();
+    }
   }
 
   loadUserAvatar(userId: number) {

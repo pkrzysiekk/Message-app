@@ -14,7 +14,7 @@
             [routerLink]="['/user', message.senderId]"
           />
         }
-        <div class="ml-2 flex max-w-9/12 flex-col">
+        <div class="ml-2 flex max-w-9/12 min-w-0 flex-col">
           <span class="text-md ml-2 justify-self-start text-gray-400"
             >{{ message.senderName }}
             {{
@@ -22,7 +22,7 @@
             }}</span
           >
           <span
-            class="my-1 overflow-x-hidden rounded-xl bg-(--brilliant-azure)/40 px-3 py-3 text-left text-2xl text-wrap break-all"
+            class="my-1 max-w-9/12 min-w-1/2 overflow-x-hidden rounded-xl bg-(--brilliant-azure)/40 px-3 py-3 text-left text-2xl text-wrap wrap-break-word break-all"
             >{{ message.content }}</span
           >
         </div>
@@ -34,11 +34,25 @@
     <div class="relative">
       <input
         type="text"
+        (keypress)="onSendByKey($event)"
         [field]="messageToSendForm.message"
         class="w-full rounded-2xl bg-black/50 p-2 text-xl outline outline-black backdrop-blur-sm focus:outline-2 focus:outline-gray-500"
       />
-
-      <button (click)="onSend()">
+      <button>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          fill="currentColor"
+          class="absolute top-1/2 right-10 size-6 -translate-y-1/2 cursor-pointer hover:invert-20"
+        >
+          <path
+            fill-rule="evenodd"
+            d="M18.97 3.659a2.25 2.25 0 0 0-3.182 0l-10.94 10.94a3.75 3.75 0 1 0 5.304 5.303l7.693-7.693a.75.75 0 0 1 1.06 1.06l-7.693 7.693a5.25 5.25 0 1 1-7.424-7.424l10.939-10.94a3.75 3.75 0 1 1 5.303 5.304L9.097 18.835l-.008.008-.007.007-.002.002-.003.002A2.25 2.25 0 0 1 5.91 15.66l7.81-7.81a.75.75 0 0 1 1.061 1.06l-7.81 7.81a.75.75 0 0 0 1.054 1.068L18.97 6.84a2.25 2.25 0 0 0 0-3.182Z"
+            clip-rule="evenodd"
+          />
+        </svg>
+      </button>
+      <button>
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 24 24"
