@@ -12,10 +12,13 @@ import { Image } from '../../core/models/image';
 import { UserAvatar } from './model/userAvatar';
 import { ImageParsePipe } from '../../shared/pipes/image-parse-pipe/image-parse-pipe';
 import { RouterLink } from '@angular/router';
+import { DomSanitizer } from '@angular/platform-browser';
+import { MessageToDataUrlPipe } from '../../shared/pipes/message-to-dataUrl-pipe';
+import { Message } from '../../core/services/message/models/message';
 
 @Component({
   selector: 'app-chat',
-  imports: [DatePipe, Field, ImageParsePipe, RouterLink],
+  imports: [DatePipe, Field, ImageParsePipe, RouterLink, MessageToDataUrlPipe],
   templateUrl: './chat.html',
   styleUrl: './chat.css',
 })
@@ -94,5 +97,15 @@ export class ChatComponent {
       d.getMonth() === today.getMonth() &&
       d.getFullYear() === today.getFullYear()
     );
+  }
+
+  onFileSelected(event: Event) {
+    const input = event.target as HTMLInputElement;
+    if (!input.files || input.files.length === 0) return;
+    const file = input.files[0];
+    this.messageService.sendFile(file, this.selectedChat()?.id!);
+  }
+  isImage(message: Message) {
+    return message.type?.startsWith('image');
   }
 }
