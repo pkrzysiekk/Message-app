@@ -1,20 +1,25 @@
-import { Component, computed, effect, inject, model, signal } from '@angular/core';
-import { Chat } from '../../core/services/chat/models/chat';
-import { ChatService } from '../../core/services/chat/chat-service';
-import { map } from 'rxjs';
-import { AsyncPipe, DatePipe } from '@angular/common';
+import {
+  Component,
+  computed,
+  effect,
+  ElementRef,
+  inject,
+  model,
+  signal,
+  ViewChild,
+} from '@angular/core';
+import { DatePipe } from '@angular/common';
 import { form, Field, required } from '@angular/forms/signals';
-import { MessageType } from '../../core/services/message/models/message-type';
-import { toObservable, toSignal } from '@angular/core/rxjs-interop';
-import { UserService } from '../../core/services/user/user-service';
-import { Image } from '../../core/models/image';
-import { UserAvatar } from './model/userAvatar';
-import { ImageParsePipe } from '../../shared/pipes/image-parse-pipe/image-parse-pipe';
 import { RouterLink } from '@angular/router';
-import { DomSanitizer } from '@angular/platform-browser';
-import { MessageToDataUrlPipe } from '../../shared/pipes/message-to-dataUrl-pipe';
+
+import { Chat } from '../../core/services/chat/models/chat';
 import { Message } from '../../core/services/message/models/message';
 import { MessageService } from '../../core/services/message/message-service';
+import { UserService } from '../../core/services/user/user-service';
+import { Image } from '../../core/models/image';
+
+import { ImageParsePipe } from '../../shared/pipes/image-parse-pipe/image-parse-pipe';
+import { MessageToDataUrlPipe } from '../../shared/pipes/message-to-dataUrl-pipe';
 
 @Component({
   selector: 'app-chat',
@@ -24,113 +29,178 @@ import { MessageService } from '../../core/services/message/message-service';
 })
 export class ChatComponent {
   selectedChat = model<Chat | null>(null);
+
+  messages = signal<Message[]>([]);
+  messagesFromHub = signal<Message[]>([]);
+
+  paginationPage = signal(1);
+  paginationPageSize = signal(20);
+
+  userAvatars = signal<Map<number, Image>>(new Map());
+
+  @ViewChild('chatContainer') chatContainer!: ElementRef<HTMLDivElement>;
+
   messageService = inject(MessageService);
   userService = inject(UserService);
-  messages = signal<Message[]>([]);
-  messagesFromHub$ = signal<Message[]>([]);
-  userAvatars = signal<Map<number, Image>>(new Map());
-  avatarFor = (userId: number) => {
-    return computed(() => this.userAvatars().get(userId));
-  };
-  constructor() {
-    this.resetUserAvatars();
-    this.loadMessages();
-    this.loadUsersAvatar();
-
-    this.messageService.messagesFromHub$.subscribe((msg) => {
-      this.messagesFromHub$.update((list) => [...list, msg]);
-    });
-  }
 
   chatMessages = computed(() => {
-    const chat = this.selectedChat();
-    if (!chat) return [];
-    return [...this.messages(), ...this.messagesFromHub$()!];
+    const allMessages = [...this.messages(), ...this.messagesFromHub()];
+
+    const uniqueMessagesMap = new Map<number, Message>();
+    allMessages.forEach((m) => {
+      if (!uniqueMessagesMap.has(m.messageId!)) {
+        uniqueMessagesMap.set(m.messageId!, m);
+      }
+    });
+
+    return Array.from(uniqueMessagesMap.values()).sort(
+      (a, b) => new Date(a.sentAt!).getTime() - new Date(b.sentAt!).getTime(),
+    );
   });
 
-  loadMessages() {
+  avatarFor = (userId: number) => computed(() => this.userAvatars().get(userId));
+
+  constructor() {
+    this.handleChatChange();
+    this.handleSignalR();
+    this.loadUsersAvatar();
+  }
+
+  handleChatChange() {
     effect(() => {
       const chat = this.selectedChat();
       if (!chat) return;
-      this.messageService.getChatMessages(chat?.id!, 1, 10).subscribe((msgs) => {
-        console.log(msgs);
-        this.messages.set(msgs);
+
+      this.resetChatState();
+
+      this.messageService
+        .getChatMessages(chat.id!, 1, this.paginationPageSize())
+        .subscribe((msgs) => {
+          this.messages.set(msgs);
+          requestAnimationFrame(() => this.scrollToBottom());
+        });
+    });
+  }
+
+  handleSignalR() {
+    this.messageService.messagesFromHub$.subscribe((msg) => {
+      if (msg.chatId !== this.selectedChat()?.id) return;
+      if (this.messagesFromHub().some((m) => m.messageId == msg.messageId)) return;
+      this.messagesFromHub.update((list) => [...list, msg]);
+
+      requestAnimationFrame(() => {
+        if (this.isNearBottom()) {
+          this.scrollToBottom();
+        }
       });
     });
   }
 
-  loadUsersAvatar() {
-    effect(() => {
-      const chatMsgs = this.chatMessages();
-      chatMsgs.forEach((m) => this.loadUserAvatar(m.senderId!));
-    });
+  onScroll() {
+    const el = this.chatContainer.nativeElement;
+    if (el.scrollTop !== 0) return;
+
+    const oldHeight = el.scrollHeight;
+    const oldScrollTop = el.scrollTop;
+
+    this.paginationPage.update((p) => p + 1);
+
+    this.messageService
+      .getChatMessages(this.selectedChat()!.id!, this.paginationPage(), this.paginationPageSize())
+      .subscribe((msgs) => {
+        if (!msgs.length) return;
+
+        this.messages.update((list) => [...msgs, ...list]);
+        setTimeout(() => {
+          console.log(this.messages());
+        }, 0);
+        requestAnimationFrame(() => {
+          const newHeight = el.scrollHeight;
+          el.scrollTop = oldScrollTop + (newHeight - oldHeight);
+        });
+      });
   }
 
-  ngOnDestroy() {
-    this.messageService.endConnection();
-  }
-  resetUserAvatars() {
+  loadUsersAvatar() {
     effect(() => {
-      const chat = this.selectedChat();
-      this.userAvatars.set(new Map());
+      this.chatMessages().forEach((m) => {
+        if (!m.senderId) return;
+        if (this.userAvatars().has(m.senderId)) return;
+
+        this.userService.getUser(m.senderId).subscribe((user) => {
+          if (!user?.avatar) return;
+
+          this.userAvatars.update((map) => {
+            const copy = new Map(map);
+            copy.set(m.senderId!, user.avatar!);
+            return copy;
+          });
+        });
+      });
     });
   }
 
   messageToSendModel = model({ message: '' });
-  messageToSendForm = form(this.messageToSendModel, (schema) => {
-    required(schema.message);
-  });
+  messageToSendForm = form(this.messageToSendModel, (schema) => required(schema.message));
 
   onSend() {
     if (this.messageToSendForm().invalid()) return;
+
     this.messageService.sendTextMessage(
       this.messageToSendModel().message,
-      this.selectedChat()?.id!,
+      this.selectedChat()!.id!,
     );
+
     this.messageToSendModel.set({ message: '' });
   }
 
   onSendByKey(event: KeyboardEvent) {
-    console.log('eyeye');
     if (event.key === 'Enter' && !event.shiftKey) {
       event.preventDefault();
       this.onSend();
     }
   }
 
-  loadUserAvatar(userId: number) {
-    if (this.userAvatars().has(userId)) return;
+  onFileSelected(event: Event) {
+    const input = event.target as HTMLInputElement;
+    if (!input.files?.length) return;
 
-    this.userService.getUser(userId).subscribe({
-      next: (user) => {
-        const avatar = user?.avatar;
-        if (!avatar) return;
-        this.userAvatars.update((map) => {
-          const newMap = new Map(map);
-          newMap.set(userId, user.avatar!);
-          return newMap;
-        });
-      },
-    });
+    this.messageService.sendFile(input.files[0], this.selectedChat()!.id!);
+  }
+
+  isImage(message: Message) {
+    return message.type?.startsWith('image');
+  }
+
+  resetChatState() {
+    this.messages.set([]);
+    this.messagesFromHub.set([]);
+    this.userAvatars.set(new Map());
+    this.paginationPage.set(1);
+  }
+
+  scrollToBottom() {
+    const el = this.chatContainer?.nativeElement;
+    if (!el) return;
+    el.scrollTop = el.scrollHeight;
+  }
+
+  isNearBottom(threshold = 80) {
+    const el = this.chatContainer.nativeElement;
+    return el.scrollHeight - el.scrollTop - el.clientHeight < threshold;
   }
 
   isToday(date: string) {
     const d = new Date(date);
-    const today = new Date();
+    const now = new Date();
     return (
-      d.getDate() === today.getDate() &&
-      d.getMonth() === today.getMonth() &&
-      d.getFullYear() === today.getFullYear()
+      d.getDate() === now.getDate() &&
+      d.getMonth() === now.getMonth() &&
+      d.getFullYear() === now.getFullYear()
     );
   }
 
-  onFileSelected(event: Event) {
-    const input = event.target as HTMLInputElement;
-    if (!input.files || input.files.length === 0) return;
-    const file = input.files[0];
-    this.messageService.sendFile(file, this.selectedChat()?.id!);
-  }
-  isImage(message: Message) {
-    return message.type?.startsWith('image');
+  ngOnDestroy() {
+    this.messageService.endConnection();
   }
 }

@@ -3,7 +3,7 @@
     <p class="p-1 text-xl">{{ selectedChat()?.chatName }}</p>
   </div>
 
-  <div class="flex-1 overflow-y-auto p-2">
+  <div (scroll)="onScroll()" #chatContainer class="flex-1 overflow-y-auto p-2">
     @for (message of chatMessages(); track message.messageId) {
       <div class="my-2 flex items-start p-1 hover:backdrop-brightness-70">
         @if (avatarFor(message.senderId!)()) {

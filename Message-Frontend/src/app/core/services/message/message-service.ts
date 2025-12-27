@@ -70,7 +70,7 @@ export class MessageService {
       content: encodedMessage,
       type: 'text/plain',
     };
-    this.connection.invoke('SendMessage', message);
+    return this.connection.invoke('SendMessage', message);
   }
 
   async sendFile(file: File, chatId: number) {
