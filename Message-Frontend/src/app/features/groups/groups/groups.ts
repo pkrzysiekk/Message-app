@@ -5,7 +5,7 @@ import { Group } from '../../../core/services/group/models/group';
 import { GroupView } from '../../group-view/group-view';
 import { ClickedOutside } from '../../../shared/directives/clicked-outside/clicked-outside';
 import { form, required, Field } from '@angular/forms/signals';
-import { MessageService } from '../../../core/services/message/message';
+import { MessageService } from '../../../core/services/message/message-service';
 
 @Component({
   selector: 'app-groups',

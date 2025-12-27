@@ -1,6 +1,6 @@
 import { inject, Injectable, Sanitizer } from '@angular/core';
 import * as signalR from '@microsoft/signalr';
-import { BehaviorSubject, Subject } from 'rxjs';
+import { BehaviorSubject, map, Subject } from 'rxjs';
 import { Message } from './models/message';
 import { DomSanitizer } from '@angular/platform-browser';
 import { HttpClient } from '@angular/common/http';
@@ -13,6 +13,8 @@ export class MessageService {
   http = inject(HttpClient);
   messages = new BehaviorSubject<Message[]>([]);
   messages$ = this.messages.asObservable();
+  incomingMessage$ = new Subject<Message>();
+  messagesFromHub$ = this.incomingMessage$.asObservable();
   textEncoder = new TextEncoder();
   textDecoder = new TextDecoder();
   fileReader = new FileReader();
@@ -25,9 +27,18 @@ export class MessageService {
   }
 
   getChatMessages(chatId: number, page: number, pageSize: number) {
-    return this.http.get<Message[]>(
-      `${this.baseApiUrl}/${chatId}?page=${page}&pageSize=${pageSize}`,
-    );
+    return this.http
+      .get<Message[]>(`${this.baseApiUrl}/${chatId}/messages?page=${page}&pageSize=${pageSize}`)
+      .pipe(
+        map((msgs) =>
+          msgs.map((msg) => {
+            if (msg.type !== 'text/plain') return msg;
+            const decodedContent = this.decodeBase64Utf8(msg.content);
+            msg.content = decodedContent;
+            return msg;
+          }),
+        ),
+      );
   }
 
   startConnection() {
@@ -42,11 +53,14 @@ export class MessageService {
   }
 
   addMessage(message: Message) {
+    console.log('message', message);
     if (message.type === 'text/plain') {
       const decodedContent = this.decodeBase64Utf8(message.content);
       message.content = decodedContent;
+      console.log('decoded,', message);
     }
-    this.messages.next([...this.messages.getValue(), message]);
+    //this.messages.next([...this.messages.getValue(), message]);
+    this.incomingMessage$.next(message);
   }
 
   sendTextMessage(messageContent: string, chatId: number) {

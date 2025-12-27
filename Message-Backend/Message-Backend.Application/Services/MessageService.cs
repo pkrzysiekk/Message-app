@@ -17,10 +17,13 @@ public class MessageService : BaseService<Message,long>,IMessageService
         page = page < 1 ? 1 : page;
         pageSize = pageSize < 1 ? 1 : pageSize;
         
+        var totalMessages = await _repository.GetAll()
+            .CountAsync(m => m.ChatId == chatId);
+
         var chatMessages = await _repository.GetAll(q => q.Include(m => m.Content))
             .Where(m => m.ChatId == chatId)
-            .OrderByDescending(c=>c.SentAt)
-            .Skip((page - 1) * pageSize)
+            .OrderBy(c => c.SentAt)
+            .Skip(Math.Max(0, totalMessages - page * pageSize))
             .Take(pageSize)
             .ToListAsync();
         return chatMessages;

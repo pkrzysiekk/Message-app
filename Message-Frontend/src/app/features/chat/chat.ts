@@ -1,12 +1,11 @@
 import { Component, computed, effect, inject, model, signal } from '@angular/core';
 import { Chat } from '../../core/services/chat/models/chat';
 import { ChatService } from '../../core/services/chat/chat-service';
-import { MessageService } from '../../core/services/message/message';
 import { map } from 'rxjs';
 import { AsyncPipe, DatePipe } from '@angular/common';
 import { form, Field, required } from '@angular/forms/signals';
 import { MessageType } from '../../core/services/message/models/message-type';
-import { toSignal } from '@angular/core/rxjs-interop';
+import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { UserService } from '../../core/services/user/user-service';
 import { Image } from '../../core/models/image';
 import { UserAvatar } from './model/userAvatar';
@@ -15,6 +14,7 @@ import { RouterLink } from '@angular/router';
 import { DomSanitizer } from '@angular/platform-browser';
 import { MessageToDataUrlPipe } from '../../shared/pipes/message-to-dataUrl-pipe';
 import { Message } from '../../core/services/message/models/message';
+import { MessageService } from '../../core/services/message/message-service';
 
 @Component({
   selector: 'app-chat',
@@ -26,28 +26,43 @@ export class ChatComponent {
   selectedChat = model<Chat | null>(null);
   messageService = inject(MessageService);
   userService = inject(UserService);
-  messages = toSignal(this.messageService.messages$, { initialValue: [] });
+  messages = signal<Message[]>([]);
+  messagesFromHub$ = signal<Message[]>([]);
   userAvatars = signal<Map<number, Image>>(new Map());
   avatarFor = (userId: number) => {
     return computed(() => this.userAvatars().get(userId));
   };
   constructor() {
     this.resetUserAvatars();
+    this.loadMessages();
+    this.loadUsersAvatar();
+
+    this.messageService.messagesFromHub$.subscribe((msg) => {
+      this.messagesFromHub$.update((list) => [...list, msg]);
+    });
   }
+
   chatMessages = computed(() => {
     const chat = this.selectedChat();
     if (!chat) return [];
-    this.messages().map((m) => this.loadUserAvatar(m.senderId!));
-    return this.messages().filter((m) => m.chatId === chat.id);
+    return [...this.messages(), ...this.messagesFromHub$()!];
   });
 
   loadMessages() {
     effect(() => {
       const chat = this.selectedChat();
-
-      this.messageService.getChatMessages(chat?.id!, 1, 100).subscribe((msgs) => {
-        this.messages;
+      if (!chat) return;
+      this.messageService.getChatMessages(chat?.id!, 1, 10).subscribe((msgs) => {
+        console.log(msgs);
+        this.messages.set(msgs);
       });
+    });
+  }
+
+  loadUsersAvatar() {
+    effect(() => {
+      const chatMsgs = this.chatMessages();
+      chatMsgs.forEach((m) => this.loadUserAvatar(m.senderId!));
     });
   }
 

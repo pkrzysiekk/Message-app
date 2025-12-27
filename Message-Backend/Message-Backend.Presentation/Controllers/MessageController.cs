@@ -72,7 +72,7 @@ namespace Message_Backend.Presentation.Controllers
             GetMessages([FromRoute] int chatId, [FromQuery] int page, [FromQuery] int pageSize)
         {
             var messages = await _messageService.GetChatMessages(chatId, page, pageSize);
-            return Ok(messages);
+            return Ok(messages.Select(c=>c.ToDto()).ToList());
         }
         
     }
