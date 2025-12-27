@@ -19,6 +19,7 @@ public class MessageService : BaseService<Message,long>,IMessageService
         
         var chatMessages = await _repository.GetAll(q => q.Include(m => m.Content))
             .Where(m => m.ChatId == chatId)
+            .OrderByDescending(c=>c.SentAt)
             .Skip((page - 1) * pageSize)
             .Take(pageSize)
             .ToListAsync();

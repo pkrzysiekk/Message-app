@@ -66,5 +66,14 @@ namespace Message_Backend.Presentation.Controllers
             await _messageService.Delete(messageId);
             return NoContent();
         }
+
+        [HttpGet("{chatId}/messages")]
+        public async Task<ActionResult<List<MessageDto>>>
+            GetMessages([FromRoute] int chatId, [FromQuery] int page, [FromQuery] int pageSize)
+        {
+            var messages = await _messageService.GetChatMessages(chatId, page, pageSize);
+            return Ok(messages);
+        }
+        
     }
 }

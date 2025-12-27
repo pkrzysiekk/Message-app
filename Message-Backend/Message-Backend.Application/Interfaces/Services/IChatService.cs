@@ -9,4 +9,5 @@ public interface IChatService :IBaseService<Chat,int>
    public Task<Chat> Update(Chat chat);
    public Task AddChatToGroup(Chat chat);
    public Task<IEnumerable<Chat>> GetUserChats(int userId);
+   public Task<IEnumerable<Chat>> GetUserChatsInGroup(int userId,int groupId);
 }

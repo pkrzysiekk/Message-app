@@ -3,11 +3,14 @@ import * as signalR from '@microsoft/signalr';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { Message } from './models/message';
 import { DomSanitizer } from '@angular/platform-browser';
+import { HttpClient } from '@angular/common/http';
 @Injectable({
   providedIn: 'root',
 })
 export class MessageService {
   private connection: signalR.HubConnection;
+  baseApiUrl = 'https://localhost/api/message';
+  http = inject(HttpClient);
   messages = new BehaviorSubject<Message[]>([]);
   messages$ = this.messages.asObservable();
   textEncoder = new TextEncoder();
@@ -19,6 +22,12 @@ export class MessageService {
       .withUrl('https://localhost/ChatHub')
       .withAutomaticReconnect()
       .build();
+  }
+
+  getChatMessages(chatId: number, page: number, pageSize: number) {
+    return this.http.get<Message[]>(
+      `${this.baseApiUrl}/${chatId}?page=${page}&pageSize=${pageSize}`,
+    );
   }
 
   startConnection() {

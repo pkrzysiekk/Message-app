@@ -58,4 +58,10 @@ public class ChatService : BaseService<Chat,int>, IChatService
             .ToListAsync();
         return userChats;
     }
+
+    public async Task<IEnumerable<Chat>> GetUserChatsInGroup(int userId, int groupId)
+    {
+        var allUserChats=await GetUserChats(userId);
+        return  allUserChats.Where(x=>x.GroupId==groupId).ToList();
+    }
 }

@@ -46,7 +46,7 @@ export class GroupView {
     effect((onCleanup) => {
       const group = this.selectedGroup();
       if (!group) return;
-      const sub = this.chatService.getAllGroupChats(group.groupId!).subscribe({
+      const sub = this.chatService.getAllUserChatsInGroup(group.groupId!).subscribe({
         next: (chats) => {
           console.log('chats', chats);
           this.groupChats.set(chats);

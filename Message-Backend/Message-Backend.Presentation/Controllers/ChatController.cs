@@ -72,6 +72,14 @@ namespace Message_Backend.Presentation.Controllers
             var userChats=await _chatService.GetUserChats(userId);
             return Ok(userChats.Select(x=>x.ToDto()).ToList());
         }
+
+        [HttpGet("{groupId}/chats")]
+        public async Task<ActionResult<IEnumerable<ChatDto>>> GetUserChatsInGroup([FromRoute] int groupId)
+        {
+           var userId = CookieHelper.GetUserIdFromCookie(User);
+           var userChatsInGroup= await _chatService.GetUserChatsInGroup(userId, groupId);
+           return Ok(userChatsInGroup.Select(c=>c.ToDto()).ToList());
+        }
         
     }
 }

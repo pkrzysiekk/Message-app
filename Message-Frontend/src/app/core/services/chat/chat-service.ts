@@ -33,4 +33,8 @@ export class ChatService {
   getAllUserChats() {
     return this.http.get<Chat[]>(`${this.baseApiUrl}/user-chats`);
   }
+
+  getAllUserChatsInGroup(groupId: number) {
+    return this.http.get<Chat[]>(`${this.baseApiUrl}/${groupId}/chats`);
+  }
 }

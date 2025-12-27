@@ -41,6 +41,16 @@ export class ChatComponent {
     return this.messages().filter((m) => m.chatId === chat.id);
   });
 
+  loadMessages() {
+    effect(() => {
+      const chat = this.selectedChat();
+
+      this.messageService.getChatMessages(chat?.id!, 1, 100).subscribe((msgs) => {
+        this.messages;
+      });
+    });
+  }
+
   ngOnDestroy() {
     this.messageService.endConnection();
   }
