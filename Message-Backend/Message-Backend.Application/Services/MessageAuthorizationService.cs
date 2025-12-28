@@ -1,0 +1,33 @@
+using Message_Backend.Application.Interfaces.Services;
+using Message_Backend.Domain.Models.Enums;
+
+namespace Message_Backend.Application.Services;
+
+public class MessageAuthorizationService :IMessageAuthorizationService
+{
+    private readonly IMessageService _messageService;
+    private readonly IChatService _chatService;
+    private readonly IGroupService _groupService;
+    
+    public MessageAuthorizationService
+        (IMessageService messageService, IChatService chatService, IGroupService groupService)
+    {
+        _messageService = messageService;
+        _chatService = chatService;
+        _groupService = groupService;
+    }
+
+    public async Task<bool> CanUserModifyMessage(long messageId, int userId)
+    {
+        var message = await _messageService.GetById(messageId);
+        if(message.SenderId==userId)
+            return true;
+        var userChatsInGroup =
+            await _chatService.GetUserChatsInGroup(userId,message.Chat.GroupId);
+        var userRole = await _groupService.GetUserRoleInGroup(userId, message.Chat.GroupId);
+        
+        bool userIsInChat = userChatsInGroup.Any(c=>c.Id == message.ChatId);
+        bool userIsAdminOrOwner = userRole is GroupRole.Admin or  GroupRole.Owner;
+        return userIsInChat && userIsAdminOrOwner;
+    }
+}
