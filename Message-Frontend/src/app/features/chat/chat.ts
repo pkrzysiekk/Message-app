@@ -36,7 +36,7 @@ export class ChatComponent {
   messages = signal<Message[]>([]);
   messagesFromHub = signal<Message[]>([]);
   paginationPage = signal(1);
-  paginationPageSize = signal(1);
+  paginationPageSize = signal(20);
   userAvatars = signal<Map<number, Image>>(new Map());
   messageService = inject(MessageService);
   userService = inject(UserService);
@@ -61,6 +61,7 @@ export class ChatComponent {
     this.handleChatChange();
     this.handleSignalR();
     this.loadUsersAvatar();
+    this.handleMessageDelete();
   }
 
   handleChatChange() {
@@ -78,6 +79,24 @@ export class ChatComponent {
           requestAnimationFrame(() => this.scrollToBottom());
         });
     });
+  }
+
+  handleMessageDelete() {
+    this.messageService.incomingDeletedMessage$
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((msgDeleted) => {
+        if (msgDeleted.chatId !== this.selectedChat()?.id) return;
+        const index = this.messages().findIndex((msg) => msg.messageId == msgDeleted.messageId);
+        this.messages.update((list) => {
+          console.log(list[index]);
+          const newList = list.splice(index, 0, msgDeleted);
+          return newList;
+        });
+      });
+  }
+
+  onMessageDelete(msgId: number) {
+    this.messageService.removeMessage(msgId);
   }
 
   handleSignalR() {

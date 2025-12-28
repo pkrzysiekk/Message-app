@@ -12,6 +12,9 @@ export class MessageService {
   baseApiUrl = 'https://localhost/api/message';
   http = inject(HttpClient);
   incomingMessage$ = new Subject<Message>();
+  incomingDeletedMessage = new Subject<Message>();
+  incomingDeletedMessage$ = this.incomingDeletedMessage.asObservable();
+
   messagesFromHub$ = this.incomingMessage$.asObservable();
   textEncoder = new TextEncoder();
   textDecoder = new TextDecoder();
@@ -43,6 +46,9 @@ export class MessageService {
     this.connection.on('ReceiveMessage', (message: Message) => {
       this.addMessage(message);
     });
+    this.connection.on('ReceiveMessageRemovedEvent', (message: Message) => {
+      this.notifyMessageDelete(message);
+    });
     this.connection.start();
   }
 
@@ -50,12 +56,17 @@ export class MessageService {
     this.connection.stop();
   }
 
+  notifyMessageDelete(message: Message) {
+    const encodedContent = this.decodeBase64Utf8(message.content);
+    message.content = encodedContent;
+    this.incomingDeletedMessage.next(message);
+  }
+
   addMessage(message: Message) {
     console.log('message', message);
     if (message.type === 'text/plain') {
       const decodedContent = this.decodeBase64Utf8(message.content);
       message.content = decodedContent;
-      console.log('decoded,', message);
     }
     this.incomingMessage$.next(message);
   }
@@ -68,6 +79,10 @@ export class MessageService {
       type: 'text/plain',
     };
     return this.connection.invoke('SendMessage', message);
+  }
+
+  removeMessage(messageId: number) {
+    this.connection.invoke('RemoveMessage', messageId);
   }
 
   async sendFile(file: File, chatId: number) {

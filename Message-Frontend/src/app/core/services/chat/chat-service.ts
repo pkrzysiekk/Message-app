@@ -2,6 +2,8 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Chat } from './models/chat';
 import { Group } from '../group/models/group';
+import { Subject } from 'rxjs';
+import { GroupRole } from './models/groupRole';
 
 @Injectable({
   providedIn: 'root',

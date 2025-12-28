@@ -3,6 +3,8 @@ import { Group } from './models/group';
 import { HttpClient } from '@angular/common/http';
 import { UserRoleRequest } from './requests/userRoleRequest';
 import { UserService } from '../user/user-service';
+import { Subject } from 'rxjs';
+import { GroupRole } from '../chat/models/groupRole';
 @Injectable({
   providedIn: 'root',
 })
@@ -10,6 +12,9 @@ export class GroupService {
   http = inject(HttpClient);
   baseApiUrl = 'https://localhost/api/group';
   userService = inject(UserService);
+
+  currentGroupRole = new Subject<GroupRole>();
+  currentGroupRole$ = this.currentGroupRole.asObservable();
 
   getGroup(groupId: number) {
     return this.http.get<Group>(`${this.baseApiUrl}/${groupId}`);
