@@ -58,6 +58,11 @@ export class ChatComponent {
     );
   });
 
+  // lastMessage = computed(() => {
+  //   if (!this.chatMessages()) return null;
+  //   return this.chatMessages()[0];
+  // });
+
   avatarFor = (userId: number) => computed(() => this.userAvatars().get(userId));
 
   constructor() {
@@ -73,12 +78,10 @@ export class ChatComponent {
 
       this.resetChatState();
 
-      this.messageService
-        .getChatMessages(chat.id!, 1, this.paginationPageSize())
-        .subscribe((msgs) => {
-          this.messages.set(msgs);
-          requestAnimationFrame(() => this.scrollToBottom());
-        });
+      this.messageService.getChatMessages(chat.id!, 20, null).subscribe((msgs) => {
+        this.messages.set(msgs);
+        requestAnimationFrame(() => this.scrollToBottom());
+      });
     });
   }
 
@@ -103,10 +106,10 @@ export class ChatComponent {
     const oldHeight = el.scrollHeight;
     const oldScrollTop = el.scrollTop;
 
-    this.paginationPage.update((p) => p + 1);
+    const lastMessage = this.chatMessages()[0];
 
     this.messageService
-      .getChatMessages(this.selectedChat()!.id!, this.paginationPage(), this.paginationPageSize())
+      .getChatMessages(this.selectedChat()!.id!, this.paginationPageSize(), lastMessage.sentAt!)
       .subscribe((msgs) => {
         if (!msgs.length) return;
 

@@ -26,19 +26,20 @@ export class MessageService {
       .build();
   }
 
-  getChatMessages(chatId: number, page: number, pageSize: number) {
-    return this.http
-      .get<Message[]>(`${this.baseApiUrl}/${chatId}/messages?page=${page}&pageSize=${pageSize}`)
-      .pipe(
-        map((msgs) =>
-          msgs.map((msg) => {
-            if (msg.type !== 'text/plain') return msg;
-            const decodedContent = this.decodeBase64Utf8(msg.content);
-            msg.content = decodedContent;
-            return msg;
-          }),
-        ),
-      );
+  getChatMessages(chatId: number, pageSize: number, messageSince: string | null) {
+    const messageRequestUrl = messageSince
+      ? `${this.baseApiUrl}/${chatId}/messages?messageSince=${messageSince}&pageSize=${pageSize}`
+      : `${this.baseApiUrl}/${chatId}/messages?pageSize=${pageSize}`;
+    return this.http.get<Message[]>(messageRequestUrl).pipe(
+      map((msgs) =>
+        msgs.map((msg) => {
+          if (msg.type !== 'text/plain') return msg;
+          const decodedContent = this.decodeBase64Utf8(msg.content);
+          msg.content = decodedContent;
+          return msg;
+        }),
+      ),
+    );
   }
 
   startConnection() {
