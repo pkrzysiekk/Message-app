@@ -69,9 +69,9 @@ namespace Message_Backend.Presentation.Controllers
 
         [HttpGet("{chatId}/messages")]
         public async Task<ActionResult<List<MessageDto>>>
-            GetMessages([FromRoute] int chatId, [FromQuery] int page, [FromQuery] int pageSize)
+            GetMessages([FromRoute] int chatId, [FromQuery] int pageSize, [FromQuery] DateTime? messageSince)
         {
-            var messages = await _messageService.GetChatMessages(chatId, page, pageSize);
+            var messages = await _messageService.GetChatMessages(chatId,pageSize, messageSince);
             return Ok(messages.Select(c=>c.ToDto()).ToList());
         }
         

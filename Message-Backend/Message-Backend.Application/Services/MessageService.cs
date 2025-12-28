@@ -12,17 +12,31 @@ public class MessageService : BaseService<Message,long>,IMessageService
 {
     public MessageService(IRepository<Message,long> repository) : base(repository) {}
 
-    public async Task<IEnumerable<Message>> GetChatMessages(int chatId, int page, int pageSize)
+    public async Task<IEnumerable<Message>> 
+        GetChatMessages(int chatId, int pageSize,DateTime? lastSentAt = null)
     {
-        page = page < 1 ? 1 : page;
         pageSize = pageSize < 1 ? 1 : pageSize;
+        IEnumerable<Message> chatMessages = [];
         
-        var chatMessages = await _repository.GetAll(q => q.Include(m => m.Content))
-            .Where(m => m.ChatId == chatId)
-            .OrderByDescending(c => c.SentAt) // najnowsze pierwsze
-            .Skip((page - 1) * pageSize)
-            .Take(pageSize)
-            .ToListAsync();
+        if (lastSentAt is null)
+        {
+             chatMessages = await _repository.GetAll(q => q.Include(m => m.Content))
+                .Where(m => m.ChatId == chatId)
+                .OrderByDescending(c => c.SentAt)
+                .Take(pageSize)
+                .ToListAsync();
+        }
+        else
+        {
+            
+            chatMessages = await _repository.GetAll(q => q.Include(m => m.Content))
+                .Where(m => m.ChatId == chatId)
+                .OrderByDescending(c => c.SentAt)
+                .Where(c => c.SentAt < lastSentAt.Value)
+                .Take(pageSize)
+                .ToListAsync();
+        }
+
         return chatMessages;
     }
 
