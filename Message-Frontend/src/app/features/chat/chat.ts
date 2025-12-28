@@ -1,6 +1,7 @@
 import {
   Component,
   computed,
+  DestroyRef,
   effect,
   ElementRef,
   inject,
@@ -20,6 +21,8 @@ import { Image } from '../../core/models/image';
 
 import { ImageParsePipe } from '../../shared/pipes/image-parse-pipe/image-parse-pipe';
 import { MessageToDataUrlPipe } from '../../shared/pipes/message-to-dataUrl-pipe';
+import { takeUntil } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-chat',
@@ -28,20 +31,16 @@ import { MessageToDataUrlPipe } from '../../shared/pipes/message-to-dataUrl-pipe
   styleUrl: './chat.css',
 })
 export class ChatComponent {
+  @ViewChild('chatContainer') chatContainer!: ElementRef<HTMLDivElement>;
   selectedChat = model<Chat | null>(null);
-
   messages = signal<Message[]>([]);
   messagesFromHub = signal<Message[]>([]);
-
   paginationPage = signal(1);
   paginationPageSize = signal(20);
-
   userAvatars = signal<Map<number, Image>>(new Map());
-
-  @ViewChild('chatContainer') chatContainer!: ElementRef<HTMLDivElement>;
-
   messageService = inject(MessageService);
   userService = inject(UserService);
+  destroyRef = inject(DestroyRef);
 
   chatMessages = computed(() => {
     const allMessages = [...this.messages(), ...this.messagesFromHub()];
@@ -58,11 +57,6 @@ export class ChatComponent {
     );
   });
 
-  // lastMessage = computed(() => {
-  //   if (!this.chatMessages()) return null;
-  //   return this.chatMessages()[0];
-  // });
-
   avatarFor = (userId: number) => computed(() => this.userAvatars().get(userId));
 
   constructor() {
@@ -78,25 +72,30 @@ export class ChatComponent {
 
       this.resetChatState();
 
-      this.messageService.getChatMessages(chat.id!, 20, null).subscribe((msgs) => {
-        this.messages.set(msgs);
-        requestAnimationFrame(() => this.scrollToBottom());
-      });
+      this.messageService
+        .getChatMessages(chat.id!, this.paginationPageSize())
+        .pipe(takeUntilDestroyed(this.destroyRef))
+        .subscribe((msgs) => {
+          this.messages.set(msgs);
+          requestAnimationFrame(() => this.scrollToBottom());
+        });
     });
   }
 
   handleSignalR() {
-    this.messageService.messagesFromHub$.subscribe((msg) => {
-      if (msg.chatId !== this.selectedChat()?.id) return;
-      if (this.messagesFromHub().some((m) => m.messageId == msg.messageId)) return;
-      this.messagesFromHub.update((list) => [...list, msg]);
+    this.messageService.messagesFromHub$
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((msg) => {
+        if (msg.chatId !== this.selectedChat()?.id) return;
+        if (this.messagesFromHub().some((m) => m.messageId == msg.messageId)) return;
+        this.messagesFromHub.update((list) => [...list, msg]);
 
-      requestAnimationFrame(() => {
-        if (this.isNearBottom()) {
-          this.scrollToBottom();
-        }
+        requestAnimationFrame(() => {
+          if (this.isNearBottom()) {
+            this.scrollToBottom();
+          }
+        });
       });
-    });
   }
 
   onScroll() {
@@ -109,7 +108,8 @@ export class ChatComponent {
     const lastMessage = this.chatMessages()[0];
 
     this.messageService
-      .getChatMessages(this.selectedChat()!.id!, this.paginationPageSize(), lastMessage.sentAt!)
+      .getChatMessages(this.selectedChat()!.id!, this.paginationPageSize(), lastMessage?.sentAt)
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((msgs) => {
         if (!msgs.length) return;
 
@@ -130,15 +130,18 @@ export class ChatComponent {
         if (!m.senderId) return;
         if (this.userAvatars().has(m.senderId)) return;
 
-        this.userService.getUser(m.senderId).subscribe((user) => {
-          if (!user?.avatar) return;
+        this.userService
+          .getUser(m.senderId)
+          .pipe(takeUntilDestroyed(this.destroyRef))
+          .subscribe((user) => {
+            if (!user?.avatar) return;
 
-          this.userAvatars.update((map) => {
-            const copy = new Map(map);
-            copy.set(m.senderId!, user.avatar!);
-            return copy;
+            this.userAvatars.update((map) => {
+              const copy = new Map(map);
+              copy.set(m.senderId!, user.avatar!);
+              return copy;
+            });
           });
-        });
       });
     });
   }
@@ -205,5 +208,6 @@ export class ChatComponent {
 
   ngOnDestroy() {
     this.messageService.endConnection();
+    this.resetChatState();
   }
 }

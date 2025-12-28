@@ -11,13 +11,10 @@ export class MessageService {
   private connection: signalR.HubConnection;
   baseApiUrl = 'https://localhost/api/message';
   http = inject(HttpClient);
-  messages = new BehaviorSubject<Message[]>([]);
-  messages$ = this.messages.asObservable();
   incomingMessage$ = new Subject<Message>();
   messagesFromHub$ = this.incomingMessage$.asObservable();
   textEncoder = new TextEncoder();
   textDecoder = new TextDecoder();
-  fileReader = new FileReader();
 
   constructor() {
     this.connection = new signalR.HubConnectionBuilder()
@@ -26,7 +23,7 @@ export class MessageService {
       .build();
   }
 
-  getChatMessages(chatId: number, pageSize: number, messageSince: string | null) {
+  getChatMessages(chatId: number, pageSize: number, messageSince: string | undefined = undefined) {
     const messageRequestUrl = messageSince
       ? `${this.baseApiUrl}/${chatId}/messages?messageSince=${messageSince}&pageSize=${pageSize}`
       : `${this.baseApiUrl}/${chatId}/messages?pageSize=${pageSize}`;
@@ -50,7 +47,7 @@ export class MessageService {
   }
 
   endConnection() {
-    this.connection.stop().then(() => this.messages.next([]));
+    this.connection.stop();
   }
 
   addMessage(message: Message) {
@@ -60,7 +57,6 @@ export class MessageService {
       message.content = decodedContent;
       console.log('decoded,', message);
     }
-    //this.messages.next([...this.messages.getValue(), message]);
     this.incomingMessage$.next(message);
   }
 
@@ -75,9 +71,10 @@ export class MessageService {
   }
 
   async sendFile(file: File, chatId: number) {
-    this.fileReader.readAsDataURL(file);
-    this.fileReader.onload = () => {
-      const content = this.fileReader.result as string;
+    const fileReader = new FileReader();
+    fileReader.readAsDataURL(file);
+    fileReader.onload = () => {
+      const content = fileReader.result as string;
       const base64 = content.replace('data:', '').replace(/^.+,/, '');
       const message: Message = {
         chatId: chatId,
