@@ -71,12 +71,12 @@ public class MessageService : BaseService<Message,long>,IMessageService
     public override async Task Delete(long id)
     {
         var message = await GetById(id);
-        const string deletedMessageContent="TWVzc2FnZSBEZWxldGVk";
+        const string deletedMessageContent="Message Deleted";
         const string deletedMessageType="text/plain";
         
         message.Status = MessageStatus.Deleted;
         message.Content.Data = Encoding.UTF8.GetBytes(deletedMessageContent);
-        message.Type = deletedMessageContent;
+        message.Type = deletedMessageType;
         
         await _repository.Update(message);
     }

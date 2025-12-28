@@ -92,7 +92,7 @@ public class ChatHub :Hub<IChatClient>
            return;
         var message = await _messageService.GetById(messageId);
         await _messageService.Delete(messageId);
-        await Clients.Group(message.ChatId.ToString()).SendMessageRemovedEvent(messageId);
+        await Clients.Group(message.ChatId.ToString()).ReceiveMessageRemovedEvent(message.ToDto());
     }
     
     private bool isMessageRequestValid(HubCallerContext ctx, MessageDto messageDto)
