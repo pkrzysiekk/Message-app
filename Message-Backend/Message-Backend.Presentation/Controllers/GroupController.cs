@@ -2,6 +2,7 @@ using Message_Backend.Application.Interfaces;
 using Message_Backend.Application.Interfaces.Services;
 using Message_Backend.Application.Mappers;
 using Message_Backend.Application.Models.DTOs;
+using Message_Backend.Domain.Models.Enums;
 using Message_Backend.Presentation.ApiRequests;
 using Message_Backend.Presentation.Helpers;
 using Microsoft.AspNetCore.Authorization;
@@ -90,5 +91,17 @@ namespace Message_Backend.Presentation.Controllers
             await _groupService.UpdateUserRoleInGroup(userId,request.GroupId, request.Role);
             return Ok();
         }
+
+        [HttpGet("{groupId}/user-role")]
+        [Authorize(Policy = "GroupMember")]
+        public async Task<ActionResult<GroupRole?>> GetUserRole([FromRoute] int groupId)
+        {
+            var userId = CookieHelper.GetUserIdFromCookie(User);
+            var userRole = await _groupService.GetUserRoleInGroup(userId, groupId);
+            if (userRole == null)
+                return NotFound();
+            return Ok(userRole);
+        }
+ 
     }
 }
