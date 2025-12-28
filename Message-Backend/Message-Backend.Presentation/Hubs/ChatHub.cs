@@ -19,13 +19,16 @@ public class ChatHub :Hub<IChatClient>
     private readonly IMessageService _messageService;
     private readonly IChatService _chatService;
     private readonly IUserService _userService;
+    private readonly IMessageAuthorizationService _messageAuthorizationService;
    
     public ChatHub
-        (IMessageService messageService, IChatService chatService, IUserService userService)
+        (IMessageService messageService, IChatService chatService,
+            IUserService userService, IMessageAuthorizationService authorizationService )
     {
         _messageService = messageService;
         _chatService = chatService;
         _userService = userService;
+        _messageAuthorizationService = authorizationService;
     }
 
     public override async Task OnConnectedAsync()
@@ -80,6 +83,18 @@ public class ChatHub :Hub<IChatClient>
             return;
         await Clients.Group(chatId.ToString()).ReceiveUserIsTypingEvent(username);
     }
+
+    public async Task RemoveMessage(long messageId)
+    {
+        var callersId = Context.User.FindFirstValue(ClaimTypes.NameIdentifier);
+        var userId = int.Parse(callersId);
+        if(!await _messageAuthorizationService.CanUserModifyMessage(messageId, userId))
+           return;
+        var message = await _messageService.GetById(messageId);
+        await _messageService.Delete(messageId);
+        await Clients.Group(message.ChatId.ToString()).SendMessageRemovedEvent(messageId);
+    }
+    
     private bool isMessageRequestValid(HubCallerContext ctx, MessageDto messageDto)
     {
         var callersId = ctx.User.FindFirstValue(ClaimTypes.NameIdentifier);

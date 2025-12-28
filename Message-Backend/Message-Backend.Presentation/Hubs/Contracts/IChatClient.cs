@@ -7,6 +7,8 @@ public interface IChatClient
 {
     Task ReceiveMessage(MessageDto message);
     Task SendMessage(MessageDto message);
+    Task RemoveMessage(long messageId);
+    Task SendMessageRemovedEvent(long messageId);
     Task SendUserIsTypingEvent(int chatId);
     Task ReceiveUserIsTypingEvent(string username);
 }

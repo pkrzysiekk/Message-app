@@ -1,3 +1,4 @@
+using System.Text;
 using Message_Backend.Application.Interfaces;
 using Message_Backend.Application.Interfaces.Repository;
 using Message_Backend.Application.Interfaces.Services;
@@ -70,7 +71,13 @@ public class MessageService : BaseService<Message,long>,IMessageService
     public override async Task Delete(long id)
     {
         var message = await GetById(id);
+        const string deletedMessageContent="TWVzc2FnZSBEZWxldGVk";
+        const string deletedMessageType="text/plain";
+        
         message.Status = MessageStatus.Deleted;
+        message.Content.Data = Encoding.UTF8.GetBytes(deletedMessageContent);
+        message.Type = deletedMessageContent;
+        
         await _repository.Update(message);
     }
 }
