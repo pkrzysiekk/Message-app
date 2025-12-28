@@ -37,7 +37,7 @@ public class MessageService : BaseService<Message,long>,IMessageService
                 .ToListAsync();
         }
 
-        return chatMessages;
+        return chatMessages.Reverse();
     }
 
     public override async Task<Message> GetById(long id)

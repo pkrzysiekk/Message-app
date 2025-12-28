@@ -36,7 +36,7 @@ export class ChatComponent {
   messages = signal<Message[]>([]);
   messagesFromHub = signal<Message[]>([]);
   paginationPage = signal(1);
-  paginationPageSize = signal(20);
+  paginationPageSize = signal(1);
   userAvatars = signal<Map<number, Image>>(new Map());
   messageService = inject(MessageService);
   userService = inject(UserService);
@@ -52,9 +52,7 @@ export class ChatComponent {
       }
     });
 
-    return Array.from(uniqueMessagesMap.values()).sort(
-      (a, b) => new Date(a.sentAt!).getTime() - new Date(b.sentAt!).getTime(),
-    );
+    return Array.from(uniqueMessagesMap.values());
   });
 
   avatarFor = (userId: number) => computed(() => this.userAvatars().get(userId));
