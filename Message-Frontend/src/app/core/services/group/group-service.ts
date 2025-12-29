@@ -32,7 +32,7 @@ export class GroupService {
       groupName: groupName,
       groupType: 1,
     };
-    return this.http.post(`${this.baseApiUrl}`, group);
+    return this.http.post<Group>(`${this.baseApiUrl}`, group);
   }
 
   updateGroup(group: Group) {
@@ -43,10 +43,8 @@ export class GroupService {
     return this.http.delete(`${this.baseApiUrl}/${groupId}`);
   }
 
-  getUserGroups(page: number, pageSize: number) {
-    return this.http.get<Group[]>(
-      `${this.baseApiUrl}/user-groups?page=${page}&pageSize=${pageSize}`,
-    );
+  getUserGroups() {
+    return this.http.get<Group[]>(`${this.baseApiUrl}/user-groups`);
   }
 
   addUser(userId: number, req: UserRoleRequest) {

@@ -35,18 +35,7 @@ public class ChatHub :Hub<IChatClient>
 
     public override async Task OnConnectedAsync()
     {
-        var callersId = base.Context.User.FindFirstValue(ClaimTypes.NameIdentifier);
-        if (callersId is null)
-            return;
-        var userId = Int32.Parse(callersId);
-        var userChats = await _chatService.GetUserChats(userId);
-        var userGroups = await _groupService.GetUserGroups(userId);
-        Context.Items["ChatIds"] = userChats.Select(x => x.Id);
-        foreach (var userChat in userChats)
-        {
-             await Groups.AddToGroupAsync(Context.ConnectionId, $"chat:{userChat.Id}");
-        }
-        
+        await RefreshConnectionState(); 
         await base.OnConnectedAsync();
        // await _userService.ChangeOnlineStatus(userId, true); 
     }
@@ -56,11 +45,6 @@ public class ChatHub :Hub<IChatClient>
         var callersId = base.Context.User.FindFirstValue(ClaimTypes.NameIdentifier);
         if (callersId is null)
             return;
-        var userChats = await _chatService.GetUserChats(Int32.Parse(callersId));
-        foreach (var userChat in userChats)
-        {
-            await Groups.RemoveFromGroupAsync(Context.ConnectionId, $"chat:{userChat.Id}");
-        }
         await base.OnDisconnectedAsync(exception);
         var userId = Int32.Parse(callersId);
        // await _userService.ChangeOnlineStatus(userId, false);
@@ -84,8 +68,38 @@ public class ChatHub :Hub<IChatClient>
         {
            await Groups.AddToGroupAsync(Context.ConnectionId, $"group:{userGroup.Id}"); 
         }
-        
-        
+    }
+
+    public async Task JoinGroup(int groupId)
+    {
+        var userId = int.Parse(
+            Context.User.FindFirstValue(ClaimTypes.NameIdentifier)
+        );
+
+        if (!await _messageAuthorizationService.IsUserInGroup(groupId, userId))
+            throw new HubException("Unauthorized");
+
+        await Groups.AddToGroupAsync(Context.ConnectionId, $"group:{groupId}");
+    }
+
+    public async Task JoinChat(int chatId)
+    {
+        var userId = int.Parse(
+            Context.User.FindFirstValue(ClaimTypes.NameIdentifier)
+        );
+            if (!await _messageAuthorizationService.IsUserInChat(chatId, userId))
+                throw new HubException("Unauthorized");
+            await Groups.AddToGroupAsync(Context.ConnectionId, $"chat:{chatId}");
+    }
+
+    public async Task SendNewGroupRequest(int groupId)
+    {
+       await Clients.Group($"group:{groupId}").ReceiveAddToGroupEvent(groupId);
+    }
+
+    public async Task SendNewChatRequest(int chatId)
+    {
+        await Clients.Group($"chat:{chatId}").ReceiveAddToChatEvent(chatId);
     }
     
 
@@ -110,9 +124,8 @@ public class ChatHub :Hub<IChatClient>
         var userId = Int32.Parse(callersId);
         if (!await _messageAuthorizationService.IsUserInGroup(groupId, userId))
             return;
-        var groupChats = await _chatService.GetAllGroupChats(groupId);
-        foreach (var chat in groupChats)
-            await Clients.Group(chat.Id.ToString()).ReceiveConnectionStateChanged();
+        await RefreshConnectionState();
+        await Clients.Group($"group:{groupId}").ReceiveConnectionStateChanged();
     }
 
     public async Task SendUserIsTypingEvent(int chatId)

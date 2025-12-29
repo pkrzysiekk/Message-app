@@ -36,4 +36,10 @@ public class MessageAuthorizationService :IMessageAuthorizationService
         var userRole = await _groupService.GetUserRoleInGroup(userId, groupId);
         return userRole != null;
     }
+
+    public async Task<bool> IsUserInChat(int chatId, int userId)
+    {
+       var userChats = await _chatService.GetUserChats(userId); 
+       return userChats.Any(c=>c.Id == chatId);
+    }
 }

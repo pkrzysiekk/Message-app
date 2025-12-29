@@ -17,8 +17,6 @@ export class Groups {
   groupService = inject(GroupService);
   groups = signal<Group[]>([]);
   selectedGroup = signal<Group | null>(null);
-  page = signal<number>(1);
-  pageSize = signal<number>(10);
   showCreateForm = signal<boolean>(false);
   showGroupList = signal<boolean>(true);
   messageService = inject(MessageService);
@@ -37,7 +35,7 @@ export class Groups {
   }
 
   fetchGroups() {
-    this.groupService.getUserGroups(this.page(), this.pageSize()).subscribe({
+    this.groupService.getUserGroups().subscribe({
       next: (fetched) => {
         this.groups.set(fetched);
         console.log(this.groups());
@@ -56,9 +54,10 @@ export class Groups {
   onGroupCreate() {
     if (this.createGroupForm().invalid()) return;
     this.groupService.createGroup(this.createGroupModel().groupName).subscribe({
-      next: () => {
+      next: (group: Group) => {
         this.showCreateForm.set(false);
         this.fetchGroups();
+        this.messageService.sendGroupStateChanged(group.groupId!);
       },
     });
   }

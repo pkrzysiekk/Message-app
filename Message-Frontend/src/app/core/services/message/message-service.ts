@@ -49,6 +49,9 @@ export class MessageService {
     this.connection.on('ReceiveMessageRemovedEvent', (message: Message) => {
       this.notifyMessageDelete(message);
     });
+    this.connection.on('ReceiveConnectionStateChanged', () => {
+      this.connection.invoke('RefreshConnectionState');
+    });
     this.connection.start();
   }
 
@@ -62,12 +65,17 @@ export class MessageService {
     this.incomingDeletedMessage.next(message);
   }
 
+  sendGroupStateChanged(groupId: number) {
+    this.connection.invoke('SendConnectionStateChanged', groupId);
+  }
+
   addMessage(message: Message) {
     console.log('message', message);
     if (message.type === 'text/plain') {
       const decodedContent = this.decodeBase64Utf8(message.content);
       message.content = decodedContent;
     }
+    console.log(message);
     this.incomingMessage$.next(message);
   }
 

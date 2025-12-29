@@ -6,6 +6,7 @@ import { ChatService } from '../../core/services/chat/chat-service';
 import { GroupRole } from '../../core/services/chat/models/groupRole';
 import { form, required, Field } from '@angular/forms/signals';
 import { ChatComponent } from '../chat/chat';
+import { MessageService } from '../../core/services/message/message-service';
 
 @Component({
   selector: 'app-group',
@@ -15,6 +16,7 @@ import { ChatComponent } from '../chat/chat';
 })
 export class GroupView {
   chatService = inject(ChatService);
+  messageService = inject(MessageService);
   selectedGroup = model<Group | null>(null);
   groupChats = model<Chat[] | null>(null);
   userGroupRole = model<GroupRole | null>(null);
@@ -84,6 +86,7 @@ export class GroupView {
         next: () => {
           this.showCreateChatForm.set(false);
           this.refreshChats();
+          this.messageService.sendGroupStateChanged(this.selectedGroup()?.groupId!);
         },
       });
   }
