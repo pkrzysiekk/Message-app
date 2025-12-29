@@ -78,7 +78,6 @@ public class ChatHub :Hub<IChatClient>
 
         if (!await _messageAuthorizationService.IsUserInGroup(groupId, userId))
             throw new HubException("Unauthorized");
-
         await Groups.AddToGroupAsync(Context.ConnectionId, $"group:{groupId}");
     }
 
@@ -87,19 +86,37 @@ public class ChatHub :Hub<IChatClient>
         var userId = int.Parse(
             Context.User.FindFirstValue(ClaimTypes.NameIdentifier)
         );
-            if (!await _messageAuthorizationService.IsUserInChat(chatId, userId))
-                throw new HubException("Unauthorized");
-            await Groups.AddToGroupAsync(Context.ConnectionId, $"chat:{chatId}");
+        if (!await _messageAuthorizationService.IsUserInChat(chatId, userId))
+            throw new HubException("Unauthorized");
+        var userChatIdsObj = Context.Items["ChatIds"];
+        if (userChatIdsObj is null)
+            return;
+        var chatIds= userChatIdsObj as IEnumerable<int>;
+      var list=  chatIds.Append(chatId);
+        Context.Items["ChatIds"] =list;
+        await Groups.AddToGroupAsync(Context.ConnectionId, $"chat:{chatId}");
     }
 
     public async Task SendNewGroupRequest(int groupId)
     {
-       await Clients.Group($"group:{groupId}").ReceiveAddToGroupEvent(groupId);
+        var userId = int.Parse(
+            Context.User.FindFirstValue(ClaimTypes.NameIdentifier)
+        );
+        if(!await _messageAuthorizationService.IsUserInGroup(groupId,userId))
+            throw new HubException("Unauthorized");
+        var usersInGroup = await _groupService.GetUsersInGroup(groupId);
+        foreach (var user in usersInGroup)
+            await Clients.User(user.Id.ToString()).ReceiveAddToGroupEvent(groupId);
     }
 
-    public async Task SendNewChatRequest(int chatId)
+    public async Task SendNewChatRequest(int groupId,int chatId)
     {
-        await Clients.Group($"chat:{chatId}").ReceiveAddToChatEvent(chatId);
+        var userId = int.Parse(
+            Context.User.FindFirstValue(ClaimTypes.NameIdentifier)
+        );
+        if(!await _messageAuthorizationService.IsUserInChat(chatId,userId))
+            throw new HubException("Unauthorized"); 
+        await Clients.Group($"group:{groupId}").ReceiveAddToChatEvent(chatId);
     }
     
 

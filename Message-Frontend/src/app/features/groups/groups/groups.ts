@@ -57,7 +57,7 @@ export class Groups {
       next: (group: Group) => {
         this.showCreateForm.set(false);
         this.fetchGroups();
-        this.messageService.sendGroupStateChanged(group.groupId!);
+        this.messageService.sendJoinGroupEvent(group.groupId!);
       },
     });
   }

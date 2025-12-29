@@ -49,14 +49,25 @@ export class MessageService {
     this.connection.on('ReceiveMessageRemovedEvent', (message: Message) => {
       this.notifyMessageDelete(message);
     });
-    this.connection.on('ReceiveConnectionStateChanged', () => {
-      this.connection.invoke('RefreshConnectionState');
+    this.connection.on('ReceiveAddToGroupEvent', (groupId: number) => {
+      this.connection.invoke('JoinGroup', groupId);
+    });
+    this.connection.on('ReceiveAddToChatEvent', (chatId: number) => {
+      this.connection.invoke('JoinChat', chatId);
     });
     this.connection.start();
   }
 
   endConnection() {
     this.connection.stop();
+  }
+
+  sendJoinChatEvent(groupId: number, chatId: number) {
+    this.connection.invoke('SendNewChatRequest', groupId, chatId);
+  }
+
+  sendJoinGroupEvent(groupId: number) {
+    this.connection.invoke('SendNewGroupRequest', groupId);
   }
 
   notifyMessageDelete(message: Message) {

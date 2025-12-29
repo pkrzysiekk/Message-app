@@ -83,10 +83,10 @@ export class GroupView {
         groupId: this.selectedGroup()?.groupId!,
       })
       .subscribe({
-        next: () => {
+        next: (chat: Chat) => {
           this.showCreateChatForm.set(false);
           this.refreshChats();
-          this.messageService.sendGroupStateChanged(this.selectedGroup()?.groupId!);
+          this.messageService.sendJoinChatEvent(this.selectedGroup()?.groupId!, chat.id!);
         },
       });
   }

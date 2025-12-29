@@ -17,7 +17,7 @@ export class ChatService {
   }
 
   create(chat: Chat) {
-    return this.http.post(`${this.baseApiUrl}`, chat);
+    return this.http.post<Chat>(`${this.baseApiUrl}`, chat);
   }
 
   update(chat: Chat) {
