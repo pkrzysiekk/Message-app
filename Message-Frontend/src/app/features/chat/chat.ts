@@ -23,6 +23,7 @@ import { ImageParsePipe } from '../../shared/pipes/image-parse-pipe/image-parse-
 import { MessageToDataUrlPipe } from '../../shared/pipes/message-to-dataUrl-pipe';
 import { takeUntil } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { GroupService } from '../../core/services/group/group-service';
 
 @Component({
   selector: 'app-chat',
@@ -40,10 +41,12 @@ export class ChatComponent {
   userAvatars = signal<Map<number, Image>>(new Map());
   messageService = inject(MessageService);
   userService = inject(UserService);
+  groupService = inject(GroupService);
   destroyRef = inject(DestroyRef);
 
   chatMessages = computed(() => {
     const allMessages = [...this.messages(), ...this.messagesFromHub()];
+    console.log(allMessages);
 
     const uniqueMessagesMap = new Map<number, Message>();
     allMessages.forEach((m) => {
@@ -221,6 +224,15 @@ export class ChatComponent {
       d.getMonth() === now.getMonth() &&
       d.getFullYear() === now.getFullYear()
     );
+  }
+
+  canModifyMessage(message: Message) {
+    const notDeleted = message.status !== 3;
+    const userRole = this.groupService.selectedUserGroupRole();
+    const userId = this.userService.localUser()?.id;
+    const userHasAdminRole = userRole === 1 || userRole === 2;
+    const userIsSender = message.messageId == userId;
+    return (userHasAdminRole || userIsSender) && notDeleted;
   }
 
   ngOnDestroy() {
