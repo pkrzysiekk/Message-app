@@ -5,6 +5,7 @@ using Message_Backend.Application.Interfaces.Services;
 using Message_Backend.Domain.Entities;
 using Message_Backend.Domain.Exceptions;
 using Message_Backend.Domain.Models.Enums;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 
 namespace Message_Backend.Application.Services;
@@ -71,6 +72,8 @@ public class MessageService : BaseService<Message,long>,IMessageService
     public override async Task Delete(long id)
     {
         var message = await GetById(id);
+        if (message.Status is MessageStatus.Deleted)
+            throw new EntityAlreadyDeleted("Already deleted");
         const string deletedMessageContent="Message Deleted";
         const string deletedMessageType="text/plain";
         
