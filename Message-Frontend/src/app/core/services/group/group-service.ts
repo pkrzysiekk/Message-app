@@ -1,4 +1,4 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
 import { Group } from './models/group';
 import { HttpClient } from '@angular/common/http';
 import { UserRoleRequest } from './requests/userRoleRequest';
@@ -12,9 +12,16 @@ export class GroupService {
   http = inject(HttpClient);
   baseApiUrl = 'https://localhost/api/group';
   userService = inject(UserService);
+  selectedUserGroupRole = signal<GroupRole | null>(null);
 
-  currentGroupRole = new Subject<GroupRole>();
-  currentGroupRole$ = this.currentGroupRole.asObservable();
+  setUserGroupRole(groupId: number) {
+    this.getUserRoleInGroup(groupId).subscribe({
+      next: (role) => {
+        console.log(role);
+        this.selectedUserGroupRole.set(role);
+      },
+    });
+  }
 
   getGroup(groupId: number) {
     return this.http.get<Group>(`${this.baseApiUrl}/${groupId}`);
@@ -52,5 +59,9 @@ export class GroupService {
 
   updateUserRole(userId: number, req: UserRoleRequest) {
     return this.http.put(`${this.baseApiUrl}/${userId}/update-group-role`, req);
+  }
+
+  getUserRoleInGroup(groupId: number) {
+    return this.http.get<GroupRole>(`${this.baseApiUrl}/${groupId}/user-role`);
   }
 }

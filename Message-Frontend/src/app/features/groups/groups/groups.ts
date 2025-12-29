@@ -46,6 +46,7 @@ export class Groups {
   }
   onSelectedGroup(group: Group) {
     this.selectedGroup.set(group);
+    this.groupService.setUserGroupRole(group.groupId!);
   }
 
   onShowCreateGroupForm() {

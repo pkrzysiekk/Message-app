@@ -17,6 +17,7 @@ export class GroupView {
   chatService = inject(ChatService);
   selectedGroup = model<Group | null>(null);
   groupChats = model<Chat[] | null>(null);
+  userGroupRole = model<GroupRole | null>(null);
   selectedChat = model<Chat | null>(null);
   showCreateChatForm = signal<boolean>(false);
   GroupRole = GroupRole;
