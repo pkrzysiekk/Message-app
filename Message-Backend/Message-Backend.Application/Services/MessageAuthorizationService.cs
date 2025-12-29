@@ -30,4 +30,10 @@ public class MessageAuthorizationService :IMessageAuthorizationService
         bool userIsAdminOrOwner = userRole is GroupRole.Admin or  GroupRole.Owner;
         return userIsInChat && userIsAdminOrOwner;
     }
+
+    public async Task<bool> IsUserInGroup(int groupId, int userId)
+    {
+        var userRole = await _groupService.GetUserRoleInGroup(userId, groupId);
+        return userRole != null;
+    }
 }

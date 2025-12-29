@@ -57,11 +57,10 @@ namespace Message_Backend.Presentation.Controllers
         }
 
         [HttpGet("user-groups")]
-        public async Task<ActionResult<IEnumerable<GroupDto>>> GetUserGroups
-            ([FromQuery] int page,[FromQuery] int pageSize)
+        public async Task<ActionResult<IEnumerable<GroupDto>>> GetUserGroups()
         {
             var userId = CookieHelper.GetUserIdFromCookie(User);
-            var userGroups= await _groupService.GetPaginatedUserGroups(userId,page,pageSize);
+            var userGroups= await _groupService.GetUserGroups(userId);
             var userGroupsDto = userGroups.Select(ug => ug.ToDto());
             return Ok(userGroupsDto);
         }

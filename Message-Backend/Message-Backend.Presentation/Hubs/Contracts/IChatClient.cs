@@ -6,9 +6,8 @@ namespace Message_Backend.Presentation.Hubs.Contracts;
 public interface IChatClient
 {
     Task ReceiveMessage(MessageDto message);
-    Task SendMessage(MessageDto message);
-    Task RemoveMessage(long messageId);
     Task ReceiveMessageRemovedEvent(MessageDto message);
+    Task ReceiveConnectionStateChanged();
     Task SendUserIsTypingEvent(int chatId);
     Task ReceiveUserIsTypingEvent(string username);
 }

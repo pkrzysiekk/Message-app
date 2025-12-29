@@ -20,15 +20,17 @@ public class ChatHub :Hub<IChatClient>
     private readonly IChatService _chatService;
     private readonly IUserService _userService;
     private readonly IMessageAuthorizationService _messageAuthorizationService;
+    private readonly IGroupService _groupService;
    
     public ChatHub
         (IMessageService messageService, IChatService chatService,
-            IUserService userService, IMessageAuthorizationService authorizationService )
+            IUserService userService, IMessageAuthorizationService authorizationService, IGroupService groupService)
     {
         _messageService = messageService;
         _chatService = chatService;
         _userService = userService;
         _messageAuthorizationService = authorizationService;
+        _groupService = groupService;
     }
 
     public override async Task OnConnectedAsync()
@@ -38,16 +40,17 @@ public class ChatHub :Hub<IChatClient>
             return;
         var userId = Int32.Parse(callersId);
         var userChats = await _chatService.GetUserChats(userId);
+        var userGroups = await _groupService.GetUserGroups(userId);
         Context.Items["ChatIds"] = userChats.Select(x => x.Id);
         foreach (var userChat in userChats)
         {
-             await Groups.AddToGroupAsync(Context.ConnectionId, userChat.Id.ToString());
+             await Groups.AddToGroupAsync(Context.ConnectionId, $"chat:{userChat.Id}");
         }
         
         await base.OnConnectedAsync();
        // await _userService.ChangeOnlineStatus(userId, true); 
     }
-
+    
     public override async Task OnDisconnectedAsync(Exception? exception)
     {
         var callersId = base.Context.User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -56,12 +59,35 @@ public class ChatHub :Hub<IChatClient>
         var userChats = await _chatService.GetUserChats(Int32.Parse(callersId));
         foreach (var userChat in userChats)
         {
-            await Groups.RemoveFromGroupAsync(Context.ConnectionId, userChat.Id.ToString());
+            await Groups.RemoveFromGroupAsync(Context.ConnectionId, $"chat:{userChat.Id}");
         }
         await base.OnDisconnectedAsync(exception);
         var userId = Int32.Parse(callersId);
        // await _userService.ChangeOnlineStatus(userId, false);
     }
+
+    public async Task RefreshConnectionState()
+    {
+        var callersId = base.Context.User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (callersId is null)
+            return;
+        var userId = Int32.Parse(callersId);
+        var userChats = await _chatService.GetUserChats(userId);
+        var userGroups = await _groupService.GetUserGroups(userId);
+        Context.Items["ChatIds"] = userChats.Select(x => x.Id);
+        foreach (var userChat in userChats)
+        {
+            await Groups.AddToGroupAsync(Context.ConnectionId, $"chat:{userChat.Id}");
+        }
+
+        foreach (var userGroup in userGroups)
+        {
+           await Groups.AddToGroupAsync(Context.ConnectionId, $"group:{userGroup.Id}"); 
+        }
+        
+        
+    }
+    
 
     public async Task SendMessage(MessageDto messageDto)
     {
@@ -73,7 +99,20 @@ public class ChatHub :Hub<IChatClient>
         await _messageService.Add(messageBo);
         var finalMessage = messageBo.ToDto();
         finalMessage.SenderName = Context.User?.Identity?.Name;
-        await Clients.Group(messageBo.ChatId.ToString()).ReceiveMessage(finalMessage);
+        await Clients.Group($"chat:{messageBo.ChatId}").ReceiveMessage(finalMessage);
+    }
+
+    public async Task SendConnectionStateChanged(int groupId)
+    {
+        var callersId = base.Context.User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (callersId is null)
+            return;
+        var userId = Int32.Parse(callersId);
+        if (!await _messageAuthorizationService.IsUserInGroup(groupId, userId))
+            return;
+        var groupChats = await _chatService.GetAllGroupChats(groupId);
+        foreach (var chat in groupChats)
+            await Clients.Group(chat.Id.ToString()).ReceiveConnectionStateChanged();
     }
 
     public async Task SendUserIsTypingEvent(int chatId)
@@ -81,7 +120,7 @@ public class ChatHub :Hub<IChatClient>
         var username = base.Context.User?.Identity?.Name;
         if (username is null)
             return;
-        await Clients.Group(chatId.ToString()).ReceiveUserIsTypingEvent(username);
+        await Clients.Group($"chat:{chatId.ToString()}").ReceiveUserIsTypingEvent(username);
     }
 
     public async Task RemoveMessage(long messageId)
@@ -92,7 +131,8 @@ public class ChatHub :Hub<IChatClient>
            return;
         var message = await _messageService.GetById(messageId);
         await _messageService.Delete(messageId);
-        await Clients.Group(message.ChatId.ToString()).ReceiveMessageRemovedEvent(message.ToDto());
+        await Clients.Group($"chat:{message.ChatId.ToString()}").ReceiveMessageRemovedEvent(message.ToDto());
+        
     }
     
     private bool isMessageRequestValid(HubCallerContext ctx, MessageDto messageDto)

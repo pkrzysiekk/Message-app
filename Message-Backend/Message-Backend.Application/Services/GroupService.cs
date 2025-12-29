@@ -27,17 +27,12 @@ public class GroupService :BaseService<Group,int>,IGroupService
     {
        await _repository.Update(group); 
     }
-    public async Task<List<Group>> GetPaginatedUserGroups(int userId,int page, int pageSize)
+    public async Task<List<Group>> GetUserGroups(int userId)
     {
-        page = page < 1 ? 1 : page;
-        pageSize = pageSize < 1 ? 1 : pageSize;
-        
         var groups = await _repository
             .GetAll(q=>q.Include(g=>g.UserGroups))
             .Where(g=>g.UserGroups
                 .Any(ug=>ug.UserId==userId))
-            .Skip((page - 1) * pageSize)
-            .Take(pageSize)
             .ToListAsync();
         return groups;
     }
@@ -77,5 +72,18 @@ public class GroupService :BaseService<Group,int>,IGroupService
     {
         var groupToGet = await GetById(groupId);
         return groupToGet.GetUserRole(userId);
+    }
+
+    public async Task<IEnumerable<User>> GetUsersInGroup(int groupId)
+    {
+        var userGroups = _repository
+            .GetAll(q =>
+                q.Include(g => g.UserGroups)
+                    .ThenInclude(g => g.User))
+                .Where(g=>g.Id == groupId)
+            .SelectMany(g=>g.UserGroups)
+            .Select(g=>g.User)
+                .ToList();
+        return userGroups;
     }
 }
