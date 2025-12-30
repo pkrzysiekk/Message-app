@@ -12,7 +12,10 @@
 
   <div (scroll)="onScroll()" #chatContainer class="flex-1 overflow-y-auto p-2">
     @for (message of chatMessages(); track message.messageId) {
-      <div class="my-2 flex items-start p-1 hover:backdrop-brightness-70">
+      <div
+        class="my-2 flex items-start p-1 hover:backdrop-brightness-70"
+        [class.justify-end]="userService.localUser()?.id == message.senderId"
+      >
         @if (avatarFor(message.senderId!)()) {
           <img
             class="aspect-square w-10 rounded-full md:w-12 xl:w-15"

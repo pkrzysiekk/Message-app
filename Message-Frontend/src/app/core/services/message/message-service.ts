@@ -9,6 +9,11 @@ import { HttpClient } from '@angular/common/http';
 })
 export class MessageService {
   private connection: signalR.HubConnection;
+  private refreshGroups = new Subject<void>();
+  refreshGroups$ = this.refreshGroups.asObservable();
+  private refreshChat = new Subject<void>();
+  refreshChat$ = this.refreshChat.asObservable();
+
   baseApiUrl = 'https://localhost/api/message';
   http = inject(HttpClient);
   incomingMessage$ = new Subject<Message>();
@@ -50,10 +55,11 @@ export class MessageService {
       this.notifyMessageDelete(message);
     });
     this.connection.on('ReceiveAddToGroupEvent', (groupId: number) => {
-      this.connection.invoke('JoinGroup', groupId);
+      console.log('received');
+      this.connection.invoke('JoinGroup', groupId).then(() => this.refreshGroups.next());
     });
     this.connection.on('ReceiveAddToChatEvent', (chatId: number) => {
-      this.connection.invoke('JoinChat', chatId);
+      this.connection.invoke('JoinChat', chatId).then(() => this.refreshChat.next());
     });
     this.connection.start();
   }
@@ -67,7 +73,10 @@ export class MessageService {
   }
 
   sendJoinGroupEvent(groupId: number) {
-    this.connection.invoke('SendNewGroupRequest', groupId);
+    console.log('JOin group');
+    this.connection
+      .invoke('SendNewGroupRequest', groupId)
+      .catch((err) => console.error('Error sending group request:', err));
   }
 
   notifyMessageDelete(message: Message) {

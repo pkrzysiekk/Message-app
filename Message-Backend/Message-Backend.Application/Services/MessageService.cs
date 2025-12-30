@@ -46,6 +46,7 @@ public class MessageService : BaseService<Message,long>,IMessageService
     {
         var messageToGet = await _repository.GetAll()
             .Include(m => m.Content)
+            .Include(m => m.Chat)
             .FirstOrDefaultAsync(m => m.Id == id);
         if (messageToGet is null)
             throw new NotFoundException("Message not found");

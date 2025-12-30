@@ -27,11 +27,22 @@ export class Groups {
     required(schema.groupName, { message: this.requiredFieldMessageError });
   });
 
-  constructor() {}
+  constructor() {
+    this.listenForGroupUpdates();
+  }
 
   ngOnInit() {
     this.fetchGroups();
     this.messageService.startConnection();
+  }
+
+  listenForGroupUpdates() {
+    this.messageService.refreshGroups$.subscribe({
+      next: () => {
+        console.log('UDPARw');
+        this.fetchGroups();
+      },
+    });
   }
 
   fetchGroups() {

@@ -72,6 +72,15 @@ export class GroupView {
   constructor() {
     this.fetchChats();
     this.fetchGroupMembers();
+    this.listenForChatUpdates();
+  }
+
+  listenForChatUpdates() {
+    this.messageService.refreshChat$.subscribe({
+      next: () => {
+        this.refreshChats();
+      },
+    });
   }
 
   fetchGroupMembers() {
@@ -137,17 +146,6 @@ export class GroupView {
     this.selectedChat.set(chat);
   }
 
-  loadFriendsAvatars() {
-    effect(() => {
-      this.fetchedFriends().forEach((f) => {
-        this.userService
-          .getUser(f.id)
-          .pipe(take(1))
-          .subscribe((user) => (f.avatar = user.avatar));
-      });
-    });
-  }
-
   getFriendsToAdd() {
     this.friendsService
       .getUsersFromFriends()
@@ -179,6 +177,7 @@ export class GroupView {
             next.add(userId);
             return next;
           });
+          this.messageService.sendJoinGroupEvent(this.selectedGroup()?.groupId!);
         },
       });
   }

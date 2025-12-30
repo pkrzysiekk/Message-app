@@ -79,6 +79,7 @@ public class ChatHub :Hub<IChatClient>
         if (!await _messageAuthorizationService.IsUserInGroup(groupId, userId))
             throw new HubException("Unauthorized");
         await Groups.AddToGroupAsync(Context.ConnectionId, $"group:{groupId}");
+        await RefreshConnectionState();
     }
 
     public async Task JoinChat(int chatId)
