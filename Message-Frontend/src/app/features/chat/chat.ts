@@ -24,10 +24,11 @@ import { MessageToDataUrlPipe } from '../../shared/pipes/message-to-dataUrl-pipe
 import { takeUntil } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { GroupService } from '../../core/services/group/group-service';
+import { GroupOptions } from '../group-view/group-options/group-options';
 
 @Component({
   selector: 'app-chat',
-  imports: [DatePipe, Field, ImageParsePipe, RouterLink, MessageToDataUrlPipe],
+  imports: [DatePipe, Field, ImageParsePipe, RouterLink, MessageToDataUrlPipe, GroupOptions],
   templateUrl: './chat.html',
   styleUrl: './chat.css',
 })
