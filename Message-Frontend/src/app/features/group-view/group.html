@@ -93,7 +93,37 @@
     @if (showInvitePeopleForm()) {
       <div class="pop-up-bg">
         <div class="pop-up-body">
-          <span>eyeyeye</span>
+          <div class="mb-4 text-lg font-semibold text-white">Invite friends</div>
+          <div class="max-h-80 space-y-1 overflow-y-auto">
+            <input class="pop-up-input" placeholder="Search" />
+            @for (friend of filteredFriends(); track friend.id) {
+              <div
+                class="flex items-center gap-3 rounded px-3 py-2 text-white transition-colors hover:backdrop-brightness-50"
+              >
+                <img
+                  [src]="friend.avatar | imageParse"
+                  class="aspect-square w-10 rounded-full object-cover"
+                />
+                <div class="flex w-full items-center">
+                  <span class="flex-1 text-sm font-medium">
+                    {{ friend.username }}
+                  </span>
+                  @if (!invitedIds().has(friend.id)) {
+                    <button
+                      class="cursor-pointer rounded-xl bg-(--brilliant-azure) p-3 text-sm font-semibold text-(--prussian-blue) transition-colors hover:bg-(--mint-leaf) hover:text-amber-50"
+                      (click)="onInvite(friend.id)"
+                    >
+                      Add
+                    </button>
+                  } @else {
+                    <span class="text-green-400">Added!</span>
+                  }
+                </div>
+              </div>
+            }
+          </div>
+
+          <span class="close-pop-up-btn" (click)="showInvitePeopleForm.set(false)"> ✕ </span>
         </div>
       </div>
     }

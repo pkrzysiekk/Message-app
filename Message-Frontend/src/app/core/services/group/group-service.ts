@@ -5,6 +5,7 @@ import { UserRoleRequest } from './requests/userRoleRequest';
 import { UserService } from '../user/user-service';
 import { Subject } from 'rxjs';
 import { GroupRole } from '../chat/models/groupRole';
+import { User } from '../../models/user';
 @Injectable({
   providedIn: 'root',
 })
@@ -61,5 +62,9 @@ export class GroupService {
 
   getUserRoleInGroup(groupId: number) {
     return this.http.get<GroupRole>(`${this.baseApiUrl}/${groupId}/user-role`);
+  }
+
+  getUsersInGroup(groupId: number) {
+    return this.http.get<User[]>(`${this.baseApiUrl}/${groupId}/members`);
   }
 }

@@ -13,10 +13,12 @@ import { FriendsInvitation } from '../../core/DTO/friendsInvitation';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { User } from '../../core/models/user';
 import { take } from 'rxjs';
+import { ImageParsePipe } from '../../shared/pipes/image-parse-pipe/image-parse-pipe';
+import { GroupService } from '../../core/services/group/group-service';
 
 @Component({
   selector: 'app-group',
-  imports: [Field, ChatComponent],
+  imports: [Field, ChatComponent, ImageParsePipe],
   templateUrl: './group.html',
   styleUrl: './group.css',
 })
@@ -24,6 +26,7 @@ export class GroupView {
   chatService = inject(ChatService);
   friendsService = inject(FriendsService);
   messageService = inject(MessageService);
+  groupService = inject(GroupService);
   userService = inject(UserService);
   destroyRef = inject(DestroyRef);
   selectedGroup = model<Group | null>(null);
@@ -33,8 +36,19 @@ export class GroupView {
   userId = this.userService.localUser()?.id;
 
   showCreateChatForm = signal<boolean>(false);
+  groupMembers = signal<User[]>([]);
   showInvitePeopleForm = signal<boolean>(false);
   fetchedFriends = signal<User[]>([]);
+
+  searchTerm = signal<string>('');
+  invitedIds = signal<Set<number>>(new Set());
+
+  filteredFriends = computed<User[]>(() => {
+    const term = this.searchTerm();
+    return this.fetchedFriends().filter(
+      (f) => f.username.startsWith(term) && !this.groupMembers().find((u) => u.id == f.id),
+    );
+  });
 
   GroupRole = GroupRole;
   chatTypeOptions = Object.values(GroupRole)
@@ -57,6 +71,20 @@ export class GroupView {
 
   constructor() {
     this.fetchChats();
+    this.fetchGroupMembers();
+  }
+
+  fetchGroupMembers() {
+    effect(() => {
+      this.groupService
+        .getUsersInGroup(this.selectedGroup()?.groupId!)
+        .pipe(takeUntilDestroyed(this.destroyRef))
+        .subscribe({
+          next: (users) => {
+            this.groupMembers.set(users);
+          },
+        });
+    });
   }
 
   fetchChats() {
@@ -135,5 +163,23 @@ export class GroupView {
   onInviteButtonClick() {
     this.showInvitePeopleForm.set(!this.showInvitePeopleForm());
     this.getFriendsToAdd();
+  }
+
+  onInvite(userId: number) {
+    this.groupService
+      .addUser(userId, {
+        groupId: this.selectedGroup()?.groupId!,
+        groupRole: 0,
+      })
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: () => {
+          this.invitedIds.update((set) => {
+            const next = new Set(set);
+            next.add(userId);
+            return next;
+          });
+        },
+      });
   }
 }

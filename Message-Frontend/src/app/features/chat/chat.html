@@ -15,7 +15,7 @@
       <div class="my-2 flex items-start p-1 hover:backdrop-brightness-70">
         @if (avatarFor(message.senderId!)()) {
           <img
-            class="w-10 rounded-full md:w-12 xl:w-15"
+            class="aspect-square w-10 rounded-full md:w-12 xl:w-15"
             [src]="(avatarFor(message.senderId!)() | imageParse) ?? 'https://pic.re/image'"
             alt=""
             [routerLink]="['/user', message.senderId]"
