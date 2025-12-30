@@ -46,7 +46,9 @@ public class FriendsService :
     public async Task<List<Friends>> GetAllUserFriends(int userId)
     {
         var friends = await _repository
-            .GetAll()
+            .GetAll(q=>
+                q.Include(f=>f.User)
+                    .Include(f=>f.Friend))
             .Where(f => 
                 (f.UserId == userId || f.FriendId == userId)
                 && f.Status==FriendInvitationStatus.Accepted)
@@ -76,7 +78,13 @@ public class FriendsService :
     public async Task<IEnumerable<User>> GetUsersFromFriends(int userId)
     {
         var friends= await GetAllUserFriends(userId);
-        List<User> users = friends.Select(f => f.User).ToList();
+        List<User> users = [];
+        foreach (var f in friends)
+        {
+            var userIdToFetch = f.UserId == userId ? f.Friend.Id : f.User.Id;
+            var user =  await _userService.GetById(userIdToFetch);
+           users.Add(user); 
+        }
         return users;
     }
 

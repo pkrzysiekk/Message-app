@@ -97,7 +97,7 @@ export class Profile {
 
     this.userService.changeAvatar(file).subscribe({
       next: () => {
-        this.userService.setLocalUser();
+        this.userService.refreshLocalUser();
       },
     });
   }

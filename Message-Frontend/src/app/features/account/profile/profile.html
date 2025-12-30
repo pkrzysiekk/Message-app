@@ -5,7 +5,7 @@
         <div class="group relative">
           <img
             class="w-50 rounded-full sm:w-30 md:w-80 lg:w-100 xl:w-120"
-            [src]="userService.localUser()?.avatar | imageParse"
+            [src]="(userService.localUser()?.avatar | imageParse) ?? 'https://pic.re/image'"
           />
           <div
             class="absolute inset-0 rounded-full bg-black/50 opacity-0 transition group-hover:opacity-100"

@@ -9,6 +9,7 @@ public interface IUserService : IBaseService<User,int>
    public Task Add(User user,string password);
    public Task Update(User user);
    public Task<IEnumerable<User>> SearchForUsers(string term);
+   public Task<User> GetUserWithAvatar(int userId);
    public Task ChangePassword(int id, string oldPassword, string newPassword);
    public Task ChangeEmail(int id, string email);
    public Task ChangeOnlineStatus(int id,bool isOnline);

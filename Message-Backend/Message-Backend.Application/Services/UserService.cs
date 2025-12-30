@@ -53,6 +53,13 @@ public class UserService : IUserService
 
     }
 
+    public async Task<User> GetUserWithAvatar(int userId)
+    {
+        var user = await _userRepository.GetAll().Include(u => u.Avatar)
+            .FirstOrDefaultAsync(u => u.Id == userId);
+        return user ?? throw new NotFoundException("User not found");
+    }
+
     public async Task ChangePassword(int id, string oldPassword, string newPassword)
     {
             await _userRepository.ChangePassword(id, oldPassword, newPassword);

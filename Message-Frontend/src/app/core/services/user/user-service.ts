@@ -32,6 +32,10 @@ export class UserService {
     this.localUser.set(null);
   }
 
+  refreshLocalUser() {
+    this.getLocalUserData();
+  }
+
   getUser(id: number) {
     return this.http.get<User>(`${this.userApiUrl}/${id}`);
   }
