@@ -25,7 +25,7 @@ namespace Message_Backend.Presentation.Controllers
         public async Task<ActionResult<FriendsDto>> Get([FromQuery]int friendId)
         {
             int userId = CookieHelper.GetUserIdFromCookie(User);
-            var friends = await _friendsService.GetFriendsByUserIds(userId, friendId);
+            var friends = await _friendsService.GetFriendsInvitesByUserIds(userId, friendId);
             return friends.ToDto();
         }
 
@@ -86,6 +86,14 @@ namespace Message_Backend.Presentation.Controllers
             int userId=CookieHelper.GetUserIdFromCookie(User);
             var status = await _friendsService.GetFriendsStatus(userId, friendId);
             return Ok(status);
+        }
+
+        [HttpGet("getUsersFromFriends")]
+        public async Task<ActionResult<List<UserDto>>> GetUsersFromFriends()
+        {
+            int userId = CookieHelper.GetUserIdFromCookie(User);
+            var users = await _friendsService.GetUsersFromFriends(userId);
+            return Ok(users.Select(x => x.ToDto()).ToList());
         }
     }
 }

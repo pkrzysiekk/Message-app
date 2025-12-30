@@ -63,7 +63,7 @@ public class FriendsService :
         return invites;
     }
 
-    public async Task<Friends> GetFriendsByUserIds(int userId, int friendId)
+    public async Task<Friends> GetFriendsInvitesByUserIds(int userId, int friendId)
     {
         var friends= await _repository
             .GetAll()
@@ -71,6 +71,13 @@ public class FriendsService :
                                   ||  (f.FriendId == userId && f.UserId == friendId));
         
        return friends ?? throw new NotFoundException("Friends not found");
+    }
+
+    public async Task<IEnumerable<User>> GetUsersFromFriends(int userId)
+    {
+        var friends= await GetAllUserFriends(userId);
+        List<User> users = friends.Select(f => f.User).ToList();
+        return users;
     }
 
     public async Task AcceptInvite(int recipientId, int senderId)
@@ -90,7 +97,7 @@ public class FriendsService :
 
     public async Task RemoveFriend(int userId, int friendId)
     {
-        var friend = await GetFriendsByUserIds(userId, friendId);
+        var friend = await GetFriendsInvitesByUserIds(userId, friendId);
         await _repository.Delete(friend.Id);
     }
 
@@ -112,7 +119,7 @@ public class FriendsService :
     } 
     private async Task<Friends> GetValidPendingInvite(int recipientId, int senderId)
     {
-        var invite = await GetFriendsByUserIds(recipientId, senderId);
+        var invite = await GetFriendsInvitesByUserIds(recipientId, senderId);
 
         bool isCorrectReceiver = invite.FriendId == recipientId;
         bool isPending = invite.Status == FriendInvitationStatus.Pending;
