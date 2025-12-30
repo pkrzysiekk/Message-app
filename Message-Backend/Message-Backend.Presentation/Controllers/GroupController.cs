@@ -101,6 +101,14 @@ namespace Message_Backend.Presentation.Controllers
                 return NotFound();
             return Ok(userRole);
         }
+
+        [HttpGet("{groupId}/members")]
+        [Authorize(Policy = "GroupMember")]
+        public async Task<ActionResult<IEnumerable<UserDto>>> GetGroupMembers([FromRoute] int groupId)
+        {
+            var users = await _groupService.GetUsersInGroup(groupId); 
+            return Ok(users.Select(user => user.ToDto()));
+        }
  
     }
 }
