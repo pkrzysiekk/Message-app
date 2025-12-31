@@ -42,4 +42,12 @@ public class MessageAuthorizationService :IMessageAuthorizationService
        var userChats = await _chatService.GetUserChats(userId); 
        return userChats.Any(c=>c.Id == chatId);
     }
+
+    public async Task<bool> IsUserOwner(int groupId,int userId)
+    {
+        var userRole = await _groupService.GetUserRoleInGroup(userId, groupId);
+        if(userRole == null)
+            return false;
+        return userRole==GroupRole.Owner;
+    }
 }

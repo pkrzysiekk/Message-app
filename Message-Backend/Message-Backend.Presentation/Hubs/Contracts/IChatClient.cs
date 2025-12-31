@@ -9,6 +9,7 @@ public interface IChatClient
     Task ReceiveMessageRemovedEvent(MessageDto message);
     Task ReceiveAddToGroupEvent(int groupId);
     Task ReceiveAddToChatEvent(int chatId);
+    Task ReceiveRemovedFromGroupEvent(int groupId);
     Task ReceiveConnectionStateChanged();
     Task SendUserIsTypingEvent(int chatId);
     Task ReceiveUserIsTypingEvent(string username);

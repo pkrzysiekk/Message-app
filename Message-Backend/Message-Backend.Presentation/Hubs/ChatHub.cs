@@ -153,6 +153,23 @@ public class ChatHub :Hub<IChatClient>
         await Clients.Group($"group:{groupId}").ReceiveConnectionStateChanged();
     }
 
+    public async Task RemoveGroup(int groupId)
+    {
+        var userId = int.Parse(
+            Context.User.FindFirstValue(ClaimTypes.NameIdentifier)
+        ); 
+        
+        if(!await _messageAuthorizationService.IsUserOwner(groupId, userId))
+            throw new HubException("Unauthorized");
+        var formerUsers = await _groupService.GetUsersInGroup(groupId);
+        await _groupService.Delete(groupId);
+        foreach (var user in formerUsers)
+        {
+            await Clients.User(user.Id.ToString()).ReceiveRemovedFromGroupEvent(groupId);
+        }
+            
+    }
+
     public async Task SendUserIsTypingEvent(int chatId)
     {
         var username = base.Context.User?.Identity?.Name;
