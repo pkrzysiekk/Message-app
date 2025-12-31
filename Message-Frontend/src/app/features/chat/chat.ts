@@ -90,12 +90,10 @@ export class ChatComponent {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((msgDeleted) => {
         if (msgDeleted.chatId !== this.selectedChat()?.id) return;
-        const index = this.messages().findIndex((msg) => msg.messageId == msgDeleted.messageId);
-        this.messages.update((list) => {
-          console.log(list[index]);
-          const newList = list.splice(index, 0, msgDeleted);
-          return newList;
-        });
+
+        this.messages.update((list) => this.replaceMessage(list, msgDeleted));
+
+        this.messagesFromHub.update((list) => this.replaceMessage(list, msgDeleted));
       });
   }
 
@@ -238,6 +236,10 @@ export class ChatComponent {
     const userHasAdminRole = userRole === 1 || userRole === 2;
     const userIsSender = message.messageId == userId;
     return (userHasAdminRole || userIsSender) && notDeleted;
+  }
+
+  replaceMessage(list: Message[], updated: Message): Message[] {
+    return list.map((m) => (m.messageId === updated.messageId ? updated : m));
   }
 
   ngOnDestroy() {

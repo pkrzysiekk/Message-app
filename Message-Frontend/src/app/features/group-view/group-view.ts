@@ -15,10 +15,11 @@ import { User } from '../../core/models/user';
 import { take } from 'rxjs';
 import { ImageParsePipe } from '../../shared/pipes/image-parse-pipe/image-parse-pipe';
 import { GroupService } from '../../core/services/group/group-service';
+import { GroupOptions } from './group-options/group-options';
 
 @Component({
   selector: 'app-group',
-  imports: [Field, ChatComponent, ImageParsePipe],
+  imports: [Field, ChatComponent, ImageParsePipe, GroupOptions],
   templateUrl: './group.html',
   styleUrl: './group.css',
 })
@@ -39,6 +40,7 @@ export class GroupView {
   groupMembers = signal<User[]>([]);
   showInvitePeopleForm = signal<boolean>(false);
   fetchedFriends = signal<User[]>([]);
+  showGroupOptions = signal<boolean>(false);
 
   searchTerm = signal<string>('');
   invitedIds = signal<Set<number>>(new Set());
@@ -120,6 +122,10 @@ export class GroupView {
       next: (fetch) => {
         this.groupChats.set(fetch);
       },
+      error: () => {
+        this.groupChats.set(null);
+        this.selectedGroup.set(null);
+      },
     });
   }
 
@@ -184,4 +190,8 @@ export class GroupView {
         },
       });
   }
+
+  showGroupSettings = () => {
+    this.showGroupOptions.set(!this.showGroupOptions());
+  };
 }

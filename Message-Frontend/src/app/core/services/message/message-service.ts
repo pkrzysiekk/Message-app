@@ -55,11 +55,14 @@ export class MessageService {
       this.notifyMessageDelete(message);
     });
     this.connection.on('ReceiveAddToGroupEvent', (groupId: number) => {
-      console.log('received');
       this.connection.invoke('JoinGroup', groupId).then(() => this.refreshGroups.next());
     });
     this.connection.on('ReceiveAddToChatEvent', (chatId: number) => {
       this.connection.invoke('JoinChat', chatId).then(() => this.refreshChat.next());
+    });
+    this.connection.on('ReceiveRemovedFromGroupEvent', (groupId: number) => {
+      this.refreshGroups.next();
+      this.refreshChat.next();
     });
     this.connection.start();
   }
@@ -73,7 +76,6 @@ export class MessageService {
   }
 
   sendJoinGroupEvent(groupId: number) {
-    console.log('JOin group');
     this.connection
       .invoke('SendNewGroupRequest', groupId)
       .catch((err) => console.error('Error sending group request:', err));
@@ -87,6 +89,10 @@ export class MessageService {
 
   sendGroupStateChanged(groupId: number) {
     this.connection.invoke('SendConnectionStateChanged', groupId);
+  }
+
+  deleteGroup(groupId: number) {
+    this.connection.invoke('RemoveGroup', groupId);
   }
 
   addMessage(message: Message) {

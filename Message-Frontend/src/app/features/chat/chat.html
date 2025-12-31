@@ -76,6 +76,7 @@
                 <a
                   [href]="message | messageToImagePipe"
                   [attr.download]="message.senderName"
+                  [class.-left-8]="isUserSender(message)"
                   class="absolute top-2 -right-8"
                   ><svg
                     xmlns="http://www.w3.org/2000/svg"

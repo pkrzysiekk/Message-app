@@ -2,7 +2,15 @@
   <aside class="relative flex flex-col border-r p-4">
     <div class="flex items-center-safe justify-center">
       <h2 class="ml-0.5 max-w-40 min-w-30 overflow-hidden text-2xl text-nowrap text-amber-50">
-        {{ selectedGroup()?.groupName }}
+        <button class="cursor-pointer p-1" (click)="showGroupSettings()">
+          {{ selectedGroup()?.groupName }}
+        </button>
+        @if (showGroupOptions()) {
+          <app-group-options
+            [selectedGroup]="selectedGroup()"
+            [closeModal]="showGroupSettings"
+          ></app-group-options>
+        }
       </h2>
       <button (click)="onShowCreateChatForm()">
         <svg

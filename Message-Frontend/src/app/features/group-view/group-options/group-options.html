@@ -1,5 +1,13 @@
 <div class="pop-up-bg h-screen w-screen">
   <div class="pop-up-body">
-    <p>group-options works!</p>
+    <h1>Group Settings</h1>
+    <p>{{ selectedGroup()?.groupName }}</p>
+    <span class="close-pop-up-btn" (click)="onModalClose()"> ✕ </span>
+    <button
+      class="submit-btn bg-(--burgundy) text-amber-50 transition-all hover:bg-red-500"
+      (click)="onGroupDelete()"
+    >
+      Delete Group
+    </button>
   </div>
 </div>
