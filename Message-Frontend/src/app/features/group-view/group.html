@@ -1,7 +1,9 @@
 <div class="grid h-full w-full grid-cols-[1fr_10fr]">
   <aside class="relative flex flex-col border-r p-4">
     <div class="flex items-center-safe justify-center">
-      <h2 class="ml-0.5 text-2xl text-nowrap text-amber-50">Group Chats</h2>
+      <h2 class="ml-0.5 max-w-40 min-w-30 overflow-hidden text-2xl text-nowrap text-amber-50">
+        {{ selectedGroup()?.groupName }}
+      </h2>
       <button (click)="onShowCreateChatForm()">
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -60,7 +62,7 @@
       }
     </div>
 
-    <ul class="max-h-160 overflow-y-auto backdrop-grayscale-40">
+    <ul class="max-h-160 max-w-40 overflow-x-hidden overflow-y-auto backdrop-grayscale-40">
       @for (chat of groupChats(); track chat.id) {
         <li
           class="cursor-pointer text-xl text-cyan-700 hover:text-white"

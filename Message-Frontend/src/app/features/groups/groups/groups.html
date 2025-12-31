@@ -19,7 +19,9 @@
       </svg>
     </button>
     @if (showGroupList()) {
-      <ul class="flex max-h-1/2 flex-col gap-1 overflow-y-scroll scroll-smooth">
+      <ul
+        class="flex max-h-3/4 max-w-60 flex-col gap-1 overflow-x-hidden overflow-y-scroll scroll-smooth"
+      >
         @for (group of groups(); track group.groupId) {
           <li
             (click)="onSelectedGroup(group)"
