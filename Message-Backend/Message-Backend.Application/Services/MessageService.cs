@@ -22,7 +22,8 @@ public class MessageService : BaseService<Message,long>,IMessageService
         
         if (lastSentAt is null)
         {
-             chatMessages = await _repository.GetAll(q => q.Include(m => m.Content))
+             chatMessages = await _repository.GetAll(q => q.Include(m => m.Content)
+                     .Include(m=>m.Sender))
                 .Where(m => m.ChatId == chatId)
                 .OrderByDescending(c => c.SentAt)
                 .Take(pageSize)
@@ -31,14 +32,14 @@ public class MessageService : BaseService<Message,long>,IMessageService
         else
         {
             
-            chatMessages = await _repository.GetAll(q => q.Include(m => m.Content))
+            chatMessages = await _repository.GetAll(q => q.Include(m => m.Content)
+                    .Include(m=>m.Sender))
                 .Where(m => m.ChatId == chatId)
                 .OrderByDescending(c => c.SentAt)
                 .Where(c => c.SentAt < lastSentAt.Value)
                 .Take(pageSize)
                 .ToListAsync();
         }
-
         return chatMessages.Reverse();
     }
 

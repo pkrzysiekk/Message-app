@@ -103,4 +103,12 @@ public class UserService : IUserService
             ContentType = avatar.ContentType
         };
     }
+
+    // public async Task<IEnumerable<User>> AddUsernamesToUsers(IEnumerable<User> users)
+    // {
+    //     foreach (var user in users)
+    //     {
+    //         var 
+    //     }
+    // }
 }
