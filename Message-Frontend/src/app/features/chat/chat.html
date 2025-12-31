@@ -12,23 +12,31 @@
 
   <div (scroll)="onScroll()" #chatContainer class="flex-1 overflow-y-auto p-2">
     @for (message of chatMessages(); track message.messageId) {
-      <div class="my-2 flex items-start p-1 hover:backdrop-brightness-70">
+      <div
+        class="my-2 flex items-start p-1 hover:backdrop-brightness-70"
+        [class.flex-row-reverse]="isUserSender(message)"
+      >
         @if (avatarFor(message.senderId!)()) {
           <img
             class="aspect-square w-10 rounded-full md:w-12 xl:w-15"
             [src]="(avatarFor(message.senderId!)() | imageParse) ?? 'https://pic.re/image'"
             alt=""
             [routerLink]="['/user', message.senderId]"
+            [class.ml-2]="isUserSender(message)"
           />
         }
-        <div class="ml-2 flex max-w-9/12 min-w-1/2 flex-col">
-          <span class="text-md relative ml-2 w-fit justify-self-start text-gray-400"
+        <div
+          class="ml-2 flex max-w-9/12 min-w-1/2 flex-col justify-center"
+          [class.items-end]="isUserSender(message)"
+        >
+          <span class="text-md relative ml-2 flex w-fit text-gray-400"
             >{{ message.senderName }}
             {{ message.sentAt | date: (isToday(message.sentAt!) ? 'HH:mm' : 'dd.MM.yyyy, HH:mm') }}
             @if (canModifyMessage(message)) {
               <button
                 class="absolute -right-5 cursor-pointer"
                 (click)="onMessageDelete(message.messageId!)"
+                [class.-left-5]="isUserSender(message)"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"

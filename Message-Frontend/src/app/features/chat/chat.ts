@@ -227,6 +227,10 @@ export class ChatComponent {
     );
   }
 
+  isUserSender(message: Message) {
+    return message.senderId == this.userService.localUser()?.id;
+  }
+
   canModifyMessage(message: Message) {
     const notDeleted = message.status !== 3;
     const userRole = this.groupService.selectedUserGroupRole();
