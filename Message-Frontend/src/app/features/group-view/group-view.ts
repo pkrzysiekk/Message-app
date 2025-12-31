@@ -85,6 +85,9 @@ export class GroupView {
 
   fetchGroupMembers() {
     effect(() => {
+      const group = this.selectedGroup();
+      if (!group) return;
+      this.invitedIds.set(new Set());
       this.groupService
         .getUsersInGroup(this.selectedGroup()?.groupId!)
         .pipe(takeUntilDestroyed(this.destroyRef))
