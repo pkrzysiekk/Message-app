@@ -79,7 +79,8 @@ public class GroupService :BaseService<Group,int>,IGroupService
         var userGroups = _repository
             .GetAll(q =>
                 q.Include(g => g.UserGroups)
-                    .ThenInclude(g => g.User))
+                    .ThenInclude(g => g.User)
+                    .ThenInclude(u=>u.Avatar))
                 .Where(g=>g.Id == groupId)
             .SelectMany(g=>g.UserGroups)
             .Select(g=>g.User)
