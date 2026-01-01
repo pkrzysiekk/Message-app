@@ -1,4 +1,4 @@
-import { Component, inject, model } from '@angular/core';
+import { Component, inject, model, signal } from '@angular/core';
 import { Group } from '../../../core/services/group/models/group';
 import { GroupService } from '../../../core/services/group/group-service';
 import { MessageService } from '../../../core/services/message/message-service';
@@ -13,6 +13,7 @@ import { ImageParsePipe } from '../../../shared/pipes/image-parse-pipe/image-par
 })
 export class GroupOptions {
   selectedGroup = model<Group | null>(null);
+  selectedUser = signal<User | null>(null);
   groupMembers = model<User[] | null>(null);
   messageService = inject(MessageService);
   groupService = inject(GroupService);
@@ -33,5 +34,9 @@ export class GroupOptions {
     this.messageService.deleteGroup(this.selectedGroup()?.groupId!);
     this.onGroupDelete();
     this.onModalClose();
+  }
+
+  onSelectedUser(user: User) {
+    this.selectedUser.set(user);
   }
 }

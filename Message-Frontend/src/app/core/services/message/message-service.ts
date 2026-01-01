@@ -69,6 +69,7 @@ export class MessageService {
 
   endConnection() {
     this.connection.stop();
+    console.log('ended');
   }
 
   sendJoinChatEvent(groupId: number, chatId: number) {

@@ -243,7 +243,6 @@ export class ChatComponent {
   }
 
   ngOnDestroy() {
-    this.messageService.endConnection();
     this.resetChatState();
   }
 }

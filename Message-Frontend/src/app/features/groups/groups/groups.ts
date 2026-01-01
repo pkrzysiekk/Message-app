@@ -36,6 +36,10 @@ export class Groups {
     this.messageService.startConnection();
   }
 
+  ngOnDestroy() {
+    this.messageService.endConnection();
+  }
+
   listenForGroupUpdates() {
     this.messageService.refreshGroups$.subscribe({
       next: () => {
