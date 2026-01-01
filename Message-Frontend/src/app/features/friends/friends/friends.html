@@ -21,7 +21,7 @@
               >
                 <img
                   [src]="(inv.avatar | imageParse) ?? 'https://pic.re/image'"
-                  class="friend-icon shrink-0"
+                  class="friend-icon shrink-0 cursor-pointer py-0.5"
                   [routerLink]="['/user', inv.id]"
                 />
 
