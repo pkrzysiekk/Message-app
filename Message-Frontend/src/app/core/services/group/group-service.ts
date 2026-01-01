@@ -60,8 +60,12 @@ export class GroupService {
     return this.http.put(`${this.baseApiUrl}/${userId}/update-group-role`, req);
   }
 
-  getUserRoleInGroup(groupId: number) {
-    return this.http.get<GroupRole>(`${this.baseApiUrl}/${groupId}/user-role`);
+  getUserRoleInGroup(groupId: number, requestedUserId: number | null = null) {
+    const apiUrl =
+      requestedUserId == null
+        ? `${this.baseApiUrl}/${groupId}/user-role`
+        : `${this.baseApiUrl}/${groupId}/user-role?requestedUserId=${requestedUserId}`;
+    return this.http.get<GroupRole>(apiUrl);
   }
 
   getUsersInGroup(groupId: number) {

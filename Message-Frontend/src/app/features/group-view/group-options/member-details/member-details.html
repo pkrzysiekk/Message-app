@@ -1,0 +1,28 @@
+<div class="pop-up-bg">
+  <div class="pop-up-body">
+    <h1 class="w-full text-center text-3xl">{{ selectedUser()?.username }}</h1>
+    <div class="grid grid-cols-2">
+      <img [src]="selectedUser()?.avatar | imageParse" class="aspect-square w-30 rounded-full" />
+      <div class="flex h-full w-full">
+        <div class="flex w-full flex-col">
+          <select
+            (change)="onRoleSelection($event)"
+            class="appearance-none rounded-md border border-gray-700 bg-gray-800 px-4 py-2 text-lg text-white focus:ring-2 focus:ring-(--brilliant-azure) focus:outline-none"
+          >
+            @for (role of chatTypeOptions; track role.value) {
+              <option [value]="role.value" [selected]="role.value == fetchedUserRole()">
+                {{ GroupRole[role.value] }}
+              </option>
+            }
+          </select>
+          <div class="flex w-full items-center justify-center">
+            <button class="submit-btn w-fit p-2 text-lg" (click)="onRoleUpdate()">
+              Update Role
+            </button>
+          </div>
+        </div>
+      </div>
+      <span class="close-pop-up-btn" (click)="onModalClose()"> ✕ </span>
+    </div>
+  </div>
+</div>

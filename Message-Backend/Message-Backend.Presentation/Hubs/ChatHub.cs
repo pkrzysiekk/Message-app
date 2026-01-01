@@ -7,6 +7,7 @@ using System.Security.Claims;
 using Message_Backend.Application.Interfaces.Services;
 using Message_Backend.Application.Models.DTOs;
 using Message_Backend.Application.Models.HubRequests;
+using Message_Backend.Domain.Models.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 using static System.Security.Claims.ClaimsPrincipal;
@@ -87,6 +88,37 @@ public class ChatHub :Hub<IChatClient>
         var list = userChatIdsObj as IEnumerable<int>;
         var updatedList = list.Concat(userChats.Select(c => c.Id));
         Context.Items["ChatIds"] =updatedList;
+    }
+
+    public async Task UpdateRole(int userIdToUpdate, int groupId,GroupRole role)
+    {
+        var userId = int.Parse(
+            Context.User.FindFirstValue(ClaimTypes.NameIdentifier)
+        ); 
+        
+        if (!await _messageAuthorizationService.IsUserOwner(groupId, userId))
+            throw new HubException("Unauthorized");
+        await _groupService.UpdateUserRoleInGroup(userIdToUpdate, groupId, role);
+        await Clients.Group($"group:{groupId}").ReceiveGroupRoleChangedEvent(groupId);
+    }
+
+    public async Task RefreshRoles(int groupId)
+    {
+        var userId = int.Parse(
+            Context.User.FindFirstValue(ClaimTypes.NameIdentifier)
+        );
+        
+        if (!await _messageAuthorizationService.IsUserInGroup(groupId, userId))
+            throw new HubException("Unauthorized");
+        var userChatsInGroup = await _chatService.GetUserChatsInGroup(userId, groupId);
+        var groupChats = await _chatService.GetAllGroupChats(groupId);
+        var items = Context.Items["ChatIds"];
+        var list = items as IEnumerable<int>;
+        var listWithoutGroupChats = list.Where(c => groupChats.All(gc => gc.Id != c));
+        var updatedList = listWithoutGroupChats.Concat(userChatsInGroup.Select(c => c.Id));
+        foreach (var userChat in userChatsInGroup)
+            await  Groups.AddToGroupAsync(Context.ConnectionId, $"chat:{userChat.Id}");
+        Context.Items["ChatIds"] = updatedList;
     }
 
     public async Task JoinChat(int chatId)

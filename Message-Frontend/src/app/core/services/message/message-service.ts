@@ -64,6 +64,11 @@ export class MessageService {
       this.refreshGroups.next();
       this.refreshChat.next();
     });
+    this.connection.on('ReceiveGroupRoleChangedEvent', (groupId: number) => {
+      this.connection.invoke('RefreshRoles', groupId).then(() => {
+        this.refreshChat.next();
+      });
+    });
     this.connection.start().catch((err) => console.log(err));
   }
 
@@ -118,6 +123,11 @@ export class MessageService {
 
   removeMessage(messageId: number) {
     this.connection.invoke('RemoveMessage', messageId);
+  }
+
+  updateUserRole(userId: number, groupId: number, groupRole: number) {
+    console.log(userId, groupId, groupRole);
+    this.connection.invoke('UpdateRole', userId, groupId, groupRole);
   }
 
   async sendFile(file: File, chatId: number) {

@@ -93,10 +93,15 @@ namespace Message_Backend.Presentation.Controllers
 
         [HttpGet("{groupId}/user-role")]
         [Authorize(Policy = "GroupMember")]
-        public async Task<ActionResult<GroupRole?>> GetUserRole([FromRoute] int groupId)
+        public async Task<ActionResult<GroupRole?>> 
+            GetUserRole([FromRoute] int groupId,[FromQuery] int? requestedUserId = null)
         {
             var userId = CookieHelper.GetUserIdFromCookie(User);
-            var userRole = await _groupService.GetUserRoleInGroup(userId, groupId);
+            GroupRole? userRole = null;
+            if(requestedUserId == null)
+                userRole = await _groupService.GetUserRoleInGroup(userId, groupId);
+            else
+                userRole = await _groupService.GetUserRoleInGroup(requestedUserId.Value, groupId);
             if (userRole == null)
                 return NotFound();
             return Ok(userRole);

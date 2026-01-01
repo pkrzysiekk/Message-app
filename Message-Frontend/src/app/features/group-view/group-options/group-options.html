@@ -5,13 +5,23 @@
       <span class="m-1 p-1">Group Members</span>
       <ul class="m-2 max-h-100 overflow-y-auto">
         @for (member of groupMembers(); track member.id) {
-          <li class="m-0.5 flex cursor-pointer items-center p-1 hover:backdrop-brightness-50">
+          <li
+            class="m-0.5 flex cursor-pointer items-center p-1 hover:backdrop-brightness-50"
+            (click)="onSelectedUser(member)"
+          >
             <img [src]="member.avatar | imageParse" class="aspect-square w-15 rounded-full" />
             <span class="ml-5 text-xl">{{ member.username }}</span>
           </li>
         }
       </ul>
     </div>
+    @if (showMemberDetailsModal()) {
+      <app-member-details
+        [selectedUser]="selectedUser()"
+        [closeModal]="toggleMemberDetailsModal"
+        [selectedGroup]="selectedGroup()"
+      ></app-member-details>
+    }
     <span class="close-pop-up-btn" (click)="onModalClose()"> ✕ </span>
     @if (groupService.selectedUserGroupRole() == 2) {
       <button

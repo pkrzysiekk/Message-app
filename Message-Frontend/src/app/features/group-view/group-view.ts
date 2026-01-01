@@ -124,7 +124,7 @@ export class GroupView {
   }
 
   refreshChats() {
-    this.chatService.getAllGroupChats(this.selectedGroup()?.groupId!).subscribe({
+    this.chatService.getAllUserChatsInGroup(this.selectedGroup()?.groupId!).subscribe({
       next: (fetch) => {
         this.groupChats.set(fetch);
       },

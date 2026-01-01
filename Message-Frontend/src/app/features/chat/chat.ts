@@ -105,7 +105,10 @@ export class ChatComponent {
     this.messageService.messagesFromHub$
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((msg) => {
+        console.log('selectedchat', this.selectedChat());
+        console.log('message', msg);
         if (msg.chatId !== this.selectedChat()?.id) return;
+
         if (this.messagesFromHub().some((m) => m.messageId == msg.messageId)) return;
         this.messagesFromHub.update((list) => [...list, msg]);
 
@@ -169,6 +172,7 @@ export class ChatComponent {
   messageToSendForm = form(this.messageToSendModel, (schema) => required(schema.message));
 
   onSend() {
+    console.log('selected chat', this.selectedChat());
     if (this.messageToSendForm().invalid()) return;
 
     this.messageService.sendTextMessage(
