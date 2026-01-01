@@ -17,6 +17,7 @@ export class GroupOptions {
   messageService = inject(MessageService);
   groupService = inject(GroupService);
   closeModal = model<() => void>();
+  showConfirmModal = model<boolean>(false);
 
   onModalClose() {
     console.log(this.closeModal());
@@ -25,7 +26,12 @@ export class GroupOptions {
   }
 
   onGroupDelete() {
+    this.showConfirmModal.set(!this.showConfirmModal());
+  }
+
+  onGroupDeleteConfirm() {
     this.messageService.deleteGroup(this.selectedGroup()?.groupId!);
+    this.onGroupDelete();
     this.onModalClose();
   }
 }

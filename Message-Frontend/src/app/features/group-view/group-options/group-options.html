@@ -20,6 +20,27 @@
       >
         Delete Group
       </button>
+      @if (showConfirmModal()) {
+        <div class="pop-up-bg">
+          <div class="pop-up-body">
+            <span class="close-pop-up-btn" (click)="onGroupDelete()"> ✕ </span>
+            <div class="flex">
+              <span class="w-full text-center text-lg"
+                >Do you really want to DELETE this group?</span
+              >
+            </div>
+            <div class="flex items-center justify-center gap-20 text-lg">
+              <button
+                class="submit-btn bg-(--burgundy) text-amber-50 transition-all hover:bg-red-600"
+                (click)="onGroupDeleteConfirm()"
+              >
+                Delete
+              </button>
+              <button class="submit-btn" (click)="onGroupDelete()">Close</button>
+            </div>
+          </div>
+        </div>
+      }
     }
   </div>
 </div>

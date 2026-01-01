@@ -64,7 +64,7 @@ export class MessageService {
       this.refreshGroups.next();
       this.refreshChat.next();
     });
-    this.connection.start();
+    this.connection.start().catch((err) => console.log(err));
   }
 
   endConnection() {
