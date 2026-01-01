@@ -52,6 +52,12 @@ export class GroupView {
     );
   });
 
+  onSearch(event: any) {
+    const value = event.target.value as string;
+    console.log(value);
+    this.searchTerm.set(value);
+  }
+
   GroupRole = GroupRole;
   chatTypeOptions = Object.values(GroupRole)
     .filter((v) => typeof v === 'number')

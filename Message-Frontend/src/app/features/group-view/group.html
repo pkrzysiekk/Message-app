@@ -105,7 +105,7 @@
         <div class="pop-up-body">
           <div class="mb-4 text-lg font-semibold text-white">Invite friends</div>
           <div class="max-h-80 space-y-1 overflow-y-auto">
-            <input class="pop-up-input" placeholder="Search" />
+            <input class="pop-up-input outline-0" placeholder="Search" (input)="onSearch($event)" />
             @for (friend of filteredFriends(); track friend.id) {
               <div
                 class="flex items-center gap-3 rounded px-3 py-2 text-white transition-colors hover:backdrop-brightness-50"
