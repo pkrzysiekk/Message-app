@@ -60,4 +60,11 @@ public class MessageAuthorizationService :IMessageAuthorizationService
         bool callerHasHigherRole = callersRole > userToDeleteRole;
         return callerHasHigherRole && usersInGroup;
     }
+
+    public async Task<bool> CanDeleteChat(int groupId, int userId, int chatId)
+    {
+        var chat = await _chatService.GetById(chatId);
+        var userRole = await _groupService.GetUserRoleInGroup(userId, groupId);
+        return userRole >= chat.ForRole && userRole != GroupRole.Member;
+    }
 }

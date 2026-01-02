@@ -14,6 +14,7 @@ export class GroupService {
   baseApiUrl = 'https://localhost/api/group';
   userService = inject(UserService);
   selectedUserGroupRole = signal<GroupRole | null>(null);
+  selectedGroup = signal<Group | null>(null);
 
   setUserGroupRole(groupId: number) {
     this.getUserRoleInGroup(groupId).subscribe({
@@ -26,6 +27,10 @@ export class GroupService {
 
   getGroup(groupId: number) {
     return this.http.get<Group>(`${this.baseApiUrl}/${groupId}`);
+  }
+
+  setSelectedGroup(group: Group) {
+    this.selectedGroup.set(group);
   }
 
   createGroup(groupName: string) {

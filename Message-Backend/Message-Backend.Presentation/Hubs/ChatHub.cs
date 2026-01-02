@@ -197,6 +197,17 @@ public class ChatHub :Hub<IChatClient>
         await Clients.Group($"group:{groupId}").ReceiveConnectionStateChanged();
     }
 
+    public async Task RemoveChat(int groupId,int chatId)
+    {
+        var userId = int.Parse(
+            Context.User.FindFirstValue(ClaimTypes.NameIdentifier)
+        );
+        if (!await _messageAuthorizationService.CanDeleteChat(groupId, userId,chatId))
+            throw new HubException("Unauthorized");
+        await _chatService.Delete(chatId);
+        await Clients.Group($"group:{groupId}").ReceiveChatDeletedEvent(groupId);
+    }
+
     public async Task RemoveGroup(int groupId)
     {
         var userId = int.Parse(

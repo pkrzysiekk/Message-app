@@ -69,6 +69,9 @@ export class MessageService {
         this.refreshChat.next();
       });
     });
+    this.connection.on('ReceiveChatDeletedEvent', (groupId: number) => {
+      this.refreshChat.next();
+    });
     this.connection.start().catch((err) => console.log(err));
   }
 
@@ -132,6 +135,10 @@ export class MessageService {
 
   removeUser(userIdToRemove: number, groupId: number) {
     this.connection.invoke('RemoveUser', userIdToRemove, groupId);
+  }
+
+  removeChat(groupId: number, chatId: number) {
+    this.connection.invoke('RemoveChat', groupId, chatId);
   }
 
   async sendFile(file: File, chatId: number) {

@@ -12,6 +12,7 @@ public interface IChatClient
     Task ReceiveRemovedFromGroupEvent(int groupId);
     Task ReceiveGroupRoleChangedEvent(int groupId);
     Task ReceiveConnectionStateChanged();
+    Task ReceiveChatDeletedEvent(int groupId);
     Task SendUserIsTypingEvent(int chatId);
     Task ReceiveUserIsTypingEvent(string username);
 }

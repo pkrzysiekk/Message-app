@@ -7,4 +7,5 @@ public interface IMessageAuthorizationService
     public Task<bool> IsUserInChat(int chatId, int userId);
     public Task<bool> IsUserOwner(int groupId,int userId);
     public Task<bool> CanDeleteMember(int groupId, int userId, int userIdToRemove);
+    public Task<bool> CanDeleteChat(int groupId, int userId, int chatId);
 }
