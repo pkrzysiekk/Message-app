@@ -25,10 +25,19 @@ import { takeUntil } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { GroupService } from '../../core/services/group/group-service';
 import { GroupOptions } from '../group-view/group-options/group-options';
+import { ChatDetails } from './chat-details/chat-details';
 
 @Component({
   selector: 'app-chat',
-  imports: [DatePipe, Field, ImageParsePipe, RouterLink, MessageToDataUrlPipe, GroupOptions],
+  imports: [
+    DatePipe,
+    Field,
+    ImageParsePipe,
+    RouterLink,
+    MessageToDataUrlPipe,
+    GroupOptions,
+    ChatDetails,
+  ],
   templateUrl: './chat.html',
   styleUrl: './chat.css',
 })
@@ -43,6 +52,7 @@ export class ChatComponent {
   messageService = inject(MessageService);
   userService = inject(UserService);
   groupService = inject(GroupService);
+  showChatDetails = signal<boolean>(false);
   destroyRef = inject(DestroyRef);
 
   chatMessages = computed(() => {
@@ -245,6 +255,10 @@ export class ChatComponent {
   replaceMessage(list: Message[], updated: Message): Message[] {
     return list.map((m) => (m.messageId === updated.messageId ? updated : m));
   }
+
+  onChatDetails = () => {
+    this.showChatDetails.set(!this.showChatDetails());
+  };
 
   ngOnDestroy() {
     this.resetChatState();

@@ -4,9 +4,16 @@
       <p class="flex-1 p-1 text-xl">{{ selectedChat()?.chatName }}</p>
       <button
         class="flex cursor-pointer justify-self-center pr-2 pb-2 text-2xl transition-all duration-300 hover:scale-110"
+        (click)="onChatDetails()"
       >
         ....
       </button>
+      @if (showChatDetails()) {
+        <app-chat-details
+          [selectedChat]="selectedChat()"
+          [closeModal]="onChatDetails"
+        ></app-chat-details>
+      }
     </div>
   </div>
 
