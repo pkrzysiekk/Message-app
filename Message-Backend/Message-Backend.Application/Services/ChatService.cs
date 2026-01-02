@@ -12,7 +12,8 @@ public class ChatService : BaseService<Chat,int>, IChatService
     private readonly IGroupService _groupService;
     private readonly IUserService _userService;
     public ChatService
-        (IRepository<Chat,int> repository, IGroupService groupService,IUserService userService):base(repository)
+        (IRepository<Chat,int> repository, IGroupService groupService,
+            IUserService userService):base(repository)
     {
         _groupService = groupService;
         _userService = userService;

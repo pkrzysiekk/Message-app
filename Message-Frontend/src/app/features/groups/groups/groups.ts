@@ -43,8 +43,10 @@ export class Groups {
   listenForGroupUpdates() {
     this.messageService.refreshGroups$.subscribe({
       next: () => {
-        console.log('UDPARw');
         this.fetchGroups();
+      },
+      error: () => {
+        this.selectedGroup.set(null);
       },
     });
   }

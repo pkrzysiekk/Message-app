@@ -130,6 +130,10 @@ export class MessageService {
     this.connection.invoke('UpdateRole', userId, groupId, groupRole);
   }
 
+  removeUser(userIdToRemove: number, groupId: number) {
+    this.connection.invoke('RemoveUser', userIdToRemove, groupId);
+  }
+
   async sendFile(file: File, chatId: number) {
     const fileReader = new FileReader();
     fileReader.readAsDataURL(file);

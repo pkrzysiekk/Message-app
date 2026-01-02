@@ -66,5 +66,8 @@ export class MemberDetails {
     this.onModalClose();
   }
 
-  onUserRemoval() {}
+  onUserRemoval() {
+    this.messageService.removeUser(this.selectedUser()?.id!, this.selectedGroup()?.groupId!);
+    this.onModalClose();
+  }
 }

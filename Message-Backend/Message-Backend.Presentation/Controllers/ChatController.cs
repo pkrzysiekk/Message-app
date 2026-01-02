@@ -74,6 +74,7 @@ namespace Message_Backend.Presentation.Controllers
         }
 
         [HttpGet("{groupId}/chats")]
+        [Authorize(Policy = "GroupMember")]
         public async Task<ActionResult<IEnumerable<ChatDto>>> GetUserChatsInGroup([FromRoute] int groupId)
         {
            var userId = CookieHelper.GetUserIdFromCookie(User);

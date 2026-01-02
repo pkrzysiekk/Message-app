@@ -81,6 +81,7 @@ export class GroupView {
     this.fetchChats();
     this.fetchGroupMembers();
     this.listenForChatUpdates();
+    this.refreshGroupMembersAfterInvite();
   }
 
   listenForChatUpdates() {
@@ -88,13 +89,18 @@ export class GroupView {
       next: () => {
         this.refreshChats();
       },
+      error: () => {
+        this.selectedChat.set(null);
+        this.selectedGroup.set(null);
+      },
     });
   }
 
   fetchGroupMembers() {
     effect(() => {
       const group = this.selectedGroup();
-      if (!group) return;
+      const chats = this.groupChats();
+      if (!group || !chats) return;
       this.invitedIds.set(new Set());
       this.groupService
         .getUsersInGroup(this.selectedGroup()?.groupId!)
@@ -126,17 +132,28 @@ export class GroupView {
   refreshChats() {
     this.chatService.getAllUserChatsInGroup(this.selectedGroup()?.groupId!).subscribe({
       next: (fetch) => {
+        console.log('fetched', fetch);
         this.groupChats.set(fetch);
       },
       error: () => {
         this.groupChats.set(null);
         this.selectedGroup.set(null);
+        console.log('selectedgroup', this.selectedGroup());
       },
     });
   }
 
   onShowCreateChatForm() {
     this.showCreateChatForm.set(!this.showCreateChatForm());
+  }
+
+  refreshGroupMembersAfterInvite() {
+    effect(() => {
+      const invitedIds = this.invitedIds();
+      this.groupService.getUsersInGroup(this.selectedGroup()?.groupId!).subscribe((users) => {
+        this.groupMembers.set(users);
+      });
+    });
   }
 
   onChatCreate() {
