@@ -15,9 +15,14 @@
               </option>
             }
           </select>
-          <div class="flex w-full items-center justify-center">
+          <div class="flex w-full flex-col items-center justify-center">
             <button class="submit-btn w-fit p-2 text-lg" (click)="onRoleUpdate()">
               Update Role
+            </button>
+            <button
+              class="submit-btn w-fit bg-(--burgundy) p-2 text-lg text-amber-50 transition-all hover:bg-red-600"
+            >
+              Remove from group
             </button>
           </div>
         </div>

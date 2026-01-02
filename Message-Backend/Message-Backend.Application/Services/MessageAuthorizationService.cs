@@ -50,4 +50,14 @@ public class MessageAuthorizationService :IMessageAuthorizationService
             return false;
         return userRole==GroupRole.Owner;
     }
+
+    public async Task<bool> CanDeleteMember(int groupId, int userId, int userIdToRemove)
+    {
+        var callersRole = await _groupService.GetUserRoleInGroup(userId, groupId);
+        var userToDeleteRole = await _groupService.GetUserRoleInGroup(userIdToRemove, groupId);
+        
+        bool usersInGroup = callersRole != null && userToDeleteRole != null;
+        bool callerHasHigherRole = callersRole > userToDeleteRole;
+        return callerHasHigherRole && usersInGroup;
+    }
 }

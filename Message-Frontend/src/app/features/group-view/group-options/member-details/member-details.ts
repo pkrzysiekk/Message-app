@@ -65,4 +65,6 @@ export class MemberDetails {
     );
     this.onModalClose();
   }
+
+  onUserRemoval() {}
 }
