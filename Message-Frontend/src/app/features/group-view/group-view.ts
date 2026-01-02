@@ -82,6 +82,10 @@ export class GroupView {
     this.fetchGroupMembers();
     this.listenForChatUpdates();
     this.refreshGroupMembersAfterInvite();
+
+    effect(() => {
+      if (!this.selectedGroup()) this.selectedChat.set(null);
+    });
   }
 
   listenForChatUpdates() {
@@ -133,6 +137,7 @@ export class GroupView {
     this.chatService.getAllUserChatsInGroup(this.selectedGroup()?.groupId!).subscribe({
       next: (fetch) => {
         this.groupChats.set(fetch);
+        if (!fetch.some((c) => c.id == this.selectedChat()?.id)) this.selectedChat.set(null);
       },
       error: () => {
         this.groupChats.set(null);

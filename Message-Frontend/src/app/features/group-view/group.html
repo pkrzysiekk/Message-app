@@ -143,6 +143,8 @@
   </aside>
 
   <main class="min-h-full w-full justify-self-center border-2 border-amber-100">
-    <app-chat [selectedChat]="selectedChat()"></app-chat>
+    @if (selectedChat()) {
+      <app-chat [selectedChat]="selectedChat()"></app-chat>
+    }
   </main>
 </div>

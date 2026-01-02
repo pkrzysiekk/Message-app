@@ -36,6 +36,7 @@ export class GroupOptions {
     this.messageService.deleteGroup(this.selectedGroup()?.groupId!);
     this.onGroupDelete();
     this.onModalClose();
+    this.selectedGroup.set(null);
   }
 
   toggleMemberDetailsModal = () => {

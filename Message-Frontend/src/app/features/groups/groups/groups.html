@@ -78,6 +78,8 @@
   </aside>
 
   <main class="min-h-full w-full justify-self-center overflow-y-auto border-2 border-amber-100">
-    <app-group [selectedGroup]="selectedGroup()"></app-group>
+    @if (selectedGroup()) {
+      <app-group [selectedGroup]="selectedGroup()"></app-group>
+    }
   </main>
 </div>

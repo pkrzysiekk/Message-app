@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, effect, inject, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { GroupService } from '../../../core/services/group/group-service';
 import { Group } from '../../../core/services/group/models/group';
@@ -6,6 +6,7 @@ import { GroupView } from '../../group-view/group-view';
 import { ClickedOutside } from '../../../shared/directives/clicked-outside/clicked-outside';
 import { form, required, Field } from '@angular/forms/signals';
 import { MessageService } from '../../../core/services/message/message-service';
+import { sign } from 'crypto';
 
 @Component({
   selector: 'app-groups',
@@ -20,6 +21,7 @@ export class Groups {
   showCreateForm = signal<boolean>(false);
   showGroupList = signal<boolean>(true);
   messageService = inject(MessageService);
+  initialGroupSelected = signal<boolean>(false);
 
   requiredFieldMessageError = `This field is required`;
   createGroupModel = signal({ groupName: '' });
@@ -29,6 +31,14 @@ export class Groups {
 
   constructor() {
     this.listenForGroupUpdates();
+    this.selectFirstGroupFallback();
+  }
+
+  selectFirstGroupFallback() {
+    effect(() => {
+      if (!this.selectedGroup() && this.groups().length > 0)
+        this.selectedGroup.set(this.groups()[0]);
+    });
   }
 
   ngOnInit() {
