@@ -76,7 +76,7 @@
     <ul class="max-h-160 max-w-40 overflow-x-hidden overflow-y-auto backdrop-grayscale-40">
       @for (chat of groupChats(); track chat.id) {
         <li
-          class="cursor-pointer text-xl text-cyan-700 hover:text-white"
+          class="flex cursor-pointer items-center rounded-md px-3 py-2 text-lg font-medium text-wrap text-gray-300 transition-colors hover:bg-gray-700/60 hover:text-white"
           (click)="onChatSelect(chat)"
           [class.bg-gray-700]="selectedChat()?.id === chat.id"
           [class.text-white]="selectedChat()?.id === chat.id"

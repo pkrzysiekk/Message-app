@@ -5,6 +5,7 @@ import { GroupService } from '../../../../core/services/group/group-service';
 import { GroupRole } from '../../../../core/services/chat/models/groupRole';
 import { Group } from '../../../../core/services/group/models/group';
 import { MessageService } from '../../../../core/services/message/message-service';
+import { UserService } from '../../../../core/services/user/user-service';
 
 @Component({
   selector: 'app-member-details',
@@ -16,6 +17,7 @@ export class MemberDetails {
   selectedUser = model<User | null>(null);
   selectedGroup = model<Group | null>(null);
   selectedRole = model<number | null>(null);
+  userService = inject(UserService);
   groupService = inject(GroupService);
   messageService = inject(MessageService);
   fetchedUserRole = signal<GroupRole | null>(null);

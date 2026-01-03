@@ -16,15 +16,28 @@
             }
           </select>
           <div class="flex w-full flex-col items-center justify-center">
-            <button class="submit-btn w-fit p-2 text-lg" (click)="onRoleUpdate()">
-              Update Role
-            </button>
-            <button
-              class="submit-btn w-fit bg-(--burgundy) p-2 text-lg text-amber-50 transition-all hover:bg-red-600"
-              (click)="onUserRemoval()"
-            >
-              Remove from group
-            </button>
+            @if (
+              groupService.isUserWithElevatedPrivileges() &&
+              !(userService.localUser()?.id == selectedUser()?.id)
+            ) {
+              <button class="submit-btn w-fit p-2 text-lg" (click)="onRoleUpdate()">
+                Update Role
+              </button>
+
+              <button
+                class="submit-btn w-fit bg-(--burgundy) p-2 text-lg text-amber-50 transition-all hover:bg-red-600"
+                (click)="onUserRemoval()"
+              >
+                Remove from group
+              </button>
+            } @else if (userService.localUser()?.id == selectedUser()?.id) {
+              <button
+                class="submit-btn w-fit bg-(--burgundy) p-2 text-lg text-amber-50 transition-all hover:bg-red-600"
+                (click)="onUserRemoval()"
+              >
+                Leave group
+              </button>
+            }
           </div>
         </div>
       </div>

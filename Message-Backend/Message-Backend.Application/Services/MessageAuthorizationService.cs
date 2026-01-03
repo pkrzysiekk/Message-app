@@ -57,8 +57,9 @@ public class MessageAuthorizationService :IMessageAuthorizationService
         var userToDeleteRole = await _groupService.GetUserRoleInGroup(userIdToRemove, groupId);
         
         bool usersInGroup = callersRole != null && userToDeleteRole != null;
+        bool userWantsToRemoveThemselves = userId == userIdToRemove;
         bool callerHasHigherRole = callersRole > userToDeleteRole;
-        return callerHasHigherRole && usersInGroup;
+        return callerHasHigherRole && usersInGroup || userWantsToRemoveThemselves && usersInGroup;
     }
 
     public async Task<bool> CanDeleteChat(int groupId, int userId, int chatId)

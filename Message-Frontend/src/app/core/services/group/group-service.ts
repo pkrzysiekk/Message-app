@@ -65,6 +65,10 @@ export class GroupService {
     return this.http.put(`${this.baseApiUrl}/${userId}/update-group-role`, req);
   }
 
+  isUserWithElevatedPrivileges() {
+    return this.selectedUserGroupRole() == 1 || this.selectedUserGroupRole() == 2;
+  }
+
   getUserRoleInGroup(groupId: number, requestedUserId: number | null = null) {
     const apiUrl =
       requestedUserId == null
