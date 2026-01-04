@@ -14,6 +14,7 @@ public class MessageContext :IdentityUserContext<User,int>
    public DbSet<Group> Groups { get; set; }
    public DbSet<Chat> Chats { get; set; }
    public DbSet<UserGroup> UserGroups { get; set; }
+   public DbSet<UserChat>  UserChats { get; set; }
    public MessageContext(DbContextOptions<MessageContext> options):base(options){}
 
    protected override void OnModelCreating(ModelBuilder modelBuilder)

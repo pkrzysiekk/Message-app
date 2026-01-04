@@ -258,6 +258,40 @@ namespace Message_Backend.Migrations
                     b.ToTable("User", (string)null);
                 });
 
+            modelBuilder.Entity("Message_Backend.Domain.Entities.UserChat", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ChatId")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("LastMessageId")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime?>("LastReadAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<long>("MessageId")
+                        .HasColumnType("bigint");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ChatId");
+
+                    b.HasIndex("MessageId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UserChats");
+                });
+
             modelBuilder.Entity("Message_Backend.Domain.Entities.UserGroup", b =>
                 {
                     b.Property<int>("UserId")
@@ -409,6 +443,33 @@ namespace Message_Backend.Migrations
                     b.Navigation("Content");
 
                     b.Navigation("Sender");
+                });
+
+            modelBuilder.Entity("Message_Backend.Domain.Entities.UserChat", b =>
+                {
+                    b.HasOne("Message_Backend.Domain.Entities.Chat", "Chat")
+                        .WithMany()
+                        .HasForeignKey("ChatId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Message_Backend.Domain.Entities.Message", "Message")
+                        .WithMany()
+                        .HasForeignKey("MessageId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Message_Backend.Domain.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Chat");
+
+                    b.Navigation("Message");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Message_Backend.Domain.Entities.UserGroup", b =>

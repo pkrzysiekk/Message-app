@@ -33,6 +33,7 @@ builder.Services.AddScoped<IFriendsService, FriendsService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IMessageService, MessageService>();
 builder.Services.AddScoped<IMessageAuthorizationService, MessageAuthorizationService>();
+builder.Services.AddScoped<IUserChatService, UserChatService>();
 //Add authorization Services
 builder.Services.AddScoped<IAuthorizationHandler,SameUserHandler>();
 builder.Services.AddScoped<IAuthorizationHandler,RequireAdminOrOwnerRoleHandler>();

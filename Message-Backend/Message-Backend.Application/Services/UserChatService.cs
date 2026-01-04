@@ -1,0 +1,45 @@
+using Message_Backend.Application.Interfaces.Repository;
+using Message_Backend.Application.Interfaces.Services;
+using Message_Backend.Domain.Entities;
+using Message_Backend.Domain.Exceptions;
+using Microsoft.EntityFrameworkCore;
+
+namespace Message_Backend.Application.Services;
+
+public class UserChatService :BaseService<UserChat,int>,IUserChatService
+{
+    private readonly IMessageService _messageService;
+    public UserChatService(IRepository<UserChat, int> repository,IMessageService messageService) : base(repository)
+    {
+        _messageService = messageService;
+    }
+
+    public async Task Create(UserChat userChat)
+    {
+        await _repository.Create(userChat);
+    }
+    
+    public async Task Update(UserChat userChat)
+    {
+        var  userChatToUpdate = await _repository.GetById(userChat.Id);
+        if (userChatToUpdate == null)
+            throw new NotFoundException("Entity not found");
+        if (!userChat.LastMessageId.HasValue)
+            throw new NotFoundException("Message has to have LastMessageId when updating");
+        var message = await _messageService.GetById(userChat.LastMessageId.Value);
+        userChatToUpdate.LastMessageId = userChat.LastMessageId;
+        userChatToUpdate.LastReadAt=message.SentAt;
+        await _repository.Update(userChatToUpdate);
+    }
+
+    public async Task<UserChat> GetByUserId(int userId, int chatId)
+    {
+        var userChatInfo = await _repository.GetAll(q =>
+            q.Include(uc => uc.Chat)
+                .Include(uc => uc.Message)
+        ).FirstOrDefaultAsync(uc => uc.UserId == userId && uc.ChatId == chatId);
+        
+        return userChatInfo ?? throw new NotFoundException("Entity not found");
+    }
+
+}
