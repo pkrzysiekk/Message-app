@@ -32,13 +32,19 @@ export class Friends {
   }
 
   fetchInvites() {
+    this.inviters.set([]);
     this.friendsService.getPendingInvites().subscribe({
       next: (invites) => {
         const ids = invites.map((invite) =>
           invite.userId === this.userId ? invite.friendId : invite.userId!,
         );
-        console.log(ids);
-        this.inviterIds.set(ids);
+        ids.map((id) => {
+          this.userService.getUser(parseInt(id)).subscribe((user) => {
+            this.inviters.update((list) => {
+              return [...list, user];
+            });
+          });
+        });
       },
     });
   }
