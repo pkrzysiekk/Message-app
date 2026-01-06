@@ -26,6 +26,7 @@ export class Friends {
   fetchFriends() {
     this.friendsService.getUsersFromFriends().subscribe({
       next: (fetched) => {
+        console.log(fetched);
         this.friends.set(fetched);
       },
     });
@@ -52,6 +53,16 @@ export class Friends {
   constructor() {
     this.fetchFriends();
     this.fetchInvites();
+
+    effect(() => {
+      this.inviterIds().map((inv) => {
+        this.userService.getUser(parseInt(inv)).subscribe((user) => {
+          this.inviters.update((list) => {
+            return [...list, user];
+          });
+        });
+      });
+    });
   }
   onAccept(friendId: number) {
     this.friendsService.acceptInvite(friendId).subscribe(() => {
