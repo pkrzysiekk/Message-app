@@ -115,8 +115,6 @@ export class ChatComponent {
     this.messageService.messagesFromHub$
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((msg) => {
-        console.log('selectedchat', this.selectedChat());
-        console.log('message', msg);
         if (msg.chatId !== this.selectedChat()?.id) return;
 
         if (this.messagesFromHub().some((m) => m.messageId == msg.messageId)) return;

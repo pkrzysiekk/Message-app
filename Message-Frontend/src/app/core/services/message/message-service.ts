@@ -39,7 +39,7 @@ export class MessageService {
       map((msgs) =>
         msgs.map((msg) => {
           if (msg.type !== 'text/plain') return msg;
-          const decodedContent = this.decodeBase64Utf8(msg.content);
+          const decodedContent = this.decodeBase64ToUtf8(msg.content);
           msg.content = decodedContent;
           return msg;
         }),
@@ -91,7 +91,7 @@ export class MessageService {
   }
 
   notifyMessageDelete(message: Message) {
-    const encodedContent = this.decodeBase64Utf8(message.content);
+    const encodedContent = this.decodeBase64ToUtf8(message.content);
     message.content = encodedContent;
     this.incomingDeletedMessage.next(message);
   }
@@ -107,7 +107,7 @@ export class MessageService {
   addMessage(message: Message) {
     console.log('message', message);
     if (message.type === 'text/plain') {
-      const decodedContent = this.decodeBase64Utf8(message.content);
+      const decodedContent = this.decodeBase64ToUtf8(message.content);
       message.content = decodedContent;
     }
     console.log(message);
@@ -115,12 +115,13 @@ export class MessageService {
   }
 
   sendTextMessage(messageContent: string, chatId: number) {
-    const encodedMessage = this.decodeUtf8Base64(messageContent);
+    const encodedMessage = this.encodeUtf8ToBase64(messageContent);
     const message: Message = {
       chatId: chatId,
       content: encodedMessage,
       type: 'text/plain',
     };
+    console.log('to Send,', message);
     return this.connection.invoke('SendMessage', message);
   }
 
@@ -156,15 +157,21 @@ export class MessageService {
     };
   }
 
-  decodeBase64Utf8(base64: string) {
+  decodeBase64ToUtf8(base64: string) {
     const binary = atob(base64);
-    const bytes = Uint8Array.from(binary, (c) => c.charCodeAt(0));
-    return this.textDecoder.decode(bytes);
+    const buffer = new Uint8Array(binary.length);
+    for (let i = 0; i < buffer.length; i++) {
+      buffer[i] = binary.charCodeAt(i);
+    }
+    return this.textDecoder.decode(buffer);
   }
 
-  decodeUtf8Base64(text: string) {
-    const encodedContent = this.textEncoder.encode(text);
-    const encodedMessage = btoa(String.fromCharCode(...encodedContent));
-    return encodedMessage;
+  encodeUtf8ToBase64(text: string) {
+    const bytes = this.textEncoder.encode(text);
+    let binary = '';
+    for (const b of bytes) {
+      binary += String.fromCharCode(b);
+    }
+    return btoa(binary);
   }
 }
