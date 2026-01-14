@@ -44,15 +44,23 @@ public class UserChatService :BaseService<UserChat,int>,IUserChatService
         
         return userChatInfo;
     }
-
     public async Task<int> GetNewMessagesCount(int userId, int chatId)
     {
         var userChatInfo = await GetByUserId(userId, chatId);
         if (userChatInfo.LastMessageId is null || userChatInfo.LastReadAt is null)
-            return 0;
-        var newMessagesCount = await _messageService
-            .GetUserNewChatMessageCount(userId, chatId, userChatInfo.LastReadAt.Value);
+            return 0; 
+        var newMessagesCount = await GetUserNewChatMessageCount(userId, chatId, userChatInfo.LastReadAt.Value);
         return newMessagesCount;
+    }
+
+    private async Task<int> GetUserNewChatMessageCount(int userId, int chatId, DateTime lastReadAt)
+    {
+        var userCount = await _repository.GetAll()
+            .Include(uc=>uc.Message)
+            .Select(uc => uc.Message)
+            .Where(m => m.ChatId == chatId && lastReadAt < m.SentAt)
+            .CountAsync();
+        return userCount;
     }
 
     public async Task EnsureUserChatsExists(int userId, int groupId)

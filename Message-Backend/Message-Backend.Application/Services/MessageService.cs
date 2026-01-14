@@ -12,7 +12,10 @@ namespace Message_Backend.Application.Services;
 
 public class MessageService : BaseService<Message,long>,IMessageService
 {
-    public MessageService(IRepository<Message,long> repository) : base(repository) {}
+
+    public MessageService(IRepository<Message, long> repository) : base(repository)
+    {
+    }
 
     public async Task<IEnumerable<Message>> 
         GetChatMessages(int chatId, int pageSize,DateTime? lastSentAt = null)
@@ -43,13 +46,11 @@ public class MessageService : BaseService<Message,long>,IMessageService
         return chatMessages.Reverse();
     }
 
-    public async Task<int> GetUserNewChatMessageCount(int userId, int chatId,DateTime lastReadAt)
-    {
-       var messageCount = await
-           _repository.GetAll()
-               .CountAsync(m=>m.ChatId == chatId && lastReadAt < m.SentAt);
-       return messageCount;
-    }
+
+
+
+ 
+    
 
     public override async Task<Message> GetById(long id)
     {
