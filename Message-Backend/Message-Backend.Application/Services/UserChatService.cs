@@ -42,4 +42,14 @@ public class UserChatService :BaseService<UserChat,int>,IUserChatService
         return userChatInfo ?? throw new NotFoundException("Entity not found");
     }
 
+    public async Task<int> GetNewMessagesCount(int userId, int chatId)
+    {
+        var userChatInfo = await GetByUserId(userId, chatId);
+        if (userChatInfo.LastMessageId is null || userChatInfo.LastReadAt is null)
+            return 0;
+        var newMessagesCount = await _messageService
+            .GetUserNewChatMessageCount(userId, chatId, userChatInfo.LastReadAt.Value);
+        return newMessagesCount;
+    }
+
 }

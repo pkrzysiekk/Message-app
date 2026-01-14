@@ -6,4 +6,5 @@ public interface IUserChatService :IBaseService<UserChat,int>
 {
    public Task Create(UserChat userChat);
    public Task<UserChat> GetByUserId(int userId, int chatId);
+   public Task Update(UserChat userChat);
 }

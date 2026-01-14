@@ -43,6 +43,14 @@ public class MessageService : BaseService<Message,long>,IMessageService
         return chatMessages.Reverse();
     }
 
+    public async Task<int> GetUserNewChatMessageCount(int userId, int chatId,DateTime lastReadAt)
+    {
+       var messageCount = await
+           _repository.GetAll()
+               .CountAsync(m=>m.ChatId == chatId && lastReadAt < m.SentAt);
+       return messageCount;
+    }
+
     public override async Task<Message> GetById(long id)
     {
         var messageToGet = await _repository.GetAll()
