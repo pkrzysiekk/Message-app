@@ -100,8 +100,8 @@ export class MessageService {
     this.connection.invoke('SendConnectionStateChanged', groupId);
   }
 
-  deleteGroup(groupId: number) {
-    this.connection.invoke('RemoveGroup', groupId);
+  sendGroupRemovedEvent(groupId: number) {
+    this.connection.invoke('SendGroupRemovedEvent', groupId);
   }
 
   addMessage(message: Message) {
@@ -137,8 +137,8 @@ export class MessageService {
     this.connection.invoke('SendUserRemovedEvent', userIdToRemove, groupId);
   }
 
-  removeChat(groupId: number, chatId: number) {
-    this.connection.invoke('RemoveChat', groupId, chatId);
+  sendChatRemovedEvent(groupId: number, chatId: number) {
+    this.connection.invoke('SendChatRemovedEvent', groupId, chatId);
   }
 
   async sendFile(file: File, chatId: number) {

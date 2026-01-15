@@ -1,4 +1,5 @@
 using Message_Backend.Application.Interfaces.Services;
+using Message_Backend.Domain.Entities;
 using Message_Backend.Domain.Models.Enums;
 
 namespace Message_Backend.Application.Services;
@@ -43,6 +44,12 @@ public class MessageAuthorizationService :IMessageAuthorizationService
        return userChats.Any(c=>c.Id == chatId);
     }
 
+    public async Task<bool> UserHasElevatedRole(int groupId, int userId)
+    {
+        var userRole = await _groupService.GetUserRoleInGroup(userId, groupId);
+        return userRole is  GroupRole.Admin or  GroupRole.Owner;
+    }
+
     public async Task<bool> IsUserOwner(int groupId,int userId)
     {
         var userRole = await _groupService.GetUserRoleInGroup(userId, groupId);
@@ -64,10 +71,38 @@ public class MessageAuthorizationService :IMessageAuthorizationService
         return callerHasElevatedRole && userToDeleteWasRemoved;
     }
 
-    public async Task<bool> CanDeleteChat(int groupId, int userId, int chatId)
+    public async Task<bool> CanSendDeleteChat(int groupId, int userId, int chatId)
     {
-        var chat = await _chatService.GetById(chatId);
-        var userRole = await _groupService.GetUserRoleInGroup(userId, groupId);
-        return userRole >= chat.ForRole && userRole != GroupRole.Member;
+        Chat? deletedChat = null;
+        try
+        {
+            deletedChat = await _chatService.GetById(chatId);
+        }
+        catch (Exception e)
+        {
+            // ignored
+        }
+
+        bool chatDeleted = deletedChat == null;
+        bool userHasElevatedRole = await UserHasElevatedRole(groupId, userId);
+        return chatDeleted && userHasElevatedRole;
+    }
+
+    public async Task<bool> CanSendRemoveGroup(int groupId, int userId)
+    {
+        var isUserOwner = await IsUserOwner(groupId, userId);
+        Group? deletedGroup = null;
+
+        try
+        {
+            deletedGroup = await _groupService.GetById(groupId);
+        }
+        catch (Exception e)
+        {
+            //ignored
+        }
+        
+        bool isGroupDeleted = deletedGroup ==  null;
+        return isUserOwner && isGroupDeleted;
     }
 }

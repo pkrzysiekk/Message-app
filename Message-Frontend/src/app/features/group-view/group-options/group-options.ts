@@ -33,7 +33,7 @@ export class GroupOptions {
   }
 
   onGroupDeleteConfirm() {
-    this.messageService.deleteGroup(this.selectedGroup()?.groupId!);
+    this.messageService.sendGroupRemovedEvent(this.selectedGroup()?.groupId!);
     this.onGroupDelete();
     this.onModalClose();
     this.selectedGroup.set(null);

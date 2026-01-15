@@ -2,6 +2,7 @@ import { Component, inject, model, signal } from '@angular/core';
 import { Chat } from '../../../core/services/chat/models/chat';
 import { MessageService } from '../../../core/services/message/message-service';
 import { GroupService } from '../../../core/services/group/group-service';
+import { ChatService } from '../../../core/services/chat/chat-service';
 
 @Component({
   selector: 'app-chat-details',
@@ -14,6 +15,7 @@ export class ChatDetails {
   closeModal = model<() => void>();
   showDeleteModal = signal<boolean>(false);
   messageService = inject(MessageService);
+  chatService = inject(ChatService);
   groupService = inject(GroupService);
 
   onModalClose() {
@@ -26,10 +28,14 @@ export class ChatDetails {
   }
 
   removeChat() {
-    this.messageService.removeChat(
-      this.groupService.selectedGroup()?.groupId!,
-      this.selectedChat()?.id!,
-    );
-    this.onModalClose();
+    this.chatService.remove(this.selectedChat()?.id!).subscribe({
+      next: () => {
+        this.messageService.sendChatRemovedEvent(
+          this.groupService.selectedGroup()?.groupId!,
+          this.selectedChat()?.id!,
+        );
+        this.onModalClose();
+      },
+    });
   }
 }
