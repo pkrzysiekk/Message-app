@@ -31,7 +31,7 @@ export class GroupView {
   groupService = inject(GroupService);
   userService = inject(UserService);
   destroyRef = inject(DestroyRef);
-  selectedGroup = model<Group | null>(null);
+  selectedGroup = signal<Group | null>(null);
   groupChats = model<Chat[] | null>(null);
   userGroupRole = model<GroupRole | null>(null);
   selectedChat = model<Chat | null>(null);
@@ -79,6 +79,7 @@ export class GroupView {
   });
 
   constructor() {
+    this.selectedGroup = this.groupService.selectedGroup;
     this.fetchChats();
     this.fetchGroupMembers();
     this.listenForChatUpdates();
@@ -141,8 +142,8 @@ export class GroupView {
         if (!fetch.some((c) => c.id == this.selectedChat()?.id)) this.selectedChat.set(null);
       },
       error: () => {
-        this.groupService.selectedGroup.set(null);
         this.selectedGroup.set(null);
+        this.selectedChat.set(null);
       },
     });
   }

@@ -7,6 +7,7 @@ using Message_Backend.Presentation.ApiRequests;
 using Message_Backend.Presentation.Helpers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using SQLitePCL;
 
 namespace Message_Backend.Presentation.Controllers
 {
@@ -16,10 +17,12 @@ namespace Message_Backend.Presentation.Controllers
     public class GroupController : ControllerBase
     {
         private readonly IGroupService _groupService;
+        private readonly IUserChatService _userChatService;
 
-        public GroupController(IGroupService groupService)
+        public GroupController(IGroupService groupService, IUserChatService userChatService)
         {
            _groupService = groupService; 
+           _userChatService = userChatService;
         } 
 
         [HttpGet("{groupId}")]
@@ -70,7 +73,8 @@ namespace Message_Backend.Presentation.Controllers
         public async Task<ActionResult> AddUserToGroup
             ([FromRoute] int userId, [FromBody] UserGroupRoleRequest roleRequest)
         {
-           await _groupService.AddUserToGroup(userId, roleRequest.GroupId, roleRequest.GroupRole); 
+           await _groupService.AddUserToGroup(userId, roleRequest.GroupId, roleRequest.GroupRole);
+           await _userChatService.EnsureUserChatsExists(userId,roleRequest.GroupId);
            return Ok();
         }
 
@@ -88,6 +92,7 @@ namespace Message_Backend.Presentation.Controllers
             ([FromRoute] int userId,[FromBody] UserGroupRoleRequest request)
         {
             await _groupService.UpdateUserRoleInGroup(userId,request.GroupId, request.GroupRole);
+            await _userChatService.EnsureUserChatsExists(userId,request.GroupId);
             return Ok();
         }
 

@@ -10,7 +10,7 @@ public class UserChat :IEntity<int>
     public  int? LastMessageId { get; set; }
     public DateTime? LastReadAt { get; set; } 
     
-    public Message Message { get; set; }
+    public Message? Message { get; set; }
     public Chat Chat { get; set; }
     public User User { get; set; }
 }

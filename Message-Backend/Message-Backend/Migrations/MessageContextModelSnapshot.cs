@@ -275,7 +275,7 @@ namespace Message_Backend.Migrations
                     b.Property<DateTime?>("LastReadAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<long>("MessageId")
+                    b.Property<long?>("MessageId")
                         .HasColumnType("bigint");
 
                     b.Property<int>("UserId")
@@ -455,9 +455,7 @@ namespace Message_Backend.Migrations
 
                     b.HasOne("Message_Backend.Domain.Entities.Message", "Message")
                         .WithMany()
-                        .HasForeignKey("MessageId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("MessageId");
 
                     b.HasOne("Message_Backend.Domain.Entities.User", "User")
                         .WithMany()
