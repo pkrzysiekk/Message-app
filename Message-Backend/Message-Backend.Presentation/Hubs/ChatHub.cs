@@ -136,14 +136,13 @@ public class ChatHub :Hub<IChatClient>
         await Groups.AddToGroupAsync(Context.ConnectionId, $"chat:{chatId}");
     }
 
-    public async Task RemoveUser(int userToDelete, int groupId)
+    public async Task SendUserRemovedEvent(int userToDelete, int groupId)
     {
         var userId = int.Parse(
             Context.User.FindFirstValue(ClaimTypes.NameIdentifier)
         );
         if(!await _messageAuthorizationService.CanDeleteMember(groupId, userId,userToDelete))
             throw new HubException("Unauthorized");
-        await _groupService.RemoveUserFromGroup(userToDelete, groupId);
         await Clients.User(userToDelete.ToString()).ReceiveRemovedFromGroupEvent(groupId);
         await Clients.Group($"group:{groupId}").ReceiveGroupRoleChangedEvent(groupId);
     }

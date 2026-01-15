@@ -77,7 +77,16 @@ export class MemberDetails {
   }
 
   onUserRemoval() {
-    this.messageService.removeUser(this.selectedUser()?.id!, this.selectedGroup()?.groupId!);
-    this.onModalClose();
+    this.groupService
+      .removeUser(this.selectedUser()?.id!, this.selectedGroup()?.groupId!)
+      .subscribe({
+        next: () => {
+          this.messageService.sendUserRemovedEvent(
+            this.selectedUser()?.id!,
+            this.selectedGroup()?.groupId!,
+          );
+          this.onModalClose();
+        },
+      });
   }
 }

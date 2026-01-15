@@ -133,8 +133,8 @@ export class MessageService {
     this.connection.invoke('SendUserRoleUpdatedEvent', userId, groupId);
   }
 
-  removeUser(userIdToRemove: number, groupId: number) {
-    this.connection.invoke('RemoveUser', userIdToRemove, groupId);
+  sendUserRemovedEvent(userIdToRemove: number, groupId: number) {
+    this.connection.invoke('SendUserRemovedEvent', userIdToRemove, groupId);
   }
 
   removeChat(groupId: number, chatId: number) {

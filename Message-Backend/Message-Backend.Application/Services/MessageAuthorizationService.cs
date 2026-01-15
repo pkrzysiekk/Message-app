@@ -53,13 +53,15 @@ public class MessageAuthorizationService :IMessageAuthorizationService
 
     public async Task<bool> CanDeleteMember(int groupId, int userId, int userIdToRemove)
     {
+        if (userId == userIdToRemove)
+            return true;
         var callersRole = await _groupService.GetUserRoleInGroup(userId, groupId);
         var userToDeleteRole = await _groupService.GetUserRoleInGroup(userIdToRemove, groupId);
+         
+        bool userToDeleteWasRemoved = userToDeleteRole == null;
+        bool callerHasElevatedRole = callersRole is GroupRole.Admin or  GroupRole.Owner;
         
-        bool usersInGroup = callersRole != null && userToDeleteRole != null;
-        bool userWantsToRemoveThemselves = userId == userIdToRemove;
-        bool callerHasHigherRole = callersRole > userToDeleteRole;
-        return callerHasHigherRole && usersInGroup || userWantsToRemoveThemselves && usersInGroup;
+        return callerHasElevatedRole && userToDeleteWasRemoved;
     }
 
     public async Task<bool> CanDeleteChat(int groupId, int userId, int chatId)
