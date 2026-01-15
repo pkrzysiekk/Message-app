@@ -11,17 +11,12 @@ namespace Message_Backend.Application.Services;
 public class GroupService :BaseService<Group,int>,IGroupService
 {
     private readonly IUserService _userService;
-    private readonly IUserChatService _userChatService;
-    private readonly IChatService _chatService;
     public GroupService
         (IRepository<Group,int> repository,
-            IUserService userService,
-            IUserChatService userChatService,
-            IChatService chatService):base(repository)
+            IUserService userService
+        ):base(repository)
     {
         _userService = userService;
-        _userChatService = userChatService;
-        _chatService = chatService;
     }
 
     public async Task CreateGroup(Group group,int creatorId)
@@ -58,7 +53,6 @@ public class GroupService :BaseService<Group,int>,IGroupService
        var userToAdd = await _userService.GetById(userId);
        groupToAddUserTo.AddUser(userToAdd.Id,role);
        await _repository.SaveChanges();
-       await _userChatService.EnsureUserChatsExists(userToAdd.Id, groupToAddUserTo.Id);
     }
 
     public async Task RemoveUserFromGroup(int userId, int groupId)
@@ -74,7 +68,6 @@ public class GroupService :BaseService<Group,int>,IGroupService
       var groupToUpdate = await GetById(groupId);
       groupToUpdate.SetUserRole(userId, role);
       await _repository.SaveChanges();
-      await _userChatService.EnsureUserChatsExists(userId, groupId);
     }
 
     public async Task<GroupRole?> GetUserRoleInGroup(int userId, int groupId)
