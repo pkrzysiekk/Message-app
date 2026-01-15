@@ -36,8 +36,7 @@ export class Groups {
 
   selectFirstGroupFallback() {
     effect(() => {
-      if (!this.selectedGroup() && this.groups().length > 0)
-        this.selectedGroup.set(this.groups()[0]);
+      if (!this.selectedGroup() && this.groups().length > 0) this.onSelectedGroup(this.groups()[0]);
     });
   }
 
