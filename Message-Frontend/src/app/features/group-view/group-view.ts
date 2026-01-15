@@ -16,6 +16,7 @@ import { take } from 'rxjs';
 import { ImageParsePipe } from '../../shared/pipes/image-parse-pipe/image-parse-pipe';
 import { GroupService } from '../../core/services/group/group-service';
 import { GroupOptions } from './group-options/group-options';
+import { error } from 'console';
 
 @Component({
   selector: 'app-group',
@@ -140,7 +141,7 @@ export class GroupView {
         if (!fetch.some((c) => c.id == this.selectedChat()?.id)) this.selectedChat.set(null);
       },
       error: () => {
-        this.groupChats.set(null);
+        this.groupService.selectedGroup.set(null);
         this.selectedGroup.set(null);
       },
     });
@@ -153,8 +154,13 @@ export class GroupView {
   refreshGroupMembersAfterInvite() {
     effect(() => {
       const invitedIds = this.invitedIds();
-      this.groupService.getUsersInGroup(this.selectedGroup()?.groupId!).subscribe((users) => {
-        this.groupMembers.set(users);
+      this.groupService.getUsersInGroup(this.selectedGroup()?.groupId!).subscribe({
+        next: (users) => {
+          this.groupMembers.set(users);
+        },
+        error: () => {
+          this.selectedGroup.set(null);
+        },
       });
     });
   }

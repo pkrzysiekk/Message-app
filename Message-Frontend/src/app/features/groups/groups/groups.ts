@@ -32,10 +32,12 @@ export class Groups {
   constructor() {
     this.listenForGroupUpdates();
     this.selectFirstGroupFallback();
+    this.selectedGroup = this.groupService.selectedGroup;
   }
 
   selectFirstGroupFallback() {
     effect(() => {
+      console.log('group changed!');
       if (!this.selectedGroup() && this.groups().length > 0) this.onSelectedGroup(this.groups()[0]);
     });
   }
