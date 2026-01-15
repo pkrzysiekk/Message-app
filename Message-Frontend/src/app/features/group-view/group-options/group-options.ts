@@ -33,10 +33,14 @@ export class GroupOptions {
   }
 
   onGroupDeleteConfirm() {
-    this.messageService.sendGroupRemovedEvent(this.selectedGroup()?.groupId!);
-    this.onGroupDelete();
-    this.onModalClose();
-    this.selectedGroup.set(null);
+    this.groupService.deleteGroup(this.selectedGroup()?.groupId!).subscribe({
+      next: () => {
+        this.messageService.sendGroupRemovedEvent(this.selectedGroup()?.groupId!);
+        this.onGroupDelete();
+        this.onModalClose();
+        this.selectedGroup.set(null);
+      },
+    });
   }
 
   toggleMemberDetailsModal = () => {

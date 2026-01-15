@@ -90,7 +90,6 @@ public class MessageAuthorizationService :IMessageAuthorizationService
 
     public async Task<bool> CanSendRemoveGroup(int groupId, int userId)
     {
-        var isUserOwner = await IsUserOwner(groupId, userId);
         Group? deletedGroup = null;
 
         try
@@ -103,6 +102,6 @@ public class MessageAuthorizationService :IMessageAuthorizationService
         }
         
         bool isGroupDeleted = deletedGroup ==  null;
-        return isUserOwner && isGroupDeleted;
+        return isGroupDeleted;
     }
 }
