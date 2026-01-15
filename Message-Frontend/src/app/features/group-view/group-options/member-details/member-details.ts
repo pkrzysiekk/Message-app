@@ -60,12 +60,20 @@ export class MemberDetails {
   onRoleUpdate() {
     if (this.selectedRole() == null) return;
     console.log('Update');
-    this.messageService.updateUserRole(
-      this.selectedUser()?.id!,
-      this.selectedGroup()?.groupId!,
-      this.selectedRole()!,
-    );
-    this.onModalClose();
+    this.groupService
+      .updateUserRole(this.selectedUser()?.id!, {
+        groupId: this.selectedGroup()?.groupId!,
+        groupRole: this.selectedRole()!,
+      })
+      .subscribe({
+        next: () => {
+          this.messageService.SendUserRoleUpdatedEvent(
+            this.selectedUser()?.id!,
+            this.selectedGroup()?.groupId!,
+          );
+          this.onModalClose();
+        },
+      });
   }
 
   onUserRemoval() {

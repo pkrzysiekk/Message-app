@@ -62,6 +62,7 @@ export class GroupService {
   }
 
   updateUserRole(userId: number, req: UserRoleRequest) {
+    console.log('req', req);
     return this.http.put(`${this.baseApiUrl}/${userId}/update-group-role`, req);
   }
 

@@ -70,7 +70,7 @@ namespace Message_Backend.Presentation.Controllers
         public async Task<ActionResult> AddUserToGroup
             ([FromRoute] int userId, [FromBody] UserGroupRoleRequest roleRequest)
         {
-           await _groupService.AddUserToGroup(userId, roleRequest.GroupId, roleRequest.Role); 
+           await _groupService.AddUserToGroup(userId, roleRequest.GroupId, roleRequest.GroupRole); 
            return Ok();
         }
 
@@ -87,7 +87,7 @@ namespace Message_Backend.Presentation.Controllers
         public async Task<ActionResult> UpdateUserRole
             ([FromRoute] int userId,[FromBody] UserGroupRoleRequest request)
         {
-            await _groupService.UpdateUserRoleInGroup(userId,request.GroupId, request.Role);
+            await _groupService.UpdateUserRoleInGroup(userId,request.GroupId, request.GroupRole);
             return Ok();
         }
 

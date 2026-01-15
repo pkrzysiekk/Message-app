@@ -129,9 +129,8 @@ export class MessageService {
     this.connection.invoke('RemoveMessage', messageId);
   }
 
-  updateUserRole(userId: number, groupId: number, groupRole: number) {
-    console.log(userId, groupId, groupRole);
-    this.connection.invoke('UpdateRole', userId, groupId, groupRole);
+  SendUserRoleUpdatedEvent(userId: number, groupId: number) {
+    this.connection.invoke('SendUserRoleUpdatedEvent', userId, groupId);
   }
 
   removeUser(userIdToRemove: number, groupId: number) {

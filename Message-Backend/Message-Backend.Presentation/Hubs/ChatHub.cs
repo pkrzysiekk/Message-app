@@ -19,19 +19,19 @@ public class ChatHub :Hub<IChatClient>
 {
     private readonly IMessageService _messageService;
     private readonly IChatService _chatService;
-    private readonly IUserService _userService;
     private readonly IMessageAuthorizationService _messageAuthorizationService;
+    private readonly IUserChatService _userChatService;
     private readonly IGroupService _groupService;
    
     public ChatHub
         (IMessageService messageService, IChatService chatService,
-            IUserService userService, IMessageAuthorizationService authorizationService, IGroupService groupService)
+             IMessageAuthorizationService authorizationService, IGroupService groupService,IUserChatService userChatService)
     {
         _messageService = messageService;
         _chatService = chatService;
-        _userService = userService;
         _messageAuthorizationService = authorizationService;
         _groupService = groupService;
+        _userChatService =  userChatService;
     }
 
     public override async Task OnConnectedAsync()
@@ -90,7 +90,7 @@ public class ChatHub :Hub<IChatClient>
         Context.Items["ChatIds"] =updatedList;
     }
 
-    public async Task UpdateRole(int userIdToUpdate, int groupId,GroupRole role)
+    public async Task SendUserRoleUpdatedEvent(int userIdToUpdate, int groupId)
     {
         var userId = int.Parse(
             Context.User.FindFirstValue(ClaimTypes.NameIdentifier)
@@ -98,7 +98,6 @@ public class ChatHub :Hub<IChatClient>
         
         if (!await _messageAuthorizationService.IsUserOwner(groupId, userId))
             throw new HubException("Unauthorized");
-        await _groupService.UpdateUserRoleInGroup(userIdToUpdate, groupId, role);
         await Clients.Group($"group:{groupId}").ReceiveGroupRoleChangedEvent(groupId);
     }
 
