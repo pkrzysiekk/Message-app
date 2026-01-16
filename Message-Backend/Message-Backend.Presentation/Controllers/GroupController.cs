@@ -17,12 +17,12 @@ namespace Message_Backend.Presentation.Controllers
     public class GroupController : ControllerBase
     {
         private readonly IGroupService _groupService;
-        private readonly IUserChatService _userChatService;
+        private readonly IChatService _chatService;
 
-        public GroupController(IGroupService groupService, IUserChatService userChatService)
+        public GroupController(IGroupService groupService, IChatService chatService)
         {
            _groupService = groupService; 
-           _userChatService = userChatService;
+           _chatService = chatService;
         } 
 
         [HttpGet("{groupId}")]
@@ -74,7 +74,7 @@ namespace Message_Backend.Presentation.Controllers
             ([FromRoute] int userId, [FromBody] UserGroupRoleRequest roleRequest)
         {
            await _groupService.AddUserToGroup(userId, roleRequest.GroupId, roleRequest.GroupRole);
-           await _userChatService.EnsureUserChatsExists(userId,roleRequest.GroupId);
+           await _chatService.EnsureUserChatsExists(userId,roleRequest.GroupId);
            return Ok();
         }
 
@@ -92,7 +92,7 @@ namespace Message_Backend.Presentation.Controllers
             ([FromRoute] int userId,[FromBody] UserGroupRoleRequest request)
         {
             await _groupService.UpdateUserRoleInGroup(userId,request.GroupId, request.GroupRole);
-            await _userChatService.EnsureUserChatsExists(userId,request.GroupId);
+            await _chatService.EnsureUserChatsExists(userId,request.GroupId);
             return Ok();
         }
 

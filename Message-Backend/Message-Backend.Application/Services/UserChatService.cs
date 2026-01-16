@@ -9,12 +9,10 @@ namespace Message_Backend.Application.Services;
 public class UserChatService :BaseService<UserChat,int>,IUserChatService
 {
     private readonly IMessageService _messageService;
-    private readonly IChatService _chatService;
     public UserChatService
-        (IRepository<UserChat, int> repository,IMessageService messageService,IChatService chatService) : base(repository)
+        (IRepository<UserChat, int> repository,IMessageService messageService) : base(repository)
     {
         _messageService = messageService;
-        _chatService = chatService;
     }
 
     public async Task Create(UserChat userChat)
@@ -44,6 +42,14 @@ public class UserChatService :BaseService<UserChat,int>,IUserChatService
         
         return userChatInfo;
     }
+
+    public async Task<IEnumerable<UserChat>> GetUserChatsInGroup(int userId)
+    {
+       var userChats = await _repository.GetAll()
+           .Where(uc => uc.UserId == userId).ToListAsync(); 
+       return userChats;
+    }
+
     public async Task<int> GetNewMessagesCount(int userId, int chatId)
     {
         var userChatInfo = await GetByUserId(userId, chatId);
@@ -63,34 +69,6 @@ public class UserChatService :BaseService<UserChat,int>,IUserChatService
         return userCount;
     }
 
-    public async Task EnsureUserChatsExists(int userId, int groupId)
-    {
-        var allUserChatsInGroup = await _chatService.GetUserChatsInGroup(userId, groupId);
-        var allUserChats = await _repository.GetAll()
-            .Where(uc => uc.UserId == userId)
-            .Select(uc => uc.ChatId)
-            .ToListAsync();
-        var missingUserChats = allUserChatsInGroup
-            .Where(c=>!allUserChats.Contains(c.Id)).ToList();
-        
-        foreach (var missingUserChat in missingUserChats)
-        {
-            var userChatInfo = new UserChat()
-            {
-                UserId = userId,
-                ChatId = missingUserChat.Id,
-                LastMessageId = null,
-                LastReadAt = null
-            };
-            try
-            {
-                await _repository.Create(userChatInfo);
-            }
-            catch (DbUpdateException)
-            {
-            }
-            
-        }
+  
     }
 
-}

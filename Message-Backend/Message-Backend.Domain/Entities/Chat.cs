@@ -10,5 +10,6 @@ public class Chat :IEntity<int>
     public GroupRole ForRole { get; set; }
     
     public ICollection<Message> Messages { get; set; } = [];
+    public ICollection<UserChat> UserChats { get; set; } = [];
     public Group Group {get; set;}
 }
