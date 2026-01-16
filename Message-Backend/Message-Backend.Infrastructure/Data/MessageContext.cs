@@ -75,6 +75,11 @@ public class MessageContext :IdentityUserContext<User,int>
          .WithMany(c=>c.UserChats)
          .HasForeignKey(uc=>uc.ChatId)
          .OnDelete(DeleteBehavior.Cascade);
+      
+      modelBuilder.Entity<UserChat>()
+         .HasIndex(c=> new { c.UserId, c.ChatId })
+         .IsUnique();
+      
 
  }
 }

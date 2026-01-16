@@ -26,6 +26,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { GroupService } from '../../core/services/group/group-service';
 import { GroupOptions } from '../group-view/group-options/group-options';
 import { ChatDetails } from './chat-details/chat-details';
+import { ChatService } from '../../core/services/chat/chat-service';
 
 @Component({
   selector: 'app-chat',
@@ -50,6 +51,7 @@ export class ChatComponent {
   paginationPageSize = signal(20);
   userAvatars = signal<Map<number, Image>>(new Map());
   messageService = inject(MessageService);
+  chatService = inject(ChatService);
   userService = inject(UserService);
   groupService = inject(GroupService);
   showChatDetails = signal<boolean>(false);
@@ -66,7 +68,6 @@ export class ChatComponent {
         uniqueMessagesMap.set(m.messageId!, m);
       }
     });
-
     return Array.from(uniqueMessagesMap.values());
   });
 
@@ -77,13 +78,14 @@ export class ChatComponent {
     this.handleSignalR();
     this.loadUsersAvatar();
     this.handleMessageDelete();
+    this.setLastMessageRead();
+    this.handleUserChatInfoUpdate();
   }
 
   handleChatChange() {
     effect(() => {
       const chat = this.selectedChat();
       if (!chat) return;
-
       this.resetChatState();
 
       this.messageService
@@ -91,8 +93,24 @@ export class ChatComponent {
         .pipe(takeUntilDestroyed(this.destroyRef))
         .subscribe((msgs) => {
           this.messages.set(msgs);
+          this.lastMessageRead.set(msgs[msgs.length - 1]);
           requestAnimationFrame(() => this.scrollToBottom());
         });
+    });
+  }
+
+  setLastMessageRead() {
+    effect(() => {
+      this.lastMessageRead.set(this.chatMessages()[this.chatMessages().length - 1]);
+    });
+  }
+  handleUserChatInfoUpdate() {
+    effect(() => {
+      const chat = this.selectedChat();
+      if (!chat) return;
+      if (this.lastMessageRead()) {
+        this.chatService.updateUserChatInfo(this.lastMessageRead()!).subscribe();
+      }
     });
   }
 
@@ -182,7 +200,6 @@ export class ChatComponent {
   messageToSendForm = form(this.messageToSendModel, (schema) => required(schema.message));
 
   onSend() {
-    console.log('selected chat', this.selectedChat());
     if (this.messageToSendForm().invalid()) return;
 
     this.messageService.sendTextMessage(

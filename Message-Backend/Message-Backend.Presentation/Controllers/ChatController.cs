@@ -85,11 +85,12 @@ namespace Message_Backend.Presentation.Controllers
            return Ok(userChatsInGroup.Select(c=>c.ToDto()).ToList());
         }
 
-        [HttpPut("user-chats/{userId}")]
-        [Authorize(Policy = "GroupMember")]
+        [HttpPut("user-chat-info")]
         public async Task<ActionResult>
-            UpdateUserChats([FromRoute] int userId, [FromBody] UserChatDto userChatDto)
+            UpdateUserChats([FromBody] UserChatDto userChatDto)
         {
+            var userId = CookieHelper.GetUserIdFromCookie(User);
+            userChatDto.UserId = userId;
             var userChat = userChatDto.ToBo();
             await _userChatService.Update(userChat);
             return Ok();

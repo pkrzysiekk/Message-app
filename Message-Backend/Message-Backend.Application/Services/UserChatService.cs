@@ -22,9 +22,9 @@ public class UserChatService :BaseService<UserChat,int>,IUserChatService
 
     public async Task<UserChat> FindByUserId(int userId, int chatId)
     {
-        var userChatInfo =
+        var userChatInfo = await
             _repository.GetAll()
-                .FirstOrDefault(uc => uc.UserId == userId && uc.ChatId == chatId);
+                .FirstOrDefaultAsync(uc => uc.UserId == userId && uc.ChatId == chatId);
         if (userChatInfo is null)
             throw new NotFoundException("UserChat info has not been found");
         return userChatInfo;

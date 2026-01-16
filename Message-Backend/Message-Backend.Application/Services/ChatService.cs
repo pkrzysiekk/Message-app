@@ -77,7 +77,7 @@ public class ChatService : BaseService<Chat, int>, IChatService
         var allUserChatsInGroup = await GetUserChatsInGroup(userId, groupId);
         var allUserChats = await _userChatService.GetUserChatsInGroup(userId);
         
-        var allUserChatsIds=allUserChats.Select(uc => uc.Id).ToList();
+        var allUserChatsIds=allUserChats.Select(uc => uc.ChatId).ToList();
         
         var missingUserChats = allUserChatsInGroup
             .Where(c => !allUserChatsIds.Contains(c.Id)).ToList();

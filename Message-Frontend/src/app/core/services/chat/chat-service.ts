@@ -4,11 +4,15 @@ import { Chat } from './models/chat';
 import { Group } from '../group/models/group';
 import { Subject } from 'rxjs';
 import { GroupRole } from './models/groupRole';
+import { UserChat } from './models/userChat';
+import { UserService } from '../user/user-service';
+import { Message } from '../message/models/message';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ChatService {
+  userService = inject(UserService);
   http = inject(HttpClient);
   baseApiUrl = 'https://localhost/api/chat';
 
@@ -38,5 +42,17 @@ export class ChatService {
 
   getAllUserChatsInGroup(groupId: number) {
     return this.http.get<Chat[]>(`${this.baseApiUrl}/${groupId}/chats`);
+  }
+
+  updateUserChatInfo(lastMessageRead: Message) {
+    console.log('lastRead', lastMessageRead);
+    const userId = this.userService.localUser()?.id;
+    const userChat: UserChat = {
+      lastMessageId: lastMessageRead.messageId!,
+      lastReadAt: lastMessageRead.sentAt!,
+      chatId: lastMessageRead.chatId,
+      userId: userId!,
+    };
+    return this.http.put(`${this.baseApiUrl}/user-chat-info`, userChat);
   }
 }
