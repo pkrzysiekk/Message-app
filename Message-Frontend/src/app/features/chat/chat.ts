@@ -53,6 +53,7 @@ export class ChatComponent {
   userService = inject(UserService);
   groupService = inject(GroupService);
   showChatDetails = signal<boolean>(false);
+  lastMessageRead = signal<Message | null>(null);
   destroyRef = inject(DestroyRef);
 
   chatMessages = computed(() => {
@@ -119,6 +120,7 @@ export class ChatComponent {
 
         if (this.messagesFromHub().some((m) => m.messageId == msg.messageId)) return;
         this.messagesFromHub.update((list) => [...list, msg]);
+        this.lastMessageRead.set(msg);
 
         requestAnimationFrame(() => {
           if (this.isNearBottom()) {

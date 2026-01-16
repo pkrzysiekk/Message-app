@@ -2,6 +2,7 @@ using Message_Backend.Application.Interfaces;
 using Message_Backend.Application.Interfaces.Services;
 using Message_Backend.Application.Mappers;
 using Message_Backend.Application.Models.DTOs;
+using Message_Backend.Domain.Entities;
 using Message_Backend.Presentation.Helpers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -14,9 +15,11 @@ namespace Message_Backend.Presentation.Controllers
     public class ChatController : ControllerBase
     {
         private readonly IChatService _chatService;
-        public ChatController(IChatService chatService)
+        private readonly IUserChatService _userChatService;
+        public ChatController(IChatService chatService, IUserChatService userChatService)
         {
             _chatService = chatService;
+            _userChatService = userChatService;
         }
         
         [HttpGet("{chatId}")]
@@ -81,6 +84,15 @@ namespace Message_Backend.Presentation.Controllers
            var userChatsInGroup= await _chatService.GetUserChatsInGroup(userId, groupId);
            return Ok(userChatsInGroup.Select(c=>c.ToDto()).ToList());
         }
-        
+
+        [HttpPut("user-chats/{userId}")]
+        [Authorize(Policy = "GroupMember")]
+        public async Task<ActionResult>
+            UpdateUserChats([FromRoute] int userId, [FromBody] UserChatDto userChatDto)
+        {
+            var userChat = userChatDto.ToBo();
+            await _userChatService.Update(userChat);
+            return Ok();
+        }
     }
 }

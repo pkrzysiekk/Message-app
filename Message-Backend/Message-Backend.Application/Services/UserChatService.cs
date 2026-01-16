@@ -19,10 +19,20 @@ public class UserChatService :BaseService<UserChat,int>,IUserChatService
     {
         await _repository.Create(userChat);
     }
+
+    public async Task<UserChat> FindByUserId(int userId, int chatId)
+    {
+        var userChatInfo =
+            _repository.GetAll()
+                .FirstOrDefault(uc => uc.UserId == userId && uc.ChatId == chatId);
+        if (userChatInfo is null)
+            throw new NotFoundException("UserChat info has not been found");
+        return userChatInfo;
+    }
     
     public async Task Update(UserChat userChat)
     {
-        var  userChatToUpdate = await _repository.GetById(userChat.Id);
+        var userChatToUpdate = await FindByUserId(userChat.UserId, userChat.ChatId);
         if (userChatToUpdate == null)
             throw new NotFoundException("Entity not found");
         if (!userChat.LastMessageId.HasValue)
