@@ -55,7 +55,6 @@ export class ChatComponent {
   userService = inject(UserService);
   groupService = inject(GroupService);
   showChatDetails = signal<boolean>(false);
-  lastMessageRead = signal<Message | null>(null);
   destroyRef = inject(DestroyRef);
 
   chatMessages = computed(() => {
@@ -78,7 +77,6 @@ export class ChatComponent {
     this.handleSignalR();
     this.loadUsersAvatar();
     this.handleMessageDelete();
-    this.setLastMessageRead();
     this.handleUserChatInfoUpdate();
   }
 
@@ -93,24 +91,18 @@ export class ChatComponent {
         .pipe(takeUntilDestroyed(this.destroyRef))
         .subscribe((msgs) => {
           this.messages.set(msgs);
-          this.lastMessageRead.set(msgs[msgs.length - 1]);
           requestAnimationFrame(() => this.scrollToBottom());
         });
     });
   }
 
-  setLastMessageRead() {
-    effect(() => {
-      this.lastMessageRead.set(this.chatMessages()[this.chatMessages().length - 1]);
-    });
-  }
   handleUserChatInfoUpdate() {
     effect(() => {
       const chat = this.selectedChat();
       if (!chat) return;
-      if (this.lastMessageRead()) {
-        this.chatService.updateUserChatInfo(this.lastMessageRead()!).subscribe();
-      }
+      if (this.chatMessages().length == 0) return;
+      const lastMessage = this.chatMessages()[this.chatMessages().length - 1];
+      this.chatService.updateUserChatInfo(lastMessage).subscribe();
     });
   }
 
@@ -138,7 +130,6 @@ export class ChatComponent {
 
         if (this.messagesFromHub().some((m) => m.messageId == msg.messageId)) return;
         this.messagesFromHub.update((list) => [...list, msg]);
-        this.lastMessageRead.set(msg);
 
         requestAnimationFrame(() => {
           if (this.isNearBottom()) {
