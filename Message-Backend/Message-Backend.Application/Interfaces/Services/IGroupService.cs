@@ -13,4 +13,6 @@ public interface IGroupService :IBaseService<Group,int>
     public Task UpdateUserRoleInGroup(int userId, int groupId, GroupRole role);
     public Task<GroupRole?> GetUserRoleInGroup(int userId, int groupId);
     public Task<IEnumerable<User>> GetUsersInGroup(int groupId);
+    public Task<bool> GroupHasNewMessages(int groupId, int userId);
+
 }

@@ -71,7 +71,7 @@ public class UserChatService :BaseService<UserChat,int>,IUserChatService
 
     private async Task<int> GetUserNewChatMessageCount(int userId, int chatId, DateTime lastReadAt)
     {
-        return await _repository.GetAll() // IQueryable<UserChat>
+        return await _repository.GetAll() 
             .Where(uc => uc.UserId == userId && uc.ChatId == chatId)
             .SelectMany(uc => uc.Chat.Messages)
             .CountAsync(m => m.SentAt > lastReadAt);

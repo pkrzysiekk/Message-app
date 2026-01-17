@@ -11,4 +11,5 @@ public interface IUserChatService : IBaseService<UserChat, int>
     public Task<int> GetNewMessagesCountByChat(int userId, int chatId);
 
 
+
 }

@@ -11,12 +11,15 @@ namespace Message_Backend.Application.Services;
 public class GroupService :BaseService<Group,int>,IGroupService
 {
     private readonly IUserService _userService;
+    private readonly IUserChatService _userChatService;
     public GroupService
         (IRepository<Group,int> repository,
-            IUserService userService
+            IUserService userService,
+            IUserChatService userChatService
         ):base(repository)
     {
         _userService = userService;
+        _userChatService = userChatService;
     }
 
     public async Task CreateGroup(Group group,int creatorId)
@@ -88,6 +91,20 @@ public class GroupService :BaseService<Group,int>,IGroupService
             .Select(g=>g.User)
                 .ToList();
         return userGroups;
+    }
+
+    public async Task<bool> GroupHasNewMessages(int groupId,int userId)
+    {
+        var GroupHasNewMessages =await _repository.GetAll()
+            .Where(g => g.Id == groupId)
+            .SelectMany(g => g.Chats)
+            .SelectMany(c => c.UserChats)
+            .Where(uc => uc.UserId == userId)
+            .SelectMany(uc => uc.Chat.Messages
+                .Where(m => m.SentAt > uc.LastReadAt))
+            .AnyAsync();
+        return GroupHasNewMessages;
+
     }
 
 }
