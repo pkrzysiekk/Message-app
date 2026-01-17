@@ -30,15 +30,7 @@ import { ChatService } from '../../core/services/chat/chat-service';
 
 @Component({
   selector: 'app-chat',
-  imports: [
-    DatePipe,
-    Field,
-    ImageParsePipe,
-    RouterLink,
-    MessageToDataUrlPipe,
-    GroupOptions,
-    ChatDetails,
-  ],
+  imports: [DatePipe, Field, ImageParsePipe, RouterLink, MessageToDataUrlPipe, ChatDetails],
   templateUrl: './chat.html',
   styleUrl: './chat.css',
 })

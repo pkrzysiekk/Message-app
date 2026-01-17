@@ -8,4 +8,5 @@ public interface IMessageService : IBaseService<Message,long>
 
      public Task Add(Message message);
     public Task Update(long messageId, MessageContent content);
+
 }

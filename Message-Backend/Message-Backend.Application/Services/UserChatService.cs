@@ -60,7 +60,7 @@ public class UserChatService :BaseService<UserChat,int>,IUserChatService
        return userChats;
     }
 
-    public async Task<int> GetNewMessagesCount(int userId, int chatId)
+    public async Task<int> GetNewMessagesCountByChat(int userId, int chatId)
     {
         var userChatInfo = await GetByUserId(userId, chatId);
         if (userChatInfo.LastMessageId is null || userChatInfo.LastReadAt is null)
@@ -71,14 +71,12 @@ public class UserChatService :BaseService<UserChat,int>,IUserChatService
 
     private async Task<int> GetUserNewChatMessageCount(int userId, int chatId, DateTime lastReadAt)
     {
-        var userCount = await _repository.GetAll()
-            .Include(uc=>uc.Message)
-            .Select(uc => uc.Message)
-            .Where(m => m.ChatId == chatId && lastReadAt < m.SentAt)
-            .CountAsync();
-        return userCount;
+        return await _repository.GetAll() // IQueryable<UserChat>
+            .Where(uc => uc.UserId == userId && uc.ChatId == chatId)
+            .SelectMany(uc => uc.Chat.Messages)
+            .CountAsync(m => m.SentAt > lastReadAt);
     }
 
   
-    }
+}
 

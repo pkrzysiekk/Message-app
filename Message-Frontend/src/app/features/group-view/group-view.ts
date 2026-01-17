@@ -59,6 +59,22 @@ export class GroupView {
     this.searchTerm.set(value);
   }
 
+  CheckNewMessageCount() {
+    effect(() => {
+      this.groupChats()?.map((c) => {
+        this.chatService
+          .getUserNewMessagesCountByChat(c.id!)
+          .pipe(takeUntilDestroyed(this.destroyRef))
+          .subscribe({
+            next: (messageCount) => {
+              c.newMessageCount = messageCount;
+              console.log('updated chat', c);
+            },
+          });
+      });
+    });
+  }
+
   GroupRole = GroupRole;
   chatTypeOptions = Object.values(GroupRole)
     .filter((v) => typeof v === 'number')
@@ -84,6 +100,7 @@ export class GroupView {
     this.fetchGroupMembers();
     this.listenForChatUpdates();
     this.refreshGroupMembersAfterInvite();
+    this.CheckNewMessageCount();
 
     effect(() => {
       if (!this.selectedGroup()) this.selectedChat.set(null);

@@ -95,5 +95,13 @@ namespace Message_Backend.Presentation.Controllers
             await _userChatService.Update(userChat);
             return Ok();
         }
+
+        [HttpGet("user-chat-info/{chatId}")]
+        public async Task<ActionResult<int>> GetUserNewMessagesCountByChat([FromRoute] int chatId)
+        {
+            var userId = CookieHelper.GetUserIdFromCookie(User);
+            var newMessagesCount = await _userChatService.GetNewMessagesCountByChat(userId, chatId);
+            return Ok(newMessagesCount);
+        }
     }
 }

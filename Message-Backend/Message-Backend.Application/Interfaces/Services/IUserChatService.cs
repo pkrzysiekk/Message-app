@@ -8,5 +8,7 @@ public interface IUserChatService : IBaseService<UserChat, int>
     public Task<UserChat?> GetByUserId(int userId, int chatId);
     public Task Update(UserChat userChat);
     public Task<IEnumerable<UserChat>> GetUserChatsInGroup(int userId);
+    public Task<int> GetNewMessagesCountByChat(int userId, int chatId);
+
 
 }

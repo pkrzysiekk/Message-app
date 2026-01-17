@@ -45,13 +45,6 @@ public class MessageService : BaseService<Message,long>,IMessageService
         }
         return chatMessages.Reverse();
     }
-
-
-
-
- 
-    
-
     public override async Task<Message> GetById(long id)
     {
         var messageToGet = await _repository.GetAll()

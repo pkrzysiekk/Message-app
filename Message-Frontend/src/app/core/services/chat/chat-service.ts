@@ -55,4 +55,8 @@ export class ChatService {
     };
     return this.http.put(`${this.baseApiUrl}/user-chat-info`, userChat);
   }
+
+  getUserNewMessagesCountByChat(chatId: number) {
+    return this.http.get<number>(`${this.baseApiUrl}/user-chat-info/${chatId}`);
+  }
 }

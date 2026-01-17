@@ -5,4 +5,5 @@ export interface Chat {
   groupId: number;
   chatName: string;
   forRole: GroupRole;
+  newMessageCount?: number;
 }
