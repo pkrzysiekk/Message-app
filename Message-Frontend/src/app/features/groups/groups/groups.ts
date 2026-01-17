@@ -35,9 +35,19 @@ export class Groups {
     this.listenForGroupUpdates();
     this.selectFirstGroupFallback();
     this.selectedGroup = this.groupService.selectedGroup;
+    this.listenForSelectedGroupUpdates();
+  }
+
+  selectFirstGroupFallback() {
+    effect(() => {
+      console.log('group changed!');
+      if (!this.selectedGroup() && this.groups().length > 0) this.onSelectedGroup(this.groups()[0]);
+    });
+  }
+
+  listenForSelectedGroupUpdates() {
     effect(() => {
       const selectedGroup = this.groupService.selectedGroup();
-      console.log('selected', selectedGroup);
       if (!selectedGroup) return;
       this.groups.update((list) => {
         const newList = [...list];
@@ -45,13 +55,6 @@ export class Groups {
         newList.splice(index, 1, selectedGroup);
         return newList;
       });
-    });
-  }
-
-  selectFirstGroupFallback() {
-    effect(() => {
-      console.log('group changed!');
-      if (!this.selectedGroup() && this.groups().length > 0) this.onSelectedGroup(this.groups()[0]);
     });
   }
 
