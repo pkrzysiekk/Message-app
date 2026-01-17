@@ -7,6 +7,7 @@ import { ClickedOutside } from '../../../shared/directives/clicked-outside/click
 import { form, required, Field } from '@angular/forms/signals';
 import { MessageService } from '../../../core/services/message/message-service';
 import { sign } from 'crypto';
+import { forkJoin, map, switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-groups',
@@ -17,6 +18,7 @@ import { sign } from 'crypto';
 export class Groups {
   groupService = inject(GroupService);
   groups = signal<Group[]>([]);
+  groupsToShow = signal<Group[]>([]);
   selectedGroup = signal<Group | null>(null);
   showCreateForm = signal<boolean>(false);
   showGroupList = signal<boolean>(true);
@@ -33,6 +35,17 @@ export class Groups {
     this.listenForGroupUpdates();
     this.selectFirstGroupFallback();
     this.selectedGroup = this.groupService.selectedGroup;
+    effect(() => {
+      const selectedGroup = this.groupService.selectedGroup();
+      console.log('selected', selectedGroup);
+      if (!selectedGroup) return;
+      this.groups.update((list) => {
+        const newList = [...list];
+        const index = list.findIndex((g) => g.groupId == selectedGroup.groupId);
+        newList.splice(index, 1, selectedGroup);
+        return newList;
+      });
+    });
   }
 
   selectFirstGroupFallback() {
@@ -63,13 +76,24 @@ export class Groups {
   }
 
   fetchGroups() {
-    this.groupService.getUserGroups().subscribe({
-      next: (fetched) => {
-        this.groups.set(fetched);
-        console.log(this.groups());
-      },
-    });
+    this.groupService
+      .getUserGroups()
+      .pipe(
+        switchMap((groups) => {
+          return forkJoin(
+            groups.map((g) =>
+              this.groupService
+                .groupHasNewMessages(g.groupId!)
+                .pipe(map((hasNew) => ({ ...g, hasNewMessages: hasNew }))),
+            ),
+          );
+        }),
+      )
+      .subscribe((groupsWithFlags) => {
+        this.groups.set(groupsWithFlags);
+      });
   }
+
   onSelectedGroup(group: Group) {
     this.groupService.setSelectedGroup(group);
     this.groupService.setUserGroupRole(group.groupId!);

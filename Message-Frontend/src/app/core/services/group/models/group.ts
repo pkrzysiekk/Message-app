@@ -6,4 +6,5 @@ export interface Group {
   createdAt?: string;
   groupType: GroupType;
   usersInGroup?: number[];
+  hasNewMessages?: boolean;
 }

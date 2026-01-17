@@ -81,4 +81,8 @@ export class GroupService {
   getUsersInGroup(groupId: number) {
     return this.http.get<User[]>(`${this.baseApiUrl}/${groupId}/members`);
   }
+
+  groupHasNewMessages(groupId: number) {
+    return this.http.get<boolean>(`${this.baseApiUrl}/${groupId}/hasNewMessages`);
+  }
 }

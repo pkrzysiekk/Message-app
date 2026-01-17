@@ -29,7 +29,12 @@
             [class.bg-gray-700]="selectedGroup()?.groupId === group.groupId"
             [class.text-white]="selectedGroup()?.groupId === group.groupId"
           >
-            <span class="truncate">{{ group.groupName }}</span>
+            <span
+              class="truncate"
+              [class.font-extrabold]="group.hasNewMessages"
+              [class.underline]="group.hasNewMessages"
+              >{{ group.groupName }}</span
+            >
           </li>
         }
       </ul>

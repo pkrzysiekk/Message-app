@@ -119,6 +119,15 @@ namespace Message_Backend.Presentation.Controllers
             var users = await _groupService.GetUsersInGroup(groupId); 
             return Ok(users.Select(user => user.ToDto()));
         }
+
+        [HttpGet("{groupId}/hasNewMessages")]
+        [Authorize(Policy = "GroupMember")]
+        public async Task<ActionResult<bool>> HasNewMessages([FromRoute] int groupId)
+        {
+            var userId = CookieHelper.GetUserIdFromCookie(User);
+            var hasNewMessages =await _groupService.GroupHasNewMessages(groupId, userId);
+            return Ok(hasNewMessages);
+        }
  
     }
 }

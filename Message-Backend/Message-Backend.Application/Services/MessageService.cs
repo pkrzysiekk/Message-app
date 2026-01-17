@@ -62,6 +62,14 @@ public class MessageService : BaseService<Message,long>,IMessageService
         await _repository.Create(message);
     }
 
+    public async Task<int> GetNewMessagesCountByChat(int chatId)
+    {
+       var messageCount =await  _repository.GetAll()
+           .Where(m => m.ChatId == chatId)
+           .CountAsync();
+       return messageCount;
+    }
+
     public async Task Update(long messageId, MessageContent content)
     {
         var message = await _repository

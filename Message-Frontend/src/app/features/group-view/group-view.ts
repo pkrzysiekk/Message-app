@@ -12,7 +12,7 @@ import { Friends } from '../friends/friends/friends';
 import { FriendsInvitation } from '../../core/DTO/friendsInvitation';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { User } from '../../core/models/user';
-import { take } from 'rxjs';
+import { forkJoin, map, switchMap, take } from 'rxjs';
 import { ImageParsePipe } from '../../shared/pipes/image-parse-pipe/image-parse-pipe';
 import { GroupService } from '../../core/services/group/group-service';
 import { GroupOptions } from './group-options/group-options';
@@ -31,6 +31,7 @@ export class GroupView {
   groupService = inject(GroupService);
   userService = inject(UserService);
   destroyRef = inject(DestroyRef);
+  refreshSignal = signal(0);
   selectedGroup = signal<Group | null>(null);
   groupChats = model<Chat[] | null>(null);
   userGroupRole = model<GroupRole | null>(null);
@@ -100,7 +101,6 @@ export class GroupView {
     this.fetchGroupMembers();
     this.listenForChatUpdates();
     this.refreshGroupMembersAfterInvite();
-    this.CheckNewMessageCount();
 
     effect(() => {
       if (!this.selectedGroup()) this.selectedChat.set(null);
@@ -110,7 +110,7 @@ export class GroupView {
   listenForChatUpdates() {
     this.messageService.refreshChat$.subscribe({
       next: () => {
-        this.refreshChats();
+        this.refreshSignal.update((v) => v + 1);
       },
       error: () => {
         this.selectedChat.set(null);
@@ -139,16 +139,33 @@ export class GroupView {
   fetchChats() {
     effect((onCleanup) => {
       const group = this.selectedGroup();
-      if (!group) return;
-      const sub = this.chatService.getAllUserChatsInGroup(group.groupId!).subscribe({
-        next: (chats) => {
-          console.log('chats', chats);
-          this.groupChats.set(chats);
-        },
-      });
-      onCleanup(() => {
-        sub.unsubscribe();
-      });
+      const refreshSignal = this.refreshSignal();
+      if (!group) {
+        this.groupChats.set([]);
+        return;
+      }
+
+      const sub = this.chatService
+        .getAllUserChatsInGroup(group.groupId!)
+        .pipe(
+          switchMap((chats) =>
+            forkJoin(
+              chats.map((c) =>
+                this.chatService.getUserNewMessagesCountByChat(c.id!).pipe(
+                  map((count) => ({
+                    ...c,
+                    newMessageCount: count,
+                  })),
+                ),
+              ),
+            ),
+          ),
+        )
+        .subscribe((updatedChats) => {
+          this.groupChats.set(updatedChats);
+        });
+
+      onCleanup(() => sub.unsubscribe());
     });
   }
 
@@ -202,7 +219,19 @@ export class GroupView {
   }
 
   onChatSelect(chat: Chat) {
+    chat.newMessageCount = 0;
     this.selectedChat.set(chat);
+    this.checkIfAllMessagesRead();
+  }
+
+  checkIfAllMessagesRead() {
+    const allChatsRead = this.groupChats()?.every((c) => c.newMessageCount == 0);
+    if (allChatsRead)
+      this.groupService.selectedGroup.update((g) => {
+        const updatedGroup = g;
+        updatedGroup!.hasNewMessages = false;
+        return updatedGroup;
+      });
   }
 
   getFriendsToAdd() {

@@ -95,16 +95,15 @@ public class GroupService :BaseService<Group,int>,IGroupService
 
     public async Task<bool> GroupHasNewMessages(int groupId,int userId)
     {
-        var GroupHasNewMessages =await _repository.GetAll()
+        var groupHasNewMessages =await _repository.GetAll()
             .Where(g => g.Id == groupId)
             .SelectMany(g => g.Chats)
             .SelectMany(c => c.UserChats)
             .Where(uc => uc.UserId == userId)
             .SelectMany(uc => uc.Chat.Messages
-                .Where(m => m.SentAt > uc.LastReadAt))
+                .Where(m => m.SentAt > uc.LastReadAt || uc.LastReadAt == null))
             .AnyAsync();
-        return GroupHasNewMessages;
-
+        return groupHasNewMessages;
     }
 
 }

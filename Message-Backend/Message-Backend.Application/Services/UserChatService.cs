@@ -64,7 +64,7 @@ public class UserChatService :BaseService<UserChat,int>,IUserChatService
     {
         var userChatInfo = await GetByUserId(userId, chatId);
         if (userChatInfo.LastMessageId is null || userChatInfo.LastReadAt is null)
-            return 0; 
+            return await _messageService.GetNewMessagesCountByChat(chatId);r 
         var newMessagesCount = await GetUserNewChatMessageCount(userId, chatId, userChatInfo.LastReadAt.Value);
         return newMessagesCount;
     }
@@ -76,6 +76,7 @@ public class UserChatService :BaseService<UserChat,int>,IUserChatService
             .SelectMany(uc => uc.Chat.Messages)
             .CountAsync(m => m.SentAt > lastReadAt);
     }
+
 
   
 }
