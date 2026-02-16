@@ -1,4 +1,13 @@
-import { Component, computed, DestroyRef, effect, inject, model, signal } from '@angular/core';
+import {
+  Component,
+  computed,
+  DestroyRef,
+  effect,
+  inject,
+  model,
+  Signal,
+  signal,
+} from '@angular/core';
 import { Group } from '../../core/services/group/models/group';
 import { Chat } from '../../core/services/chat/models/chat';
 import { UserService } from '../../core/services/user/user-service';
@@ -35,7 +44,7 @@ export class GroupView {
   selectedGroup = signal<Group | null>(null);
   groupChats = model<Chat[] | null>(null);
   userGroupRole = model<GroupRole | null>(null);
-  selectedChat = model<Chat | null>(null);
+  selectedChat: Signal<Chat | null>;
   userId = this.userService.localUser()?.id;
 
   showCreateChatForm = signal<boolean>(false);
@@ -97,13 +106,14 @@ export class GroupView {
 
   constructor() {
     this.selectedGroup = this.groupService.selectedGroup;
+    this.selectedChat = this.chatService.selectedChat;
     this.fetchChats();
     this.fetchGroupMembers();
     this.listenForChatUpdates();
     this.refreshGroupMembersAfterInvite();
 
     effect(() => {
-      if (!this.selectedGroup()) this.selectedChat.set(null);
+      if (!this.selectedGroup()) this.chatService.setSelectedChat(null);
     });
   }
 
@@ -113,7 +123,7 @@ export class GroupView {
         this.refreshSignal.update((v) => v + 1);
       },
       error: () => {
-        this.selectedChat.set(null);
+        this.chatService.setSelectedChat(null);
         this.selectedGroup.set(null);
       },
     });
@@ -173,11 +183,12 @@ export class GroupView {
     this.chatService.getAllUserChatsInGroup(this.selectedGroup()?.groupId!).subscribe({
       next: (fetch) => {
         this.groupChats.set(fetch);
-        if (!fetch.some((c) => c.id == this.selectedChat()?.id)) this.selectedChat.set(null);
+        if (!fetch.some((c) => c.id == this.selectedChat()?.id))
+          this.chatService.setSelectedChat(null);
       },
       error: () => {
         this.selectedGroup.set(null);
-        this.selectedChat.set(null);
+        this.chatService.setSelectedChat(null);
       },
     });
   }
@@ -220,7 +231,7 @@ export class GroupView {
 
   onChatSelect(chat: Chat) {
     chat.newMessageCount = 0;
-    this.selectedChat.set(chat);
+    this.chatService.setSelectedChat(chat);
     this.checkIfAllMessagesRead();
   }
 

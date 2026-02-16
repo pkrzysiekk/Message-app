@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { inject, Injectable } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
 import { Chat } from './models/chat';
 import { Group } from '../group/models/group';
 import { Subject } from 'rxjs';
@@ -13,9 +13,11 @@ import { Message } from '../message/models/message';
 })
 export class ChatService {
   userService = inject(UserService);
+  private _selectedChat = signal<Chat | null>(null);
+  selectedChat = this._selectedChat.asReadonly();
   http = inject(HttpClient);
   baseApiUrl = 'https://localhost/api/chat';
-
+  //TODO: user doesn't get new msg notif via SignalR
   get(id: number) {
     return this.http.get<Chat>(`${this.baseApiUrl}/${id}`);
   }
@@ -58,5 +60,9 @@ export class ChatService {
 
   getUserNewMessagesCountByChat(chatId: number) {
     return this.http.get<number>(`${this.baseApiUrl}/user-chat-info/${chatId}`);
+  }
+
+  setSelectedChat(chat: Chat | null) {
+    this._selectedChat.set(chat);
   }
 }

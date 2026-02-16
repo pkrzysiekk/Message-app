@@ -6,6 +6,7 @@ import {
   ElementRef,
   inject,
   model,
+  Signal,
   signal,
   ViewChild,
 } from '@angular/core';
@@ -36,7 +37,7 @@ import { ChatService } from '../../core/services/chat/chat-service';
 })
 export class ChatComponent {
   @ViewChild('chatContainer') chatContainer!: ElementRef<HTMLDivElement>;
-  selectedChat = model<Chat | null>(null);
+  selectedChat: Signal<Chat | null>;
   messages = signal<Message[]>([]);
   messagesFromHub = signal<Message[]>([]);
   paginationPage = signal(1);
@@ -65,6 +66,7 @@ export class ChatComponent {
   avatarFor = (userId: number) => computed(() => this.userAvatars().get(userId));
 
   constructor() {
+    this.selectedChat = this.chatService.selectedChat;
     this.handleChatChange();
     this.handleSignalR();
     this.loadUsersAvatar();
