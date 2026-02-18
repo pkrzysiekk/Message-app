@@ -17,6 +17,7 @@ export class MessageService {
   refreshChat$ = this.refreshChat.asObservable();
   groupService = inject(GroupService);
   chatService = inject(ChatService);
+  groupChats = this.chatService.groupChats;
   baseApiUrl = 'https://localhost/api/message';
   http = inject(HttpClient);
   incomingMessage$ = new Subject<Message>();
@@ -119,10 +120,18 @@ export class MessageService {
   notifyAboutNewMessage(message: Message, groupId: number) {
     const groupToUpdate = this.groupService.groups().find((g) => g.groupId == groupId);
     const isChatOpened = this.chatService.selectedChat()?.id == message.chatId;
+    const openedGroupChats = this.groupChats()?.find((c) => c.id == message.chatId);
     if (groupToUpdate && !isChatOpened) {
       groupToUpdate.hasNewMessages = true;
       this.groupService.groups.update((g) =>
         g.map((group) => (group.groupId == groupId ? { ...groupToUpdate } : group)),
+      );
+    }
+
+    if (openedGroupChats && !isChatOpened) {
+      openedGroupChats.newMessageCount!++;
+      this.groupChats.update((gc) =>
+        gc!.map((c) => (c.id == message.chatId ? { ...openedGroupChats } : c)),
       );
     }
   }

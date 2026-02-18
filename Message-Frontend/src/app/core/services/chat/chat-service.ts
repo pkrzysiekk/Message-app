@@ -15,6 +15,7 @@ export class ChatService {
   userService = inject(UserService);
   private _selectedChat = signal<Chat | null>(null);
   selectedChat = this._selectedChat.asReadonly();
+  groupChats = signal<Chat[] | null>(null);
   http = inject(HttpClient);
   baseApiUrl = 'https://localhost/api/chat';
   //TODO: user doesn't get new msg notif via SignalR

@@ -42,7 +42,7 @@ export class GroupView {
   destroyRef = inject(DestroyRef);
   refreshSignal = signal(0);
   selectedGroup = signal<Group | null>(null);
-  groupChats = model<Chat[] | null>(null);
+  groupChats = signal<Chat[] | null>(null);
   userGroupRole = model<GroupRole | null>(null);
   selectedChat: Signal<Chat | null>;
   userId = this.userService.localUser()?.id;
@@ -107,6 +107,7 @@ export class GroupView {
   constructor() {
     this.selectedGroup = this.groupService.selectedGroup;
     this.selectedChat = this.chatService.selectedChat;
+    this.groupChats = this.chatService.groupChats;
     this.fetchChats();
     this.fetchGroupMembers();
     this.listenForChatUpdates();

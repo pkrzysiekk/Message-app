@@ -8,6 +8,7 @@ import { form, required, Field } from '@angular/forms/signals';
 import { MessageService } from '../../../core/services/message/message-service';
 import { sign } from 'crypto';
 import { forkJoin, map, switchMap } from 'rxjs';
+import { ChatService } from '../../../core/services/chat/chat-service';
 
 @Component({
   selector: 'app-groups',
@@ -23,6 +24,7 @@ export class Groups {
   showGroupList = signal<boolean>(true);
   messageService = inject(MessageService);
   initialGroupSelected = signal<boolean>(false);
+  chatService = inject(ChatService);
 
   requiredFieldMessageError = `This field is required`;
   createGroupModel = signal({ groupName: '' });
@@ -47,6 +49,7 @@ export class Groups {
   listenForSelectedGroupUpdates() {
     effect(() => {
       const selectedGroup = this.groupService.selectedGroup();
+      const selectedChat = this.chatService.selectedChat();
       if (!selectedGroup) return;
       this.groups.update((list) => {
         const newList = [...list];
