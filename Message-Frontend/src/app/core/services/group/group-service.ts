@@ -14,6 +14,7 @@ export class GroupService {
   baseApiUrl = 'https://localhost/api/group';
   userService = inject(UserService);
   selectedUserGroupRole = signal<GroupRole | null>(null);
+  groups = signal<Group[]>([]);
   selectedGroup = signal<Group | null>(null);
 
   setUserGroupRole(groupId: number) {

@@ -178,9 +178,10 @@ public class ChatHub :Hub<IChatClient>
         messageDto.SenderId = int.Parse(callersId);
         var messageBo = messageDto.ToBo();
         await _messageService.Add(messageBo);
+        var chat =await _chatService.GetById(messageDto.ChatId);
         var finalMessage = messageBo.ToDto();
         finalMessage.SenderName = Context.User?.Identity?.Name;
-        await Clients.Group($"chat:{messageBo.ChatId}").ReceiveMessage(finalMessage);
+        await Clients.Group($"chat:{messageBo.ChatId}").ReceiveMessage(finalMessage,chat.GroupId);
     }
 
     public async Task SendConnectionStateChanged(int groupId)

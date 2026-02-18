@@ -17,8 +17,7 @@ import { forkJoin, map, switchMap } from 'rxjs';
 })
 export class Groups {
   groupService = inject(GroupService);
-  groups = signal<Group[]>([]);
-  groupsToShow = signal<Group[]>([]);
+  groups = this.groupService.groups;
   selectedGroup = signal<Group | null>(null);
   showCreateForm = signal<boolean>(false);
   showGroupList = signal<boolean>(true);

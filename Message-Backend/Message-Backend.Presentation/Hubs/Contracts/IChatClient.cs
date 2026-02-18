@@ -5,7 +5,7 @@ namespace Message_Backend.Presentation.Hubs.Contracts;
 
 public interface IChatClient
 {
-    Task ReceiveMessage(MessageDto message);
+    Task ReceiveMessage(MessageDto message,int groupId);
     Task ReceiveMessageRemovedEvent(MessageDto message);
     Task ReceiveAddToGroupEvent(int groupId);
     Task ReceiveAddToChatEvent(int chatId);

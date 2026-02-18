@@ -4,6 +4,8 @@ import { BehaviorSubject, map, Subject } from 'rxjs';
 import { Message } from './models/message';
 import { DomSanitizer } from '@angular/platform-browser';
 import { HttpClient } from '@angular/common/http';
+import { ChatService } from '../chat/chat-service';
+import { GroupService } from '../group/group-service';
 @Injectable({
   providedIn: 'root',
 })
@@ -13,7 +15,8 @@ export class MessageService {
   refreshGroups$ = this.refreshGroups.asObservable();
   private refreshChat = new Subject<void>();
   refreshChat$ = this.refreshChat.asObservable();
-
+  groupService = inject(GroupService);
+  chatService = inject(ChatService);
   baseApiUrl = 'https://localhost/api/message';
   http = inject(HttpClient);
   incomingMessage$ = new Subject<Message>();
@@ -48,8 +51,9 @@ export class MessageService {
   }
 
   startConnection() {
-    this.connection.on('ReceiveMessage', (message: Message) => {
+    this.connection.on('ReceiveMessage', (message: Message, groupId: number) => {
       this.addMessage(message);
+      this.notifyAboutNewMessage(message, groupId);
     });
     this.connection.on('ReceiveMessageRemovedEvent', (message: Message) => {
       this.notifyMessageDelete(message);
@@ -105,13 +109,22 @@ export class MessageService {
   }
 
   addMessage(message: Message) {
-    console.log('message', message);
     if (message.type === 'text/plain') {
       const decodedContent = this.decodeBase64ToUtf8(message.content);
       message.content = decodedContent;
     }
-    console.log(message);
     this.incomingMessage$.next(message);
+  }
+
+  notifyAboutNewMessage(message: Message, groupId: number) {
+    const groupToUpdate = this.groupService.groups().find((g) => g.groupId == groupId);
+    const isChatOpened = this.chatService.selectedChat()?.id == message.chatId;
+    if (groupToUpdate && !isChatOpened) {
+      groupToUpdate.hasNewMessages = true;
+      this.groupService.groups.update((g) =>
+        g.map((group) => (group.groupId == groupId ? { ...groupToUpdate } : group)),
+      );
+    }
   }
 
   sendTextMessage(messageContent: string, chatId: number) {
@@ -121,7 +134,6 @@ export class MessageService {
       content: encodedMessage,
       type: 'text/plain',
     };
-    console.log('to Send,', message);
     return this.connection.invoke('SendMessage', message);
   }
 
