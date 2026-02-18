@@ -179,6 +179,13 @@ export class GroupView {
             if (this.groupChats()?.some((c) => c.id != this.selectedChat()?.id))
               this.chatService.setSelectedChat(null);
           },
+          error: () => {
+            this.chatService.setSelectedChat(null);
+            this.groupService.groups.update((group) =>
+              group.filter((g) => g.groupId != this.selectedGroup()?.groupId),
+            );
+            this.selectedGroup.set(null);
+          },
         });
       onCleanup(() => sub.unsubscribe());
     });

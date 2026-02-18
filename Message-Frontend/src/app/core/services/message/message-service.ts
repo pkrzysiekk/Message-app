@@ -72,8 +72,11 @@ export class MessageService {
     });
     this.connection.on('ReceiveRemovedFromGroupEvent', (groupId: number) => {
       console.log('removed');
-      this.refreshGroups.next();
-      this.refreshChat.next();
+
+      this.connection.invoke('RefreshConnectionState').then(() => {
+        this.refreshGroups.next();
+        this.refreshChat.next();
+      });
     });
     this.connection.on('ReceiveGroupRoleChangedEvent', (groupId: number) => {
       console.log('fired');

@@ -35,7 +35,6 @@ export class Groups {
 
   constructor() {
     this.listenForGroupUpdates();
-    this.selectFirstGroupFallback();
     this.selectedGroup = this.groupService.selectedGroup;
     this.listenForSelectedGroupUpdates();
   }
