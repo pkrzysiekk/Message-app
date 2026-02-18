@@ -6,6 +6,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { HttpClient } from '@angular/common/http';
 import { ChatService } from '../chat/chat-service';
 import { GroupService } from '../group/group-service';
+import { AudioService } from '../audio/audio-service';
 @Injectable({
   providedIn: 'root',
 })
@@ -17,6 +18,7 @@ export class MessageService {
   refreshChat$ = this.refreshChat.asObservable();
   groupService = inject(GroupService);
   chatService = inject(ChatService);
+  audioService = inject(AudioService);
   groupChats = this.chatService.groupChats;
   baseApiUrl = 'https://localhost/api/message';
   http = inject(HttpClient);
@@ -126,6 +128,7 @@ export class MessageService {
       this.groupService.groups.update((g) =>
         g.map((group) => (group.groupId == groupId ? { ...groupToUpdate } : group)),
       );
+      this.audioService.playMessageAlert();
     }
 
     if (openedGroupChats && !isChatOpened) {
