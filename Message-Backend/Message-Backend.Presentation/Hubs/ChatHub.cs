@@ -144,6 +144,7 @@ public class ChatHub :Hub<IChatClient>
         if(!await _messageAuthorizationService.CanDeleteMember(groupId, userId,userToDelete))
             throw new HubException("Unauthorized");
         await Clients.User(userToDelete.ToString()).ReceiveRemovedFromGroupEvent(groupId);
+        await Groups.RemoveFromGroupAsync(userToDelete.ToString(), $"group:{groupId}");
         await Clients.Group($"group:{groupId}").ReceiveGroupRoleChangedEvent(groupId);
     }
 

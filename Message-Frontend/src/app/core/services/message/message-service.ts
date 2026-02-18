@@ -65,13 +65,18 @@ export class MessageService {
       this.connection.invoke('JoinGroup', groupId).then(() => this.refreshGroups.next());
     });
     this.connection.on('ReceiveAddToChatEvent', (chatId: number) => {
-      this.connection.invoke('JoinChat', chatId).then(() => this.refreshChat.next());
+      this.connection.invoke('JoinChat', chatId).then(() => {
+        this.refreshGroups.next();
+        this.refreshChat.next();
+      });
     });
     this.connection.on('ReceiveRemovedFromGroupEvent', (groupId: number) => {
+      console.log('removed');
       this.refreshGroups.next();
       this.refreshChat.next();
     });
     this.connection.on('ReceiveGroupRoleChangedEvent', (groupId: number) => {
+      console.log('fired');
       this.connection.invoke('RefreshRoles', groupId).then(() => {
         this.refreshChat.next();
       });

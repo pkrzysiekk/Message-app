@@ -124,6 +124,7 @@ export class GroupView {
         this.refreshSignal.update((v) => v + 1);
       },
       error: () => {
+        console.log('err');
         this.chatService.setSelectedChat(null);
         this.selectedGroup.set(null);
       },
@@ -172,10 +173,13 @@ export class GroupView {
             ),
           ),
         )
-        .subscribe((updatedChats) => {
-          this.groupChats.set(updatedChats);
+        .subscribe({
+          next: (updatedChats) => {
+            this.groupChats.set(updatedChats);
+            if (this.groupChats()?.some((c) => c.id != this.selectedChat()?.id))
+              this.chatService.setSelectedChat(null);
+          },
         });
-
       onCleanup(() => sub.unsubscribe());
     });
   }
