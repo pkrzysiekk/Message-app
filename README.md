@@ -8,8 +8,8 @@
 
 ## 🏆 Overview
 
-**Message-app** is a well-crafted messaging application, combining a robust C# backend with a modern frontend based on TypeScript, HTML, CSS, and SCSS.  
-The project focuses on performance, security, a clear code structure, and an intuitive user experience. Every detail has been thoroughly refined to deliver a dependable and pleasant tool for communication.
+**Message-app** is a well-crafted instant-messaging application, combining a robust C# backend with a modern frontend based on TypeScript, HTML, CSS, and SCSS.  
+The project focuses on security, clear code structure, and an intuitive user experience.
 
 ---
 
@@ -19,35 +19,39 @@ The project focuses on performance, security, a clear code structure, and an int
   The backend is built with performance and scalability in mind, using industry-standard practices.
 
 - **Modern frontend (TypeScript, HTML, CSS, SCSS)**  
-  The interface is responsive, clean, and user-friendly. TypeScript ensures type safety and better code maintainability.
+  The user interface is responsive, clear, and user-friendly. TypeScript ensures type safety and easier long-term maintenance.
 
 - **Security and privacy**  
-  The app employs best practices to protect user data and communication.
+  The app follows best practices to ensure user data and conversations are protected.
 
 - **Easy to extend and maintain**  
-  The architecture makes it simple to add new features or integrate with other systems.
+  The architecture makes it simple to introduce new features and integrate external systems.
 
 ---
 
 ## 📸 User Interface Examples
 
-Below you can see selected views from the application, demonstrating its clean interface and ease of use:
+Below you can see selected views from the application:
 
 ### 1. User Profile Quick View  
 ![User profile view](assets/image1.png)  
-_Shows a user's profile card, member role, and an option to leave the group._
+_Viewing a user's profile card, role, and leaving the group._
 
 ### 2. Friend Invitation Dialog  
 ![Invite friends](assets/image2.png)  
-_Easily search and invite friends to your group conversations._
+_Easily search and invite friends to your group chats._
 
 ### 3. Create Group Modal  
 ![Create group modal](assets/image3.png)  
-_Creating a new group chat is quick and intuitive thanks to a simple modal dialog._
+_Creating new group chats is simple and quick._
 
 ### 4. Chat Window  
 ![Group chat example](assets/image4.png)  
-_A clear and pleasant chat window, making communication seamless and enjoyable._
+_Elegant chat interface for smooth communication._
+
+### 5. Sending Images in Chat  
+![Sending images in chat](assets/image5.png)  
+_Share images directly in the chat! A message with a picture attached appears seamlessly alongside text messages for a richer conversation experience._
 
 ---
 
@@ -58,37 +62,18 @@ _A clear and pleasant chat window, making communication seamless and enjoyable._
 
 ---
 
-## 🏗️ Technologies
 
-- **C#** – reliable backend logic, security, and speed
-- **TypeScript** – type-safe, robust frontend
-- **HTML/CSS/SCSS** – modern, clear, and responsive user interface
-
----
-
-## 🛠️ Getting Started
-
-1. **Clone the repository:**
-   ```bash
-   git clone https://github.com/pkrzysiekk/Message-app.git
-   ```
-2. **Backend (C#):**
-   - Go to the `Backend` folder and follow instructions from the local README.
-3. **Frontend (TypeScript):**
-   - Enter the `Frontend` folder, run `npm install`, then start with `npm run start`.
-
----
 
 ## 👏 Why Choose Message-app?
 
-- Combines proven technologies: **46.6% C#** (backend), **34.5% TypeScript** (frontend)
-- Focus on readability and modular code structure
-- High quality – built with great attention to detail
-- Architecture ready for easy extension or future maintenance
+- Uses proven technologies: **46.6% C#** (backend), **34.5% TypeScript** (frontend)
+- Excellent code readability and modular structure
+- High quality – built with care and attention to detail
+- The architecture is ready for easy extension and long-term support
 
 ---
 
 ## 📧 Contact
 
 Have questions or want to contribute?  
-Open an Issue or contact us directly on GitHub!
+Open an Issue or contact directly via GitHub!
