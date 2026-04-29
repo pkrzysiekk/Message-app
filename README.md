@@ -55,7 +55,7 @@ _Share images directly in the chat! A message with a picture attached appears se
 
 ---
 
-## 📂 Code Structure
+##  Code Structure
 
 - `Backend/` – C#: server logic, API, database handling
 - `Frontend/` – TypeScript, HTML, CSS/SCSS: user interface
@@ -64,7 +64,7 @@ _Share images directly in the chat! A message with a picture attached appears se
 
 
 
-## 👏 Why Choose Message-app?
+##  Why Choose Message-app?
 
 - Uses proven technologies: **46.6% C#** (backend), **34.5% TypeScript** (frontend)
 - Excellent code readability and modular structure
@@ -73,7 +73,7 @@ _Share images directly in the chat! A message with a picture attached appears se
 
 ---
 
-## 📧 Contact
+##  Contact
 
 Have questions or want to contribute?  
 Open an Issue or contact directly via GitHub!
