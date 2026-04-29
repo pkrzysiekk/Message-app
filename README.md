@@ -6,14 +6,14 @@
 [![Languages](https://img.shields.io/badge/CSS-1.9%25-264de4)](https://developer.mozilla.org/en-US/docs/Web/CSS)
 [![Languages](https://img.shields.io/badge/SCSS-0.4%25-c6538c)](https://sass-lang.com/documentation/)
 
-## 🏆 Overview
+##  Overview
 
 **Message-app** is a well-crafted instant-messaging application, combining a robust C# backend with a modern frontend based on TypeScript, HTML, CSS, and SCSS.  
 The project focuses on security, clear code structure, and an intuitive user experience.
 
 ---
 
-## 🚀 Key Features
+##  Key Features
 
 - **Reliable and fast C# backend**  
   The backend is built with performance and scalability in mind, using industry-standard practices.
@@ -29,7 +29,7 @@ The project focuses on security, clear code structure, and an intuitive user exp
 
 ---
 
-## 📸 User Interface Examples
+##  User Interface Examples
 
 Below you can see selected views from the application:
 
@@ -39,11 +39,11 @@ _Viewing a user's profile card, role, and leaving the group._
 
 ### 2. Friend Invitation Dialog  
 ![Invite friends](assets/image2.png)  
-_Easily search and invite friends to your group chats._
+_Easily search and invite friends to your groups._
 
 ### 3. Create Group Modal  
 ![Create group modal](assets/image3.png)  
-_Creating new group chats is simple and quick._
+_Creating new group is simple and quick._
 
 ### 4. Chat Window  
 ![Group chat example](assets/image4.png)  
